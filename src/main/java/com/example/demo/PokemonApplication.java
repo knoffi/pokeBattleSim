@@ -13,7 +13,7 @@ public class PokemonApplication {
 			// String print = pokemons.stream().reduce("", (cur, next) -> cur + "\n" +
 			// next);
 			// System.out.println(print);
-			System.out.println(Pokedex.getPokemon(120, HTTPMode.JAVA_11).name);
+			System.out.println(Pokedex.getPokemon("mew", HTTPMode.JAVA_11).name);
 		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}

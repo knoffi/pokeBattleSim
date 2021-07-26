@@ -8,6 +8,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -83,5 +84,12 @@ public class Pokedex {
         Pokemon pokemon = mode == HTTPMode.JAVA_11 ? getClassicalPokemonModernly()[index]
                 : getClassicalPokemonRobustly()[index];
         return pokemon;
+    }
+    public static Pokemon getPokemon(String name, HTTPMode mode)
+            throws RuntimeException, IOException, InterruptedException {
+        Pokemon[] pokemons = mode == HTTPMode.JAVA_11 ? getClassicalPokemonModernly() : getClassicalPokemonRobustly();
+        Pokemon result = Arrays.stream(pokemons).filter(pokemon -> pokemon.name.equals(name)).findFirst()
+                .orElseThrow(RuntimeException::new);
+        return result;
     }
 }
