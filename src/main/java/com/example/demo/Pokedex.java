@@ -85,11 +85,26 @@ public class Pokedex {
                 : getClassicalPokemonRobustly()[index];
         return pokemon;
     }
+
     public static Pokemon getPokemon(String name, HTTPMode mode)
             throws RuntimeException, IOException, InterruptedException {
         Pokemon[] pokemons = mode == HTTPMode.JAVA_11 ? getClassicalPokemonModernly() : getClassicalPokemonRobustly();
         Pokemon result = Arrays.stream(pokemons).filter(pokemon -> pokemon.name.equals(name)).findFirst()
                 .orElseThrow(RuntimeException::new);
         return result;
+    }
+
+    public static Pokemon[] getRandomTeam(HTTPMode mode) throws RuntimeException, IOException, InterruptedException {
+        Pokemon[] pokemonTeam = new Pokemon[6];
+        for (int i = 0; i < 6; i++) {
+            pokemonTeam[i] = getPokemon(getRandomPokeIndex(), mode);
+        }
+
+        return pokemonTeam;
+    }
+
+    private static int getRandomPokeIndex() {
+        int index = (int) Math.round(Math.random() * CLASSICAL_POKEMON_RANGE);
+        return index;
     }
 }

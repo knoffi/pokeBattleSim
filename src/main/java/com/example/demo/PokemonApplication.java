@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,7 +14,11 @@ public class PokemonApplication {
 			// String print = pokemons.stream().reduce("", (cur, next) -> cur + "\n" +
 			// next);
 			// System.out.println(print);
-			System.out.println(Pokedex.getPokemon("mew", HTTPMode.JAVA_11).name);
+			var team = Pokedex.getRandomTeam(HTTPMode.JAVA_11);
+			String[] teamNames = Arrays.stream(team).map(pokemon -> pokemon.name).toArray(String[]::new);
+			for (String name : teamNames) {
+				System.out.println(name + " \n");
+			}
 		} catch (IOException | InterruptedException e) {
 			System.out.println(e);
 		}
