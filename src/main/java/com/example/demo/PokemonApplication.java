@@ -10,10 +10,6 @@ public class PokemonApplication {
 
 	public static void main(String[] args) {
 		try {
-			// List<String> pokemons = Pokedex.getClassicalPokemons(HTTPMode.JAVA_11);
-			// String print = pokemons.stream().reduce("", (cur, next) -> cur + "\n" +
-			// next);
-			// System.out.println(print);
 			var team = Pokedex.getRandomTeam(HTTPMode.JAVA_11);
 			String[] teamNames = Arrays.stream(team).map(pokemon -> pokemon.name).toArray(String[]::new);
 			for (String name : teamNames) {
