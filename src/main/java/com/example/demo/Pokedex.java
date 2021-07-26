@@ -18,31 +18,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Pokedex {
     private static int CLASSICAL_POKEMON_RANGE = 151;
-    private static String CLASSICAL_POKEMON_URL = "https://pokeapi.co/api/v2/pokemon/?limit=" + CLASSICAL_POKEMON_RANGE
-            + "/";
+    private static String POKEMON_URL_PATH = "https://pokeapi.co/api/v2/pokemon/";
+    private static String CLASSICAL_POKEMON_QUERY = "?limit=" + CLASSICAL_POKEMON_RANGE + "/";
+    private static String CLASSICAL_POKEMON_URL = POKEMON_URL_PATH + CLASSICAL_POKEMON_QUERY;
 
     public static List<String> getClassicalPokemons(HTTPMode mode) throws IOException, InterruptedException {
-        if (mode == HTTPMode.JAVA_11) {
-            return getClassicalPokemonModernly();
-        } else {
-            return getClassicalPokemonRobustly();
-        }
+        Pokemon[] pokemons = mode == HTTPMode.JAVA_11 ? getClassicalPokemonModernly() : getClassicalPokemonRobustly();
+        return getNames(pokemons);
     }
 
-    private static List<String> getClassicalPokemonModernly() throws IOException, InterruptedException {
-        URI pokemonURL = URI.create(CLASSICAL_POKEMON_URL);
+    private static Pokemon[] getClassicalPokemonModernly() throws IOException, InterruptedException {
+        var pokemonURL = URI.create(CLASSICAL_POKEMON_URL);
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(pokemonURL).build();
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
         String responseBody = response.body();
         Pokemon[] pokemons = convertJSON(responseBody);
 
-        return getNames(pokemons);
+        return pokemons;
 
     }
 
-    private static List<String> getClassicalPokemonRobustly() throws RuntimeException, IOException {
-        List<String> names = new ArrayList<String>();
+    private static Pokemon[] getClassicalPokemonRobustly() throws RuntimeException, IOException {
         URL pokemonsURL = new URL(CLASSICAL_POKEMON_URL);
         HttpURLConnection connection = (HttpURLConnection) pokemonsURL.openConnection();
         connection.setRequestMethod("GET");
@@ -57,12 +54,9 @@ public class Pokedex {
             responseString += scanner.nextLine();
         }
         Pokemon[] pokemons = convertJSON(responseString);
-        for (Pokemon pokemon : pokemons) {
-            names.add(pokemon.name);
-        }
         scanner.close();
         connection.disconnect();
-        return getNames(pokemons);
+        return pokemons;
 
     }
 
@@ -79,5 +73,15 @@ public class Pokedex {
             names.add(pokemon.name);
         }
         return names;
+    }
+
+    public static Pokemon getPokemon(int index, HTTPMode mode)
+            throws RuntimeException, IOException, InterruptedException {
+        if (index <= 0 || index > CLASSICAL_POKEMON_RANGE) {
+            throw new RuntimeException("We only deal with the Pokemon from the red/blue edition");
+        }
+        Pokemon pokemon = mode == HTTPMode.JAVA_11 ? getClassicalPokemonModernly()[index]
+                : getClassicalPokemonRobustly()[index];
+        return pokemon;
     }
 }
