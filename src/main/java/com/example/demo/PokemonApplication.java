@@ -1,7 +1,10 @@
 package com.example.demo;
 
 import java.io.IOException;
-import java.util.Arrays;
+
+import com.example.demo.Pokedex.Pokedex;
+import com.example.demo.Searches.PokemonSearch.PokemonSearch;
+import com.example.demo.Searches.PokemonSearch.StatBySearch;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,12 +13,12 @@ public class PokemonApplication {
 
 	public static void main(String[] args) {
 		try {
-			var team = Pokedex.getRandomTeam(HTTPMode.JAVA_11);
-			String[] teamNames = Arrays.stream(team).map(pokemon -> pokemon.name).toArray(String[]::new);
-			for (String name : teamNames) {
-				System.out.println(name + " \n");
-			}
-		} catch (IOException | InterruptedException e) {
+			PokemonSearch pikachu = Pokedex.getPokemon("pikachu", RequestMode.JAVA_11);
+			StatBySearch hp = pikachu.stats[0];
+			System.out.println("name: " + pikachu.name);
+			System.out.println(hp.base_stat);
+			System.out.println(hp.stat.name);
+		} catch (IOException | InterruptedException | RuntimeException e) {
 			System.out.println(e);
 		}
 	}
