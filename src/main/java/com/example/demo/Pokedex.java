@@ -12,11 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class Pokedex {
     private static int CLASSICAL_POKEMON_RANGE = 151;
     private static String POKEMON_URL_PATH = "https://pokeapi.co/api/v2/pokemon/";
@@ -34,7 +29,7 @@ public class Pokedex {
         var request = HttpRequest.newBuilder(pokemonURL).build();
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
         String responseBody = response.body();
-        Pokemon[] pokemons = convertJSON(responseBody);
+        Pokemon[] pokemons = JSONHandler.convertJSON(responseBody, PokemonsSearch.class).results;
 
         return pokemons;
 
@@ -54,18 +49,11 @@ public class Pokedex {
         while (scanner.hasNext()) {
             responseString += scanner.nextLine();
         }
-        Pokemon[] pokemons = convertJSON(responseString);
+        Pokemon[] pokemons = JSONHandler.convertJSON(responseString, PokemonsSearch.class).results;
         scanner.close();
         connection.disconnect();
         return pokemons;
 
-    }
-
-    private static Pokemon[] convertJSON(String pokemonResponse) throws JsonMappingException, JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        Pokemon[] pokemons = mapper.readValue(pokemonResponse, SearchAnswer.class).results;
-        return pokemons;
     }
 
     private static ArrayList<String> getNames(Pokemon[] pokemons) {
