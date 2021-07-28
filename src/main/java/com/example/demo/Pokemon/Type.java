@@ -1,6 +1,6 @@
 package com.example.demo.Pokemon;
 
-public class PokeType {
+public class Type {
     public String name;
     private String url;
 }
