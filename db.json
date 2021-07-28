@@ -41,44 +41,44 @@
     ],
     "rounds": [
         {
-            "combatantRed": "meowth",
-            "combatantBlue": "ekans",
-            "winner": "ekans"
+            "redCombatant": "meowth",
+            "blueCombatant": "ekans",
+            "blueWon": true
         },
         {
-            "combatantRed": "marowak",
-            "combatantBlue": "ekans",
-            "winner": "ekans"
+            "redCombatant": "marowak",
+            "blueCombatant": "ekans",
+            "blueWon": true
         },
         {
-            "combatantRed": "dewgong",
-            "combatantBlue": "ekans",
-            "winner": "ekans"
+            "redCombatant": "dewgong",
+            "blueCombatant": "ekans",
+            "blueWon": true
         },
         {
-            "combatantRed": "dewgong",
-            "combatantBlue": "ekans",
-            "winner": "dewgong"
+            "redCombatant": "dewgong",
+            "blueCombatant": "ekans",
+            "blueWon": false
         },
         {
-            "combatantRed": "dewgong",
-            "combatantBlue": "clefable",
-            "winner": "dewgong"
+            "redCombatant": "dewgong",
+            "blueCombatant": "clefable",
+            "blueWon": false
         },
         {
-            "combatantRed": "dewgong",
-            "combatantBlue": "beedrill",
-            "winner": "beedrill"
+            "redCombatant": "dewgong",
+            "blueCombatant": "beedrill",
+            "blueWon": true
         },
         {
-            "combatantRed": "caterpie",
-            "combatantBlue": "beedrill",
-            "winner": "beedrill"
+            "redCombatant": "caterpie",
+            "blueCombatant": "beedrill",
+            "blueWon": true
         },
         {
-            "combatantRed": "magnemite",
-            "combatantBlue": "beedrill",
-            "winner": "beedrill"
+            "redCombatant": "magnemite",
+            "blueCombatant": "beedrill",
+            "blueWon": true
         }
     ],
     "blueWon": true
