@@ -18,6 +18,7 @@ public class PokemonApplication {
 			System.out.println("name: " + pikachu.name);
 			System.out.println(hp.base_stat);
 			System.out.println(hp.stat.name);
+			System.out.println(pikachu.types[0].type.name);
 		} catch (IOException | InterruptedException | RuntimeException e) {
 			System.out.println(e);
 		}
