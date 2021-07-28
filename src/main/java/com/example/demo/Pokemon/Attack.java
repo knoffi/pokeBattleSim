@@ -2,14 +2,31 @@ package com.example.demo.Pokemon;
 
 public class Attack {
     String name;
-    String text;
-    int damage;
+    int power;
     DamageClass damageClass;
     Type type;
     int accurancy;
     StatChange[] statChanges;
-}
+    Meta meta;
 
-enum DamageClass {
-    PHYSICAL, SPECIAL
+    public Attack() {
+        this.name = "struggle";
+        this.power = 50;
+        this.type = new Type("normal", "https://pokeapi.co/api/v2/type/1/");
+        this.damageClass = DamageClass.PHYSICAL;
+        this.accurancy = 100;
+        this.statChanges = new StatChange[0];
+        this.meta = new Meta();
+    }
+
+    public Attack(String name, int power, DamageClass damageClass, Type type, int accurancy, StatChange[] statChanges,
+            Meta meta) {
+        this.name = name;
+        this.power = power;
+        this.damageClass = damageClass;
+        this.type = type;
+        this.accurancy = accurancy;
+        this.statChanges = statChanges;
+        this.meta = meta;
+    }
 }

@@ -19,9 +19,11 @@ import com.example.demo.Searches.PokemonsSearch.PokemonsSearch;
 
 public class Pokedex {
     private static int CLASSICAL_POKEMON_RANGE = 151;
-    private static String API_HOST = "https://pokeapi.co/api/";
-    private static String POKEMON_PATH = "v2/pokemon/";;
+    private static String HOST = "https://pokeapi.co/";
+    private static String API_PATH = "api/v2/";
+    private static String POKEMON_PATH = "pokemon/";;
     private static String CLASSICAL_POKEMON_QUERY = "?limit=" + CLASSICAL_POKEMON_RANGE + "/";
+    private static String CLASSICAL_VERSION_PATH = "version-group/1/";
 
     public static List<String> getClassicalPokemons(RequestMode mode) throws IOException, InterruptedException {
         PokemonBySearch[] pokemons = mode == RequestMode.JAVA_11 ? getClassicalPokemonModernly()
@@ -29,8 +31,18 @@ public class Pokedex {
         return getNames(pokemons);
     }
 
+    public static String getClassicalVersionKey() {
+        String key = "red-blue";
+        try {
+            key = getPokeData(API_PATH + CLASSICAL_VERSION_PATH, Name.class, RequestMode.JAVA_11).name;
+        } catch (IOException | InterruptedException e) {
+            System.out.println("___VERSION NAME NOT FOUND___" + e.getClass());
+        }
+        return key;
+    }
+
     private static PokemonBySearch[] getClassicalPokemonModernly() throws IOException, InterruptedException {
-        return getPokeDataModernly(POKEMON_PATH + CLASSICAL_POKEMON_QUERY, PokemonsSearch.class).results;
+        return getPokeDataModernly(API_PATH + POKEMON_PATH + CLASSICAL_POKEMON_QUERY, PokemonsSearch.class).results;
 
     }
 
@@ -41,7 +53,7 @@ public class Pokedex {
     }
 
     private static <T> T getPokeDataModernly(String dataPath, Class<T> type) throws IOException, InterruptedException {
-        var url = URI.create(API_HOST + dataPath);
+        var url = URI.create(HOST + dataPath);
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(url).build();
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -51,7 +63,7 @@ public class Pokedex {
     }
 
     private static <T> T getPokeDataNotModernly(String dataPath, Class<T> type) throws IOException, RuntimeException {
-        URL pokemonsURL = new URL(API_HOST + dataPath);
+        URL pokemonsURL = new URL(HOST + dataPath);
         HttpURLConnection connection = (HttpURLConnection) pokemonsURL.openConnection();
         connection.setRequestMethod("GET");
         connection.connect();
@@ -71,7 +83,7 @@ public class Pokedex {
     }
 
     private static PokemonBySearch[] getClassicalPokemonNotModernly() throws RuntimeException, IOException {
-        return getPokeDataNotModernly(POKEMON_PATH + CLASSICAL_POKEMON_QUERY, PokemonsSearch.class).results;
+        return getPokeDataNotModernly(API_PATH + POKEMON_PATH + CLASSICAL_POKEMON_QUERY, PokemonsSearch.class).results;
     }
 
     private static ArrayList<String> getNames(PokemonBySearch[] pokemons) {
@@ -83,7 +95,7 @@ public class Pokedex {
     }
 
     public static String getStringPokeData(int index) throws IOException, InterruptedException {
-        var url = URI.create(API_HOST + POKEMON_PATH + index);
+        var url = URI.create(HOST + POKEMON_PATH + index);
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(url).build();
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -96,14 +108,14 @@ public class Pokedex {
         if (index <= 0 || index > CLASSICAL_POKEMON_RANGE) {
             throw new RuntimeException("We only deal with the Pokemon from the red/blue edition");
         }
-        String pathByPokeIndex = POKEMON_PATH + index + "/";
+        String pathByPokeIndex = API_PATH + POKEMON_PATH + index + "/";
         PokemonSearch pokemon = getPokeData(pathByPokeIndex, PokemonSearch.class, mode);
         return pokemon;
     }
 
     public static PokemonSearch getPokemon(String name, RequestMode mode)
             throws RuntimeException, IOException, InterruptedException {
-        String pathByPokeName = POKEMON_PATH + name + "/";
+        String pathByPokeName = API_PATH + POKEMON_PATH + name + "/";
         return getPokeData(pathByPokeName, PokemonSearch.class, mode);
     }
 
@@ -121,4 +133,14 @@ public class Pokedex {
         int index = (int) Math.round(Math.random() * CLASSICAL_POKEMON_RANGE);
         return index;
     }
+
+    public static String getPathFromURL(String url) {
+        return url.substring(HOST.length());
+    }
+
+    public static String CLASSICAL_VERSION_KEY = getClassicalVersionKey();
+}
+
+class Name {
+    public String name;
 }

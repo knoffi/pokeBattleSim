@@ -1,12 +1,13 @@
 package com.example.demo.Searches.PokemonSearch;
 
+import com.example.demo.Pokemon.Type;
+
 public class NameHolder {
     public String name;
     public String url;
 
-    NameHolder() {
-        this.name = "";
-        this.url = "";
+    public Type convert() {
+        return new Type(this.name, this.url);
     }
 
 }
