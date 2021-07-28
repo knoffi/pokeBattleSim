@@ -63,7 +63,6 @@ public class Pokemon {
     private Attack[] getAttacks(MoveBySearch[] moves) {
         String[] filteredURLs = Arrays.stream(moves).filter(MoveBySearch::isClassical).map(move -> move.move.url)
                 .toArray(String[]::new);
-        System.out.println(filteredURLs.length);
         int moveAmount = filteredURLs.length;
         int[] selectedIndices = getMoveSelection(moveAmount);
         // TODO: throw exception and use "Verzweifler" if selectionSize is less than 1
