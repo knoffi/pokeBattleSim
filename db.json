@@ -1,0 +1,85 @@
+{
+    "blueTeam": [
+        {
+            "name": "ekans"
+        },
+        {
+            "name": "clefable"
+        },
+        {
+            "name": "beedrill"
+        },
+        {
+            "name": "venomoth"
+        },
+        {
+            "name": "squirtle"
+        },
+        {
+            "name": "ninetails"
+        }
+    ],
+    "redTeam": [
+        {
+            "name": "meowth"
+        },
+        {
+            "name": "marowak"
+        },
+        {
+            "name": "dewgong"
+        },
+        {
+            "name": "dewgong"
+        },
+        {
+            "name": "caterpie"
+        },
+        {
+            "name": "magnemite"
+        }
+    ],
+    "rounds": [
+        {
+            "combatantRed": "meowth",
+            "combatantBlue": "ekans",
+            "winner": "ekans"
+        },
+        {
+            "combatantRed": "marowak",
+            "combatantBlue": "ekans",
+            "winner": "ekans"
+        },
+        {
+            "combatantRed": "dewgong",
+            "combatantBlue": "ekans",
+            "winner": "ekans"
+        },
+        {
+            "combatantRed": "dewgong",
+            "combatantBlue": "ekans",
+            "winner": "dewgong"
+        },
+        {
+            "combatantRed": "dewgong",
+            "combatantBlue": "clefable",
+            "winner": "dewgong"
+        },
+        {
+            "combatantRed": "dewgong",
+            "combatantBlue": "beedrill",
+            "winner": "beedrill"
+        },
+        {
+            "combatantRed": "caterpie",
+            "combatantBlue": "beedrill",
+            "winner": "beedrill"
+        },
+        {
+            "combatantRed": "magnemite",
+            "combatantBlue": "beedrill",
+            "winner": "beedrill"
+        }
+    ],
+    "blueWon": true
+}
