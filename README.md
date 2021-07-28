@@ -1,5 +1,5 @@
 # pokeBattleSim
-Desctop application to let your team of classical pokemon fight against a team of your friends.
+Desctop application to let two teams of classical pokemon fight against each other.
 
 Frontend: Typescript (React, Electron)
 
