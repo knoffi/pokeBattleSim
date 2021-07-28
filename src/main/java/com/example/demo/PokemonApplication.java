@@ -15,10 +15,6 @@ public class PokemonApplication {
 		try {
 			PokemonSearch pikachu = Pokedex.getPokemon("pikachu", RequestMode.JAVA_11);
 			StatBySearch hp = pikachu.stats[0];
-			System.out.println("name: " + pikachu.name);
-			System.out.println(hp.base_stat);
-			System.out.println(hp.stat.name);
-			System.out.println(pikachu.types[0].type.name);
 		} catch (IOException | InterruptedException | RuntimeException e) {
 			System.out.println(e);
 		}

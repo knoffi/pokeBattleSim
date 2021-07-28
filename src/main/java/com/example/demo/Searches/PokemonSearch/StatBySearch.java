@@ -6,6 +6,6 @@ public class StatBySearch {
 
     StatBySearch() {
         this.base_stat = 0;
-        this.stat = new NameHolder("test");
+        this.stat = new NameHolder();
     }
 }
