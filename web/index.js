@@ -1,9 +1,10 @@
 // @ts-check
 
 // TODO remove dev fixture for production
-const isProduction = true;
-const fixture = globalFixture;
+const isProduction = false;
 
+const devUrl =
+  "https://raw.githubusercontent.com/proSingularity/pokeBattleSim/main/db.json";
 const url =
   "https://raw.githubusercontent.com/knoffi/pokeBattleSim/main/db.json";
 
@@ -24,8 +25,9 @@ const url =
 const startBattle = document.querySelector("#start-battle-btn");
 
 startBattle.addEventListener("click", async () => {
+  const api = isProduction ? url : devUrl;
   /** @type {ApiRes} */
-  const data = isProduction ? await fetch(url).then((x) => x.json()) : fixture;
+  const data = await fetch(api).then((x) => x.json());
   const teams = document.querySelector("#teams");
   const redTeam = getTeamRow(data, "red");
   const blueTeam = getTeamRow(data, "blue");
