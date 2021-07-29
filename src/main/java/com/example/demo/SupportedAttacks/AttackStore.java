@@ -1,9 +1,12 @@
 package com.example.demo.SupportedAttacks;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Scanner;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Pokedex.Pokedex;
@@ -13,6 +16,31 @@ import com.example.demo.Searches.MoveSearch.MoveSearch;
 import com.example.demo.Searches.PokemonSearch.NameHolder;
 
 public class AttackStore {
+    private final static String SUPPORT_ATTACKS_FILE_PATH = "C:\\Users\\monop\\programming\\pokeFightApi\\pokeBattleSim\\src\\main\\java\\com\\example\\demo\\SupportedAttacks\\supportAttackNames.txt";
+
+    private static String[] loadSupportedNames() {
+        File file = new File(SUPPORT_ATTACKS_FILE_PATH);
+        try {
+            Scanner sc = new Scanner(file);
+            String supportedAttacksString = "";
+            while (sc.hasNextLine()) {
+                supportedAttacksString += sc.nextLine();
+            }
+            ;
+            sc.close();
+            String[] result = supportedAttacksString.split(" ");
+            return result;
+        } catch (FileNotFoundException e) {
+            System.out.println("___FILE WITH SUPPORTED ATTACKS WAS NOT FOUND" + e.getClass());
+        }
+        ;
+        System.out.println("We only support the attack move struggle...");
+        String[] defaultResult = { "struggle" };
+        return defaultResult;
+    }
+
+    public final static String[] SUPPORTED_ATTACKS_BY_NAME = loadSupportedNames();
+
     private static Attack getAttackFromUrl(String url) {
         try {
             String path = Pokedex.getPathFromURL(url);
@@ -28,9 +56,6 @@ public class AttackStore {
         try {
             NameHolder[] nameHolders = Pokedex.getPokeData(Pokedex.API_PATH + Pokedex.GENERATION_I_PATH,
                     MoveNameHolders.class, RequestMode.JAVA_11).moves;
-            /*NameHolder[] trimmedNameHolders = { nameHolders[0], nameHolders[1], nameHolders[2], nameHolders[3],
-                    nameHolders[4], nameHolders[5], nameHolders[6], nameHolders[7], nameHolders[8], nameHolders[9],
-                    nameHolders[10] };*/
             Attack[] attacks = Arrays.stream(nameHolders).map(nameHolder -> getAttackFromUrl(nameHolder.url))
                     .toArray(Attack[]::new);
             return attacks;
@@ -47,17 +72,20 @@ public class AttackStore {
     }
 
     public static void update() throws IOException {
-        FileWriter fileWriter = new FileWriter(
-                "C:\\Users\\monop\\programming\\pokeFightApi\\pokeBattleSim\\src\\main\\java\\com\\example\\demo\\SupportedAttacks\\test.txt");
+        FileWriter fileWriter = new FileWriter(SUPPORT_ATTACKS_FILE_PATH);
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        String supportedAttackNames = "here we got \n";
+        String supportedAttackNames = "";
         Attack[] classicalAttacks = getClassicalAttacks();
         Attack[] supportedAttacks = getSupportedAttacks(classicalAttacks);
         for (int i = 0; i < supportedAttacks.length; i++) {
-            supportedAttackNames += supportedAttacks[i].getName() + "\n";
+            supportedAttackNames += supportedAttacks[i].getName() + " ";
         }
         printWriter.print(supportedAttackNames);
         printWriter.close();
+    }
+
+    public static boolean isSupported(String name) {
+        return Arrays.stream(SUPPORTED_ATTACKS_BY_NAME).anyMatch(attackName -> attackName.equals(name));
     }
 }
 
