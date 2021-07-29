@@ -3,9 +3,11 @@ package com.example.demo.Combat;
 public class CombatResult {
     public String winnerName;
     public String[] commentary;
+    public boolean blueWon;
 
-    CombatResult(String winnerName, String[] commentary) {
+    public CombatResult(String winnerName, String[] commentary, boolean blueWon) {
         this.commentary = commentary;
         this.winnerName = winnerName;
+        this.blueWon = blueWon;
     }
 }

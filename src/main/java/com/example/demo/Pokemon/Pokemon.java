@@ -50,7 +50,7 @@ public class Pokemon {
     public String getFinishingBlow() {
         Attack[] finishingAttacks = Arrays.stream(this.attacks).filter(Attack::doesDamage).toArray(Attack[]::new);
         if (finishingAttacks.length > 0) {
-            int index = (int) Math.random() * finishingAttacks.length;
+            int index = (int) Math.floor(Math.random() * finishingAttacks.length);
             return finishingAttacks[index].getName();
         }
         return "struggle";

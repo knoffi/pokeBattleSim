@@ -25,7 +25,7 @@ public class Combat {
         this.combatSummary.push(winner.getName() + " defeated " + loser.getName() + " !");
 
         String[] combatSummary = this.combatSummary.toArray(String[]::new);
-        return new CombatResult(winner.getName(), combatSummary);
+        return new CombatResult(winner.getName(), combatSummary, blueWins);
     }
 
 }
