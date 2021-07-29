@@ -30,49 +30,56 @@ public class Pokemon {
         for (int i = 0; i < this.stats.length; i++) {
             statPrinter += this.stats[i].name + " " + this.stats[i].value + "\n";
         }
-        String typePrinter = this.types.length + " my types:\n";
+        String typePrinter = "";
         for (int i = 0; i < this.types.length; i++) {
-            statPrinter += this.types[i].name + "(t)\n";
+            statPrinter += this.types[i].name + "\n";
         }
-        String attackPrinter = this.attacks.length + " my attacks:\n";
+        String attackPrinter = "";
         for (int i = 0; i < this.attacks.length; i++) {
-            statPrinter += this.attacks[i].name + " " + this.attacks[i].meta.category + "(a)\n";
+            statPrinter += this.attacks[i].name + " (" + this.attacks[i].meta.category + ")\n";
         }
-        String completePrinter = namePrinter + statPrinter + typePrinter + attackPrinter;
+        String completePrinter = namePrinter + statPrinter + " my types:\n" + typePrinter + " my attacks:\n"
+                + attackPrinter;
         System.out.println(completePrinter);
-
     }
 
-    private static int[] getMoveSelection(int max) {
-        int selectionSize = Math.min(4, max);
+    private static int[] getMoveSelection(int maxIndex) {
+        int selectionSize = Math.min(4, maxIndex + 1);
         int[] randomMoveIndices = new int[selectionSize];
         for (int i = 0; i < selectionSize; i++) {
             int randomIndex;
             do {
-                randomIndex = (int) Math.round(Math.random() * max);
-            } while (moveIndexTaken(randomMoveIndices, randomIndex));
+
+                randomIndex = (int) Math.round(Math.random() * maxIndex);
+            } while (moveIndexTaken(randomMoveIndices, randomIndex, i));
             randomMoveIndices[i] = randomIndex;
         }
         return randomMoveIndices;
     }
 
-    private static boolean moveIndexTaken(int[] indices, int newIndex) {
-        return Arrays.stream(indices).anyMatch(index -> index == newIndex);
+    private static boolean moveIndexTaken(int[] indices, int newIndex, int trimIndex) {
+        return Arrays.stream(indices).limit(trimIndex).anyMatch(index -> index == newIndex);
     }
 
     private Attack[] getAttacks(MoveBySearch[] moves) {
-        String[] filteredURLs = Arrays.stream(moves).filter(MoveBySearch::isClassical).map(move -> move.move.url)
+        String[] filteredURLs = Arrays.stream(moves).filter(MoveBySearch::isSupported).map(move -> move.move.url)
                 .toArray(String[]::new);
         int moveAmount = filteredURLs.length;
-        int[] selectedIndices = getMoveSelection(moveAmount);
+        int[] selectedIndices = getMoveSelection(moveAmount - 1);
         // TODO: throw exception and use "Verzweifler" if selectionSize is less than 1
         int selectionSize = Math.min(4, moveAmount);
         Attack[] selectedAttacks = new Attack[selectionSize];
-        for (int i = 0; i < selectionSize; i++) {
-            int selectedIndex = selectedIndices[i];
-            String selectedURL = filteredURLs[selectedIndex];
-            selectedAttacks[i] = getAttack(selectedURL);
+        try {
+            for (int k = 0; k < selectionSize; k++) {
+                int selectedIndex = selectedIndices[k];
+                String selectedURL = filteredURLs[selectedIndex];
+                selectedAttacks[k] = getAttack(selectedURL);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("___INDEX OUT OF BOUNCE DURING ATTACK SELECTION___" + e.getClass());
         }
+        ;
+
         return selectedAttacks;
     }
 

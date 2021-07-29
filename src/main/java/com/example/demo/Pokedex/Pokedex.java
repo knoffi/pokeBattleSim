@@ -18,12 +18,16 @@ import com.example.demo.Searches.PokemonsSearch.PokemonBySearch;
 import com.example.demo.Searches.PokemonsSearch.PokemonsSearch;
 
 public class Pokedex {
-    private static int CLASSICAL_POKEMON_RANGE = 151;
-    private static String HOST = "https://pokeapi.co/";
-    private static String API_PATH = "api/v2/";
-    private static String POKEMON_PATH = "pokemon/";;
-    private static String CLASSICAL_POKEMON_QUERY = "?limit=" + CLASSICAL_POKEMON_RANGE + "/";
-    private static String CLASSICAL_VERSION_PATH = "version-group/1/";
+    /**
+     *
+     */
+    public static final int CLASSICAL_POKEMON_RANGE = 151;
+    public static final String HOST = "https://pokeapi.co/";
+    public static final String API_PATH = "api/v2/";
+    public static final String POKEMON_PATH = "pokemon/";;
+    public static final String CLASSICAL_POKEMON_QUERY = "?limit=" + CLASSICAL_POKEMON_RANGE + "/";
+    public static final String CLASSICAL_VERSION_PATH = "version-group/1/";
+    public static final String GENERATION_I_PATH = "generation/1/";
 
     public static List<String> getClassicalPokemons(RequestMode mode) throws IOException, InterruptedException {
         PokemonBySearch[] pokemons = mode == RequestMode.JAVA_11 ? getClassicalPokemonModernly()
@@ -46,14 +50,14 @@ public class Pokedex {
 
     }
 
-    public static <T> T getPokeData(String dataPath, Class<T> type, RequestMode mode)
+    public static <T> T getPokeData(String path, Class<T> type, RequestMode mode)
             throws IOException, InterruptedException, RuntimeException {
-        return mode == RequestMode.TRADITIONAL_OLD ? getPokeDataNotModernly(dataPath, type)
-                : getPokeDataModernly(dataPath, type);
+        return mode == RequestMode.TRADITIONAL_OLD ? getPokeDataNotModernly(path, type)
+                : getPokeDataModernly(path, type);
     }
 
-    private static <T> T getPokeDataModernly(String dataPath, Class<T> type) throws IOException, InterruptedException {
-        var url = URI.create(HOST + dataPath);
+    private static <T> T getPokeDataModernly(String path, Class<T> type) throws IOException, InterruptedException {
+        var url = URI.create(HOST + path);
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(url).build();
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -62,8 +66,8 @@ public class Pokedex {
         return data;
     }
 
-    private static <T> T getPokeDataNotModernly(String dataPath, Class<T> type) throws IOException, RuntimeException {
-        URL pokemonsURL = new URL(HOST + dataPath);
+    private static <T> T getPokeDataNotModernly(String path, Class<T> type) throws IOException, RuntimeException {
+        URL pokemonsURL = new URL(HOST + path);
         HttpURLConnection connection = (HttpURLConnection) pokemonsURL.openConnection();
         connection.setRequestMethod("GET");
         connection.connect();
