@@ -19,6 +19,10 @@ public class Attack {
         this.meta = new Meta();
     }
 
+    public boolean doesDamage() {
+        return this.power > 0 || this.meta.category.substring(0, 3).equals("dam");
+    }
+
     public Attack(String name, int power, DamageClass damageClass, Type type, int accurancy, StatChange[] statChanges,
             Meta meta) {
         this.name = name;

@@ -43,6 +43,19 @@ public class Pokemon {
         System.out.println(completePrinter);
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public String getFinishingBlow() {
+        Attack[] finishingAttacks = Arrays.stream(this.attacks).filter(Attack::doesDamage).toArray(Attack[]::new);
+        if (finishingAttacks.length > 0) {
+            int index = (int) Math.floor(Math.random() * finishingAttacks.length);
+            return finishingAttacks[index].getName();
+        }
+        return "struggle";
+    }
+
     private static int[] getMoveSelection(int maxIndex) {
         int selectionSize = Math.min(4, maxIndex + 1);
         int[] randomMoveIndices = new int[selectionSize];
