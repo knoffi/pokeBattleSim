@@ -110,7 +110,7 @@ public class Pokedex {
     public static PokemonSearch getPokemon(int index, RequestMode mode)
             throws RuntimeException, IOException, InterruptedException {
         if (index <= 0 || index > CLASSICAL_POKEMON_RANGE) {
-            throw new RuntimeException("We only deal with the Pokemon from the red/blue edition");
+            throw new RuntimeException("___ONLY CLASSICAL POKEMON ALLOWED___");
         }
         String pathByPokeIndex = API_PATH + POKEMON_PATH + index + "/";
         PokemonSearch pokemon = getPokeData(pathByPokeIndex, PokemonSearch.class, mode);
@@ -134,7 +134,7 @@ public class Pokedex {
     }
 
     private static int getRandomPokeIndex() {
-        int index = (int) Math.round(Math.random() * CLASSICAL_POKEMON_RANGE);
+        int index = (int) Math.floor(Math.random() * CLASSICAL_POKEMON_RANGE);
         return index;
     }
 
