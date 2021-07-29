@@ -29,4 +29,12 @@ public class Attack {
         this.statChanges = statChanges;
         this.meta = meta;
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getCategory() {
+        return this.meta.category;
+    }
 }
