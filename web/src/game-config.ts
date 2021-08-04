@@ -1,8 +1,8 @@
 import { Types } from "phaser";
-import { MainScene } from "./scenes/MainScene";
+import { StandyScene } from "./scenes/StandbyScene";
 
 export const gameConfig: Types.Core.GameConfig = {
-    scene: MainScene,
+    scene: StandyScene,
     type: Phaser.AUTO,
     dom: {
         createContainer: true,
