@@ -1,16 +1,8 @@
 import { Scene } from "phaser";
 import { isProd } from "../dev-config";
+import { ApiRes, IPokemon } from "../interfaces";
+import { MainScene } from "./MainScene";
 import { Scenes } from "./Scenes";
-
-interface IPokemon {
-    name: string;
-    frontSprite: string;
-    backSprite: string;
-}
-interface ApiRes {
-    redTeam: IPokemon[];
-    blueTeam: IPokemon[];
-}
 
 const isIPokemon = (x: unknown & Partial<IPokemon>) => {
     if (typeof x !== "object") {
@@ -80,6 +72,8 @@ export class StandyScene extends Scene {
             const blueTeam = getTeamRow(data, "blue");
             const vs = getVersusText();
             teams.append(redTeam, vs, blueTeam);
+            const mainscene = this.scene.add(Scenes.Main, MainScene);
+            this.scene.start(mainscene, data);
         });
     }
 }
