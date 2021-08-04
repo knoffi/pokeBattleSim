@@ -1,5 +1,5 @@
 package com.example.demo;
 
-public enum HTTPMode {
+public enum RequestMode {
     TRADITIONAL_OLD, JAVA_11
 }
