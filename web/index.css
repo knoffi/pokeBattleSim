@@ -37,6 +37,26 @@ h1 {
     font-size: xx-large;
 }
 
-.gamecontainer {
-    display: none;
+.gameboy {
+    content: url(./assets/gameboyadvance.png);
+    max-width: 800px;
 }
+
+.gameboycontainer {
+    position: relative;
+}
+
+#game {
+    position: absolute; /* relative to gameboycontainer */
+    left: 193px;
+    top: 67px;
+}
+
+.gamecontainer {
+    display: flex;
+    justify-content: center;
+}
+
+/* .gamecontainer {
+    display: none;
+} */

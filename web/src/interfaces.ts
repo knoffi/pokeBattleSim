@@ -7,4 +7,10 @@ export interface IPokemon {
 export interface ApiRes {
     redTeam: IPokemon[];
     blueTeam: IPokemon[];
+    rounds: Array<{
+        redCombatant: string;
+        blueCombatant: string;
+        blueWon: boolean;
+    }>;
+    blueWon: boolean;
 }

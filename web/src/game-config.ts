@@ -16,12 +16,9 @@ export const gameConfig: Types.Core.GameConfig = {
     pixelArt: true,
     scale: {
         parent: "game",
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: Phaser.Scale.NONE,
         // OBS browser overlay dimensions
-        width: 1440,
-        height: 1080,
-        // width: window.innerWidth * window.devicePixelRatio,
-        // height: window.innerHeight * window.devicePixelRatio,
+        width: 293, // gba screen width
+        height: 198, // gba screen height
     },
 };
