@@ -1,5 +1,5 @@
 import { GUI } from "dat.gui";
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 import { ApiRes } from "../interfaces";
 import { Color } from "../styles/Color";
 import { Scenes } from "./Scenes";
@@ -8,6 +8,9 @@ const cfg = {};
 
 export class MainScene extends Scene {
     private battle!: ApiRes;
+    private round!: number;
+    private blue: GameObjects.Image | undefined;
+    private red: GameObjects.Image | undefined;
 
     public constructor() {
         super({
@@ -28,52 +31,107 @@ export class MainScene extends Scene {
     }
 
     public create(): void {
+        this.round = 0;
+
         const gui = new GUI();
 
-        this.cameras.main.setBackgroundColor(Color.SwitchedOffGrey);
+        this.cameras.main.setBackgroundColor(Color.InBattleWhite);
 
-        const blue = this.nextBluePkmn(0);
-        const red = this.nextRedPkmn(0);
+        // enforce renders
+        this.events.on("next round", () => this.nextRound());
+        this.events.emit("next round");
+    }
 
-        const i = 0;
-        if (this.battle.rounds[i].blueWon) {
-            const timeline = this.tweens.createTimeline();
-            timeline.add({
-                x: blue.x - 0.8 * (blue.x - red.x), // linear combination
-                y: blue.y - 0.8 * (blue.y - red.y),
-                targets: [blue],
-                ease: "sine",
-                duration: 250,
-                yoyo: true,
-            });
-            timeline.add({ delay: 100, alpha: 0, duration: 0, targets: [red] });
-            timeline.add({ delay: 100, alpha: 1, duration: 1, targets: [red] });
-            timeline.add({ delay: 100, alpha: 0, duration: 0, targets: [red] });
-            timeline.add({ delay: 100, alpha: 1, duration: 1, targets: [red] });
-            timeline.add({
-                delay: 200,
-                y: 500,
-                duration: 200,
-                targets: [red],
-            });
-            timeline.play();
+    /** recursively calling this method via event. Anchor on all rounds having been displayed. */
+    private nextRound() {
+        const finalRoundEnded = this.round >= this.battle.rounds.length;
+        if (finalRoundEnded) {
+            return;
         }
-        // TODO remove test images
-        // Do stuff
+
+        const round = this.battle.rounds[this.round];
+        this.blue = this.blue?.active
+            ? this.blue
+            : this.nextBluePkmn(round.blueCombatant);
+        this.red = this.red?.active
+            ? this.red
+            : this.nextRedPkmn(round.redCombatant);
+
+        const onDefeat = (defender: GameObjects.Image | undefined) => () => {
+            defender?.setActive(false).setVisible(false);
+            this.round++;
+            this.events.emit("next round");
+        };
+        if (round.blueWon) {
+            const timeline = this.attackAndDie(this.blue, this.red);
+            timeline.once("complete", onDefeat(this.red));
+        } else {
+            const timeline = this.attackAndDie(this.red, this.blue);
+            timeline.once("complete", onDefeat(this.blue));
+        }
     }
 
-    private nextBluePkmn(index: number) {
-        const blue = this.add
-            .image(230, 50, this.battle.blueTeam[index].name)
-            .setScale(1.6);
-        return blue;
+    private attackAndDie(
+        attacker: GameObjects.Image,
+        defender: GameObjects.Image
+    ) {
+        const timeline = this.tweens.createTimeline();
+        // wait after spawning enemy, then attack
+        timeline.add({
+            delay: 500,
+            x: attacker.x - 0.8 * (attacker.x - defender.x), // linear combination
+            y: attacker.y - 0.8 * (attacker.y - defender.y),
+            targets: [attacker],
+            ease: "sine",
+            duration: 250,
+            yoyo: true,
+        });
+        // start blinking
+        timeline.add({
+            delay: 100,
+            alpha: 0,
+            duration: 0,
+            targets: [defender],
+        });
+        timeline.add({
+            delay: 100,
+            alpha: 1,
+            duration: 1,
+            targets: [defender],
+        });
+        timeline.add({
+            delay: 100,
+            alpha: 0,
+            duration: 0,
+            targets: [defender],
+        });
+        timeline.add({
+            delay: 100,
+            alpha: 1,
+            duration: 1,
+            targets: [defender],
+        });
+        // end blinking
+        // start fall down
+        timeline.add({
+            delay: 200,
+            y: 500,
+            duration: 200,
+            targets: [defender],
+        });
+        timeline.play();
+        return timeline;
     }
 
-    private nextRedPkmn(index: number) {
-        const red = this.add
-            .image(70, 145, withBack(this.battle.redTeam[0].name))
-            .setScale(1.6);
-        return red;
+    private nextBluePkmn(pokemon: string) {
+        return this.add.image(230, 50, pokemon).setScale(1.6);
+    }
+
+    private nextRedPkmn(pokemon: string) {
+        return this.add
+            .image(70, 145, withBack(pokemon))
+            .setScale(1.6)
+            .setDepth(1);
     }
 }
 

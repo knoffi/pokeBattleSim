@@ -6,7 +6,7 @@ import { MainScene } from "./MainScene";
 import { Scenes } from "./Scenes";
 
 const cfg = {
-    minTimeShowingStartScreenInMs: 100, // TODO set back to ~1500
+    minTimeShowingStartScreenInMs: 1500,
 };
 
 const isIPokemon = (x: unknown & Partial<IPokemon>) => {
@@ -46,8 +46,7 @@ function assertApiRes(x: undefined | Partial<ApiRes>): asserts x is ApiRes {
     }
 }
 
-const devUrl =
-    "https://raw.githubusercontent.com/proSingularity/pokeBattleSim/main/db.json";
+const devUrl = "./assets/db.json";
 const url =
     "https://raw.githubusercontent.com/knoffi/pokeBattleSim/main/db.json";
 
