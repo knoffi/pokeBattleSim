@@ -1,10 +1,13 @@
-// @ts-check
+// @ts-nocheck
 
 // TODO remove dev fixture for production
+// @ts-ignore
 const isProduction = false;
 
+// @ts-ignore
 const devUrl =
   "https://raw.githubusercontent.com/proSingularity/pokeBattleSim/main/db.json";
+// @ts-ignore
 const url =
   "https://raw.githubusercontent.com/knoffi/pokeBattleSim/main/db.json";
 
@@ -22,6 +25,7 @@ const url =
  * }} ApiRes
  */
 
+// @ts-ignore
 const startBattle = document.querySelector("#start-battle-btn");
 
 startBattle.addEventListener("click", async () => {
