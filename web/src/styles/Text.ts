@@ -50,6 +50,3 @@ export const TextConfig: { [key: string]: Style } = {
         color: Color.HackerGreen,
     },
 };
-
-export const setDefaultTextStyle = (text: GameObjects.Text) =>
-    text.setStyle(TextConfig.lg).setColor(Color.White);

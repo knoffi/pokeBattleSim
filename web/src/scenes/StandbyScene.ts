@@ -107,35 +107,3 @@ export class StandyScene extends Scene {
         });
     }
 }
-
-function getVersusText() {
-    const vs = document.createElement("i");
-    vs.className = "vs";
-    vs.innerHTML = "VS";
-    return vs;
-}
-
-function getTeamRow(data: ApiRes, color: "red" | "blue") {
-    const team = document.createElement("div");
-    team.className = "row";
-    team.id = `${color}-team`;
-    const teamData = data[`${color}Team` as const];
-
-    const pkmnsAsRows = teamData.map((pkmn) => {
-        const pkmnNode = document.createElement("div");
-        pkmnNode.className = `col image-with-caption`;
-        const sprite = document.createElement("img");
-        sprite.src = pkmn.frontSprite;
-        sprite.alt = pkmn.name;
-
-        const caption = document.createElement("p");
-        caption.innerHTML = pkmn.name;
-
-        pkmnNode.append(sprite, caption);
-
-        return pkmnNode;
-    });
-
-    team.append(...pkmnsAsRows);
-    return team;
-}
