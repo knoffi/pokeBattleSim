@@ -59,7 +59,3 @@ class IntermediateResult {
     public Pokemon[] redTeam;
     public Pokemon[] blueTeam;
 }
-
-class DuellResult {
-
-}
