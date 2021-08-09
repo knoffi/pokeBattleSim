@@ -26,7 +26,8 @@ public class DuellController {
                     .toArray(LogPokemon[]::new);
             TrainerDuell duell = new TrainerDuell(red, blue);
             LogRound[] rounds = duell.letThemFight();
-            return new DuellLog(blueLogPokemon, redLogPokemon, rounds);
+            boolean blueWon = rounds[rounds.length - 1].blueWon;
+            return new DuellLog(blueLogPokemon, redLogPokemon, rounds, blueWon);
         } catch (RuntimeException | IOException | InterruptedException e) {
             System.out.println(e);
         }
@@ -39,4 +40,5 @@ public class DuellController {
         return randomTeam;
 
     }
+
 }
