@@ -46,7 +46,7 @@ function assertApiRes(x: undefined | Partial<ApiRes>): asserts x is ApiRes {
     }
 }
 
-const devUrl = "./assets/db.json";
+const devUrl = "./db.json";
 const url =
     "https://raw.githubusercontent.com/knoffi/pokeBattleSim/main/db.json";
 
