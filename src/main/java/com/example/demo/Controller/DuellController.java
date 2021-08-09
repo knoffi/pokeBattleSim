@@ -1,9 +1,12 @@
 package com.example.demo.Controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Pokedex.Pokedex;
+import com.example.demo.Pokemon.Pokemon;
+import com.example.demo.TrainerDuell.TrainerDuell;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,25 +16,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class DuellController {
     @GetMapping(value = "/getTrainerDuell")
     public @ResponseBody DuellLog index() {
-        String[] firstRoundText = { "Looks like we are in a Pokemon battle, M-M-Morty", "Oh geez, Rick!" };
-        LogRound firstRound = new LogRound("ekans", "magnemite", firstRoundText, true);
-        LogRound[] rounds = { firstRound };
-        LogPokemon bluePokemon;
-        LogPokemon redPokemon;
         try {
-            bluePokemon = Pokedex.getPokemon(10, RequestMode.JAVA_11).convert().getLogData();
-            redPokemon = Pokedex.getPokemon(15, RequestMode.JAVA_11).convert().getLogData();
+            Pokemon bluePokemon = Pokedex.getPokemon(10, RequestMode.JAVA_11).convert();
+            Pokemon redPokemon = Pokedex.getPokemon(15, RequestMode.JAVA_11).convert();
+            Pokemon[] blue = { bluePokemon, bluePokemon };
+            Pokemon[] red = { redPokemon };
+            LogPokemon[] blueLogPokemon = Arrays.stream(blue).map(pokemon -> pokemon.getLogData())
+                    .toArray(LogPokemon[]::new);
+            LogPokemon[] redLogPokemon = Arrays.stream(red).map(pokemon -> pokemon.getLogData())
+                    .toArray(LogPokemon[]::new);
+            TrainerDuell duell = new TrainerDuell(red, blue);
+            LogRound[] rounds = duell.letThemFight();
+            return new DuellLog(blueLogPokemon, redLogPokemon, rounds);
         } catch (RuntimeException | IOException | InterruptedException e) {
             System.out.println(e);
-            bluePokemon = new LogPokemon("magnemite",
-                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/81.png",
-                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/81.png");
-            redPokemon = new LogPokemon("magnemite",
-                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/81.png",
-                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/81.png");
         }
-        LogPokemon[] blue = { bluePokemon, bluePokemon };
-        LogPokemon[] red = { redPokemon };
-        return new DuellLog(blue, red, rounds);
+        return new DuellLog();
     }
 }

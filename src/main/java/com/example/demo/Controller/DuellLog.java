@@ -5,7 +5,16 @@ public class DuellLog {
     public LogPokemon[] redTeam;
     public LogRound[] rounds;
 
-    DuellLog(LogPokemon[] blue, LogPokemon[] red, LogRound[] rounds) {
+    public DuellLog(LogPokemon[] blue, LogPokemon[] red, LogRound[] rounds) {
+        this.blueTeam = blue;
+        this.redTeam = red;
+        this.rounds = rounds;
+    }
+
+    public DuellLog() {
+        LogPokemon[] blue = {};
+        LogPokemon[] red = {};
+        LogRound[] rounds = {};
         this.blueTeam = blue;
         this.redTeam = red;
         this.rounds = rounds;
