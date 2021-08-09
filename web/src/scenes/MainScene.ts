@@ -81,6 +81,7 @@ export class MainScene extends Scene {
             delay: 500,
             x: attacker.x - 0.8 * (attacker.x - defender.x), // linear combination
             y: attacker.y - 0.8 * (attacker.y - defender.y),
+            scale: attacker.scale - 0.8 * (attacker.scale - defender.scale), // scale to indicate distance to camera, i.e. coming closer or moving away from the camera
             targets: [attacker],
             ease: "sine",
             duration: 250,
@@ -124,13 +125,13 @@ export class MainScene extends Scene {
     }
 
     private nextBluePkmn(pokemon: string) {
-        return this.add.image(230, 50, pokemon).setScale(1.6);
+        return this.add.image(230, 50, pokemon).setScale(1.4);
     }
 
     private nextRedPkmn(pokemon: string) {
         return this.add
             .image(70, 145, withBack(pokemon))
-            .setScale(1.6)
+            .setScale(1.6) // slightly larger than blue for perspective
             .setDepth(1);
     }
 }
