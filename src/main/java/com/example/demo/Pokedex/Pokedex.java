@@ -134,7 +134,7 @@ public class Pokedex {
     }
 
     private static int getRandomPokeIndex() {
-        int index = (int) Math.floor(Math.random() * CLASSICAL_POKEMON_RANGE);
+        int index = 1 + (int) Math.floor(Math.random() * CLASSICAL_POKEMON_RANGE);
         return index;
     }
 
