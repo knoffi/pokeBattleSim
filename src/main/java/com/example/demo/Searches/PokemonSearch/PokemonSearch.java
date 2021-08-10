@@ -7,6 +7,7 @@ public class PokemonSearch {
     public StatBySearch[] stats;
     public TypeHolder[] types;
     public MoveBySearch[] moves;
+    public SpritesBySearch sprites;
 
     public Pokemon convert() {
         return new Pokemon(this);
