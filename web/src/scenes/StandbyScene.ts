@@ -50,7 +50,7 @@ const devUrl = "./db.json";
 const url =
     "https://raw.githubusercontent.com/knoffi/pokeBattleSim/main/db.json";
 
-export class StandyScene extends Scene {
+export class StandbyScene extends Scene {
     constructor(key = Scenes.Standby) {
         super(key);
     }
