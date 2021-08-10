@@ -4,12 +4,10 @@ const CopyPlugin = require("copy-webpack-plugin");
 const pathToPhaser = path.join(__dirname, "/node_modules/phaser/");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
 
-const OUTPUT_DIR = process.env.OUTPUT_DIR || "build";
-
 module.exports = {
     entry: "./src/index.ts",
     output: {
-        path: path.resolve(__dirname, OUTPUT_DIR),
+        path: path.resolve(__dirname, "build"),
         filename: "bundle.js",
     },
     module: {
