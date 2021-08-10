@@ -86,7 +86,6 @@ export class StandyScene extends Scene {
                 (x) => x.json() as Partial<ApiRes>
             );
             assertApiRes(data);
-            // NOTE: don't use scene.add without true + scene.start here, otherwise phaser will just ignore the start call for some reason. Bug?
             const startMainScene = () =>
                 this.scene.add(Scenes.Main, MainScene, true, data);
 
