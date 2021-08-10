@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.example.demo.RequestMode;
+import com.example.demo.Controller.LogPokemon;
 import com.example.demo.Pokedex.Pokedex;
 import com.example.demo.Searches.MoveSearch.MoveSearch;
 import com.example.demo.Searches.PokemonSearch.MoveBySearch;
@@ -16,12 +17,16 @@ public class Pokemon {
     private Stat[] stats;
     private Type[] types;
     private Attack[] attacks;
+    private String frontSpriteUrl;
+    private String backSpriteUrl;
 
     public Pokemon(PokemonSearch data) {
         this.name = data.name;
         this.stats = Arrays.stream(data.stats).map(StatBySearch::convert).toArray(Stat[]::new);
         this.types = Arrays.stream(data.types).map(TypeHolder::convert).toArray(Type[]::new);
         this.attacks = getAttacks(data.moves);
+        this.backSpriteUrl = data.sprites.back_default;
+        this.frontSpriteUrl = data.sprites.front_default;
     }
 
     public void print() {
@@ -41,6 +46,11 @@ public class Pokemon {
         String completePrinter = namePrinter + statPrinter + " my types:\n" + typePrinter + " my attacks:\n"
                 + attackPrinter;
         System.out.println(completePrinter);
+    }
+
+    public LogPokemon getLogData() {
+
+        return new LogPokemon(this.name, this.backSpriteUrl, this.frontSpriteUrl);
     }
 
     public String getName() {
