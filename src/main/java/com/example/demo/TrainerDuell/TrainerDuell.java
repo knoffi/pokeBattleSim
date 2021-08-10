@@ -3,7 +3,6 @@ package com.example.demo.TrainerDuell;
 import java.util.Stack;
 
 import com.example.demo.Combat.Combat;
-import com.example.demo.Combat.CombatResult;
 import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Pokemon;
 
@@ -30,12 +29,9 @@ public class TrainerDuell {
         while (blueCanFight && redCanFight) {
             Pokemon blueFighter = this.blueTeam.pop();
             Pokemon redFighter = this.redTeam.pop();
-            // TODO: directly convert to LogRound instead if CombatResult
-            CombatResult intermediateResult = new Combat(redFighter, blueFighter).getResult();
-            LogRound roundSummary = new LogRound(redFighter.getName(), blueFighter.getName(),
-                    intermediateResult.commentary, intermediateResult.blueWon);
+            LogRound roundSummary = new Combat(redFighter, blueFighter).getResult();
             this.duellSummary.push(roundSummary);
-            if (intermediateResult.blueWon) {
+            if (roundSummary.blueWon) {
                 this.blueTeam.push(blueFighter);
                 redCanFight = !this.redTeam.empty();
             } else {
