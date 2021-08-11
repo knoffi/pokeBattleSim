@@ -1,5 +1,6 @@
-import { GUI } from "dat.gui";
 import { GameObjects, Scene } from "phaser";
+import { Pokemon } from "../components/Pokemon";
+import { makeBluePokemon, makeRedPokemon } from "../components/TeamPokemons";
 import { ApiRes } from "../interfaces";
 import { Color } from "../styles/Color";
 import { Scenes } from "./Scenes";
@@ -9,8 +10,8 @@ const cfg = {};
 export class MainScene extends Scene {
     private battle!: ApiRes;
     private round!: number;
-    private blue: GameObjects.Image | undefined;
-    private red: GameObjects.Image | undefined;
+    private blue: Pokemon | undefined;
+    private red: Pokemon | undefined;
 
     public constructor() {
         super({
@@ -32,8 +33,6 @@ export class MainScene extends Scene {
 
     public create(): void {
         this.round = 0;
-
-        const gui = new GUI();
 
         this.cameras.main.setBackgroundColor(Color.InBattleWhite);
 
@@ -57,8 +56,8 @@ export class MainScene extends Scene {
             ? this.red
             : this.nextRedPkmn(round.redCombatant);
 
-        const onDefeat = (defender: GameObjects.Image | undefined) => () => {
-            defender?.setActive(false).setVisible(false);
+        const onDefeat = (defender: Pokemon | undefined) => () => {
+            defender?.deactivate();
             this.round++;
             this.events.emit("next round");
         };
@@ -125,15 +124,10 @@ export class MainScene extends Scene {
     }
 
     private nextBluePkmn(pokemon: string) {
-        return this.add.image(230, 50, pokemon).setScale(1.4);
+        return makeBluePokemon(this, pokemon);
     }
 
     private nextRedPkmn(pokemon: string) {
-        return this.add
-            .image(70, 145, withBack(pokemon))
-            .setScale(1.6) // slightly larger than blue for perspective
-            .setDepth(1);
+        return makeRedPokemon(this, pokemon);
     }
 }
-
-const withBack = (s: string) => `${s}back`;
