@@ -1,0 +1,6 @@
+web
+!web/build
+Dockerfile
+db.json
+**/*.md
+.git

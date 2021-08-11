@@ -47,8 +47,7 @@ function assertApiRes(x: undefined | Partial<ApiRes>): asserts x is ApiRes {
 }
 
 const devUrl = "./db.json";
-const url =
-    "https://raw.githubusercontent.com/knoffi/pokeBattleSim/main/db.json";
+const url = "/getTrainerDuell";
 
 export class StandbyScene extends Scene {
     constructor(key = Scenes.Standby) {

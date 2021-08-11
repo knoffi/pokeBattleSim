@@ -67,6 +67,23 @@
         {
             "redCombatant": "meowth",
             "blueCombatant": "ekans",
+            "battleLog": [
+                {
+                    "type": "textonly",
+                    "text": "I choose you, meowth!"
+                },
+                {
+                    "type": "attack",
+                    "isBlue": true,
+                    "attackName": "struggle",
+                    "damage": 821,
+                    "superEffective": true
+                },
+                {
+                    "type": "win",
+                    "isBlue": true
+                }
+            ],
             "blueWon": true
         },
         {
