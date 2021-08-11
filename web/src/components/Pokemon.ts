@@ -1,4 +1,5 @@
-import { GameObjects, Scene, Types } from "phaser";
+import { GameObjects, Scene } from "phaser";
+import { TextConfig } from "../styles/TextConfig";
 
 interface IConfig {
     x: number;
@@ -10,11 +11,6 @@ interface IConfig {
     depth: number;
     name: string;
 }
-
-const nameTextStyle: Types.GameObjects.Text.TextStyle = {
-    fontSize: "20px",
-    color: "#010001",
-};
 
 export class Pokemon extends GameObjects.Image {
     private nameText: GameObjects.Text;
@@ -28,7 +24,7 @@ export class Pokemon extends GameObjects.Image {
         this.setScale(scale).setDepth(depth);
 
         this.nameText = scene.add
-            .text(nameTextX, nameTextY, name.toUpperCase(), nameTextStyle)
+            .text(nameTextX, nameTextY, name.toUpperCase(), TextConfig.md)
             .setDepth(-1);
     }
 
