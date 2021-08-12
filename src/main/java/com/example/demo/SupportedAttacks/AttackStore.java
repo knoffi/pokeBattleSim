@@ -1,7 +1,6 @@
 package com.example.demo.SupportedAttacks;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,7 +15,7 @@ import com.example.demo.Searches.MoveSearch.MoveSearch;
 import com.example.demo.Searches.PokemonSearch.NameHolder;
 
 public class AttackStore {
-    private final static String SUPPORT_ATTACKS_FILE_PATH = "./pokeBattleSim/src/main/java/com/example/demo/SupportedAttacks/supportAttackNames.txt";
+    private final static String SUPPORT_ATTACKS_FILE_PATH = "./src/main/java/com/example/demo/SupportedAttacks/supportAttackNames.txt";
 
     private static String[] loadSupportedNames() {
         File file = new File(SUPPORT_ATTACKS_FILE_PATH);
@@ -30,7 +29,7 @@ public class AttackStore {
             sc.close();
             String[] result = supportedAttacksString.split(" ");
             return result;
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("___FILE WITH SUPPORTED ATTACKS WAS NOT FOUND" + e.getClass());
         }
         ;
