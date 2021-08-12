@@ -19,6 +19,7 @@ public class Pokemon {
     private Attack[] attacks;
     private String frontSpriteUrl;
     private String backSpriteUrl;
+    private int exhaustionPoint;
 
     public Pokemon(PokemonSearch data) {
         this.name = data.name;
@@ -27,6 +28,21 @@ public class Pokemon {
         this.attacks = getAttacks(data.moves);
         this.backSpriteUrl = data.sprites.back_default;
         this.frontSpriteUrl = data.sprites.front_default;
+        this.exhaustionPoint = 0;
+    }
+
+    public int getStatSum() {
+        var statValues = Arrays.stream(this.stats).map(stat -> stat.value);
+        int sum = statValues.reduce(0, (cur, prev) -> cur + prev);
+        return sum;
+    }
+
+    public int getExhaustion() {
+        return this.exhaustionPoint;
+    }
+
+    public void addExhaustion() {
+        this.exhaustionPoint++;
     }
 
     public void print() {
