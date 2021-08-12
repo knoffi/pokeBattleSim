@@ -16,7 +16,6 @@ import com.example.demo.Searches.MoveSearch.MoveSearch;
 import com.example.demo.Searches.PokemonSearch.NameHolder;
 
 public class AttackStore {
-    // TODO make relative. Consider using https://www.sqlite.org/index.html?
     private final static String SUPPORT_ATTACKS_FILE_PATH = "./pokeBattleSim/src/main/java/com/example/demo/SupportedAttacks/supportAttackNames.txt";
 
     private static String[] loadSupportedNames() {
