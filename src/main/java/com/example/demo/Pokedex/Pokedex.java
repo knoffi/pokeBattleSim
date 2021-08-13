@@ -24,10 +24,11 @@ public class Pokedex {
     public static final int CLASSICAL_POKEMON_RANGE = 151;
     public static final String HOST = "https://pokeapi.co/";
     public static final String API_PATH = "api/v2/";
-    public static final String POKEMON_PATH = "pokemon/";;
+    public static final String POKEMON_PATH = "pokemon/";
     public static final String CLASSICAL_POKEMON_QUERY = "?limit=" + CLASSICAL_POKEMON_RANGE + "/";
     public static final String CLASSICAL_VERSION_PATH = "version-group/1/";
     public static final String GENERATION_I_PATH = "generation/1/";
+    public static final String CLASSICAL_TYPES_PATH = "type?limit=16";
 
     public static List<String> getClassicalPokemons(RequestMode mode) throws IOException, InterruptedException {
         PokemonBySearch[] pokemons = mode == RequestMode.JAVA_11 ? getClassicalPokemonModernly()
