@@ -12,16 +12,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TypeStore {
     final static private String TYPE_FILE_PATH = "./pokeBattleSim/src/main/java/com/example/demo/TypeEffects/TypeTable.json";
+    // BEWARE: api does not support checks for types form classical generation, thus
+    // index array is hard coded
+    // TODO: Test with api call whether we get the desired hard coded names by hard
+    // coded index
+    final static private int[] CLASSICAL_TYPE_INDICES = { 1, 2, 3, 4, 5, 6, 7, 8,
+            /* path ending "9" is steel type, which is not classical */ 10, 11, 12, 13, 14, 15, 16 };
 
     public static void updateTypes() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
         try {
             FileWriter file = new FileWriter(TYPE_FILE_PATH);
-            String data = mapper.writeValueAsString(getTypeData(1));
+            TypeTable table = new TypeTable(getTypes());
+            String data = mapper.writeValueAsString(table);
             file.write(data);
             file.close();
-            NameHolder[] types = getTypes();
 
         } catch (IOException e) {
             System.out.println("___WRITING TYPE TABLE FAILED___" + e.getClass());
@@ -29,16 +35,13 @@ public class TypeStore {
 
     };
 
-    private static NameHolder[] getTypes() {
-        try {
-            NameHolder[] types = Pokedex.getPokeData(Pokedex.API_PATH + Pokedex.CLASSICAL_TYPES_PATH, TypesSearch.class,
-                    RequestMode.JAVA_11).results;
-            return types;
-        } catch (IOException | InterruptedException e) {
-            System.out.println("___FAILING TYPE LOADING___" + e.getClass());
+    private static TypeData[] getTypes() {
+        TypeData[] types = new TypeData[15];
+        for (int i = 0; i < CLASSICAL_TYPE_INDICES.length; i++) {
+            int typeIndex = CLASSICAL_TYPE_INDICES[i];
+            types[i] = getTypeData(typeIndex);
         }
-
-        return new NameHolder[0];
+        return types;
     }
 
     private static TypeData getTypeData(int typeIndex) {
@@ -56,6 +59,10 @@ public class TypeStore {
 
 class TypeTable {
     private TypeData[] types;
+
+    TypeTable() {
+
+    }
 
     TypeTable(TypeData[] types) {
         this.types = types;
