@@ -2,23 +2,24 @@ package com.example.demo.TypeEffects;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Pokedex.Pokedex;
 import com.example.demo.Searches.PokemonSearch.NameHolder;
-
-import org.json.simple.JSONObject;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TypeStore {
     final static private String TYPE_FILE_PATH = "./pokeBattleSim/src/main/java/com/example/demo/TypeEffects/TypeTable.json";
 
     public static void updateTypes() {
-        JSONObject test = new JSONObject(getTypeData(1));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
         try {
             FileWriter file = new FileWriter(TYPE_FILE_PATH);
-            file.write(test.toJSONString());
+            String data = mapper.writeValueAsString(getTypeData(1));
+            file.write(data);
             file.close();
             NameHolder[] types = getTypes();
 
@@ -40,23 +41,23 @@ public class TypeStore {
         return new NameHolder[0];
     }
 
-    private static Map<String, String[]> getTypeData(int typeIndex) {
+    private static TypeData getTypeData(int typeIndex) {
         try {
             var types = Pokedex.getPokeData(Pokedex.API_PATH + "type/" + typeIndex + "/", TypeDataSearch.class,
-                    RequestMode.JAVA_11).getDamageMap();
-            return types;
+                    RequestMode.JAVA_11);
+            return types.convert();
         } catch (IOException | InterruptedException e) {
             System.out.println("___FAILING TYPE LOADING___" + e.getClass());
         }
 
-        return new HashMap<>();
+        return new TypeData();
     }
 }
 
 class TypeTable {
-    private NameHolder[] types;
+    private TypeData[] types;
 
-    TypeTable(NameHolder[] types) {
+    TypeTable(TypeData[] types) {
         this.types = types;
     }
 }
@@ -65,19 +66,34 @@ class TypeDataSearch {
     public DamageRelationsBySearch damage_relations;
     public String name;
 
-    public Map<String, String[]> getDamageMap() {
-        Map<String, String[]> damageMap = new HashMap();
-        System.out.println(this.damage_relations);
-        System.out.println("okay");
-        damageMap.put("double_damage_from", this.damage_relations.getDamageName(0));
-        damageMap.put("double_damage_to", this.damage_relations.getDamageName(1));
-        damageMap.put("half_damage_from", this.damage_relations.getDamageName(2));
-        damageMap.put("half_damage_to", this.damage_relations.getDamageName(3));
-        damageMap.put("no_damage_from", this.damage_relations.getDamageName(4));
-        damageMap.put("no_damage_to", this.damage_relations.getDamageName(5));
-        return damageMap;
+    public TypeData convert() {
+        return new TypeData(this);
     }
 
+}
+
+class TypeData {
+    private String typeName;
+    private String[] doubleDamageFrom;
+    private String[] doubleDamageTo;
+    private String[] halfDamageFrom;
+    private String[] halfDamageTo;
+    private String[] noDamageFrom;
+    private String[] noDamageTo;
+
+    TypeData() {
+
+    }
+
+    TypeData(TypeDataSearch data) {
+        this.doubleDamageFrom = data.damage_relations.getDamageNames(0);
+        this.doubleDamageTo = data.damage_relations.getDamageNames(1);
+        this.halfDamageFrom = data.damage_relations.getDamageNames(2);
+        this.halfDamageTo = data.damage_relations.getDamageNames(3);
+        this.noDamageFrom = data.damage_relations.getDamageNames(4);
+        this.noDamageTo = data.damage_relations.getDamageNames(5);
+        this.typeName = data.name;
+    }
 }
 
 class TypesSearch {

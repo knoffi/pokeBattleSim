@@ -12,7 +12,7 @@ public class DamageRelationsBySearch {
     public NameHolder[] no_damage_from;
     public NameHolder[] no_damage_to;
 
-    public String[] getDamageName(int relationIndex) {
+    public String[] getDamageNames(int relationIndex) {
         NameHolder[] damageHolders = this.getDamageHolder(relationIndex);
         return Arrays.stream(damageHolders).map(nameHolder -> nameHolder.name).toArray(String[]::new);
     }
