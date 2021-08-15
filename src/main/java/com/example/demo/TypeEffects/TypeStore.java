@@ -2,6 +2,8 @@ package com.example.demo.TypeEffects;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Pokedex.Pokedex;
@@ -55,6 +57,22 @@ public class TypeStore {
 
         return new TypeData();
     }
+
+    public static Effectiveness getEffectiveness(String pokeType, String attackType) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+        try {
+            Path jsonPath = Paths.get(TYPE_FILE_PATH);
+            TypeTable table = mapper.readValue(jsonPath.toFile(), TypeTable.class);
+            table.print();
+
+        } catch (IOException e) {
+            System.out.println("___FINDING TYPE TABLE FAILED___" + e.getClass());
+        }
+        return Effectiveness.NORMAL;
+
+    }
+
 }
 
 class TypeTable {
@@ -66,6 +84,10 @@ class TypeTable {
 
     TypeTable(TypeData[] types) {
         this.types = types;
+    }
+
+    void print() {
+        System.out.println(this.types.length);
     }
 }
 
