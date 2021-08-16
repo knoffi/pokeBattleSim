@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Optional;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Pokedex.Pokedex;
@@ -58,13 +60,13 @@ public class TypeStore {
         return new TypeData();
     }
 
-    public static Effectiveness getEffectiveness(String pokeType, String attackType) {
+    public static Effectiveness getEffectiveness(String pokemonType, String attackType) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
         try {
             Path jsonPath = Paths.get(TYPE_FILE_PATH);
             TypeTable table = mapper.readValue(jsonPath.toFile(), TypeTable.class);
-            table.print();
+            return table.getEffectiveness(pokemonType, attackType);
 
         } catch (IOException e) {
             System.out.println("___FINDING TYPE TABLE FAILED___" + e.getClass());
@@ -89,6 +91,22 @@ class TypeTable {
     void print() {
         System.out.println(this.types.length);
     }
+
+    public Effectiveness getEffectiveness(String pokemonType, String attackType) {
+        Optional<TypeData> typeRow = Arrays.stream(types).filter(type -> type.equals(attackType)).findAny();
+        if (typeRow.isEmpty()) {
+            try {
+                throw new Exception("MissingPokeTypeRow");
+            } catch (Throwable e) {
+                System.out.println("___NO ROW FOR THIS ATTACK TYPE___" + e.getClass());
+                return Effectiveness.NORMAL;
+            }
+        } else {
+            TypeData attackData = typeRow.get();
+            return attackData.getEffectivenessAgainstPokemon(pokemonType);
+
+        }
+    }
 }
 
 class TypeDataSearch {
@@ -112,6 +130,27 @@ class TypeData {
 
     TypeData() {
 
+    }
+
+    public Effectiveness getEffectivenessAgainstPokemon(String pokeType) {
+        boolean isEffective = Arrays.stream(this.doubleDamageTo).anyMatch(type -> type.equals(pokeType));
+        if (isEffective) {
+            return Effectiveness.EFFECTIVE;
+        }
+        boolean isHalfDmg = Arrays.stream(this.halfDamageTo).anyMatch(type -> type.equals(pokeType));
+        if (isHalfDmg) {
+            return Effectiveness.RESISTANT;
+        }
+        boolean isUseless = Arrays.stream(this.noDamageTo).anyMatch(type -> type.equals(pokeType));
+        if (isUseless) {
+            return Effectiveness.IMMUN;
+        } else {
+            return Effectiveness.NORMAL;
+        }
+    }
+
+    public boolean equals(String type) {
+        return type.equals(this.typeName);
     }
 
     TypeData(TypeDataSearch data) {
