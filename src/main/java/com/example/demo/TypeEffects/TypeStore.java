@@ -135,7 +135,7 @@ class TypeData {
     public Effectiveness getEffectivenessAgainstPokemon(String pokeType) {
         boolean isEffective = Arrays.stream(this.doubleDamageTo).anyMatch(type -> type.equals(pokeType));
         if (isEffective) {
-            return Effectiveness.EFFECTIVE;
+            return Effectiveness.VERY;
         }
         boolean isHalfDmg = Arrays.stream(this.halfDamageTo).anyMatch(type -> type.equals(pokeType));
         if (isHalfDmg) {
