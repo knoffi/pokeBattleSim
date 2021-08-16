@@ -34,6 +34,10 @@ public class Attack {
         this.meta = meta;
     }
 
+    public Type getType() {
+        return this.type;
+    }
+
     public String getName() {
         return this.name;
     }

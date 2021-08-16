@@ -3,7 +3,11 @@ package com.example.demo.Combat;
 import java.util.Stack;
 
 import com.example.demo.Controller.LogRound;
+import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.Pokemon;
+import com.example.demo.Pokemon.Type;
+import com.example.demo.TypeEffects.Effectiveness;
+import com.example.demo.TypeEffects.TypeStore;
 
 public class Combat {
     private Pokemon red;
@@ -43,6 +47,9 @@ class BattleCalculation {
     }
 
     public boolean blueWins() {
+        System.out.println("_______________________________________");
+        System.out.println("Best attack of " + blue.getName() + " vs. " + red.getName() + " : ");
+        System.out.println(this.getBestAttackEffect(this.blue.getAttacks(), this.red.getPokeTypes()));
         int blueVictoryPoints = 0;
         blueVictoryPoints += this.blueStatBonus();
         blueVictoryPoints += this.blueExhaustionBonus();
@@ -53,6 +60,40 @@ class BattleCalculation {
         } else {
             return this.blueWinsRandomly();
         }
+    }
+
+    private Effectiveness getBestAttackEffect(Attack[] attacks, Type[] defender) {
+        Effectiveness bestEffectivness = Effectiveness.IMMUN;
+        for (Attack attack : attacks) {
+            bestEffectivness = this.getMax(bestEffectivness, attack.getType(), defender);
+        }
+        return bestEffectivness;
+    }
+
+    private Effectiveness getMax(Effectiveness prevEffectiveness, Type attackType, Type[] defenderTypes) {
+        Effectiveness attackEffect = this.getEffectiveness(attackType, defenderTypes);
+        if (prevEffectiveness.value > attackEffect.value) {
+            return prevEffectiveness;
+        } else {
+            return attackEffect;
+        }
+    }
+
+    private Effectiveness getEffectiveness(Type attackType, Type[] defenderTypes) {
+        // TODO: use OPTIONAL instead
+        Type firstType, secondType;
+        double effectivenessValue;
+        firstType = defenderTypes[0];
+        if (defenderTypes.length == 1) {
+            effectivenessValue = TypeStore.getEffectiveness(firstType.name, attackType.name).value;
+        }
+
+        else {
+            secondType = defenderTypes[1];
+            effectivenessValue = TypeStore.getEffectiveness(firstType.name, attackType.name).value
+                    + TypeStore.getEffectiveness(firstType.name, attackType.name).value;
+        }
+        return Effectiveness.findKeyFromValue(effectivenessValue);
     }
 
     private int blueExhaustionBonus() {
