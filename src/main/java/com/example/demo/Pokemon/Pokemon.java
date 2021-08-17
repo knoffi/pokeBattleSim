@@ -49,10 +49,6 @@ public class Pokemon {
         return this.types;
     }
 
-    public Attack[] getAttacks() {
-        return this.attacks;
-    }
-
     public void print() {
         String namePrinter = "I am " + this.name + "\n";
         String statPrinter = "stats:\n";
@@ -81,13 +77,9 @@ public class Pokemon {
         return this.name;
     }
 
-    public String getFinishingBlow() {
+    public Attack[] getFinishingBlows() {
         Attack[] finishingAttacks = Arrays.stream(this.attacks).filter(Attack::doesDamage).toArray(Attack[]::new);
-        if (finishingAttacks.length > 0) {
-            int index = (int) Math.floor(Math.random() * finishingAttacks.length);
-            return finishingAttacks[index].getName();
-        }
-        return "struggle";
+        return finishingAttacks;
     }
 
     private static int[] getMoveSelection(int maxIndex) {
