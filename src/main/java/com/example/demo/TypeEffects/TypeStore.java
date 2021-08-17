@@ -98,7 +98,7 @@ class TypeTable {
             try {
                 throw new Exception("MissingPokeTypeRow");
             } catch (Throwable e) {
-                System.out.println("___NO ROW FOR ATTACK TYPE" + attackType.toUpperCase() + "___" + e.getClass());
+                System.out.println("___NO ROW FOR ATTACK TYPE " + attackType.toUpperCase() + "___" + e.getClass());
                 return Effectiveness.NORMAL;
             }
         } else {
