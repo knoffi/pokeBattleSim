@@ -106,7 +106,7 @@ class BattleCalculation {
         else {
             secondType = defenderTypes[1];
             effectivenessValue = TypeStore.getEffectiveness(firstType.name, attackType.name).value
-                    + TypeStore.getEffectiveness(firstType.name, attackType.name).value;
+                    + TypeStore.getEffectiveness(secondType.name, attackType.name).value;
         }
         return Effectiveness.findKeyFromValue(effectivenessValue);
     }
@@ -174,7 +174,7 @@ class AttackText {
                 effectString = "";
                 break;
         }
-        return this.attacker + " used " + this.attack + "! " + effectString;
+        return this.attacker + " uses " + this.attack + "! " + effectString;
     }
 
 }

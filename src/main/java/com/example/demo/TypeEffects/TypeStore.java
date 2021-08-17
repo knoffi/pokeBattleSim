@@ -121,11 +121,8 @@ class TypeDataSearch {
 
 class TypeData {
     private String typeName;
-    private String[] doubleDamageFrom;
     private String[] doubleDamageTo;
-    private String[] halfDamageFrom;
     private String[] halfDamageTo;
-    private String[] noDamageFrom;
     private String[] noDamageTo;
 
     TypeData() {
@@ -135,6 +132,7 @@ class TypeData {
     public Effectiveness getEffectivenessAgainstPokemon(String pokeType) {
         boolean isEffective = Arrays.stream(this.doubleDamageTo).anyMatch(type -> type.equals(pokeType));
         if (isEffective) {
+
             return Effectiveness.VERY;
         }
         boolean isHalfDmg = Arrays.stream(this.halfDamageTo).anyMatch(type -> type.equals(pokeType));
@@ -154,11 +152,8 @@ class TypeData {
     }
 
     TypeData(TypeDataSearch data) {
-        this.doubleDamageFrom = data.damage_relations.getDamageNames(0);
         this.doubleDamageTo = data.damage_relations.getDamageNames(1);
-        this.halfDamageFrom = data.damage_relations.getDamageNames(2);
         this.halfDamageTo = data.damage_relations.getDamageNames(3);
-        this.noDamageFrom = data.damage_relations.getDamageNames(4);
         this.noDamageTo = data.damage_relations.getDamageNames(5);
         this.typeName = data.name;
     }
