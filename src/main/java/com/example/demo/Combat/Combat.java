@@ -47,7 +47,7 @@ class BattleCalculation {
     /**
      *
      */
-    private static final int ATTACK_WEIGHT = 7;
+    private static final int ATTACK_WEIGHT = 8;
     private Pokemon blue;
     private Pokemon red;
     private AttackNameAndEffect blueAttack;
@@ -77,7 +77,13 @@ class BattleCalculation {
     }
 
     private double blueAttackBonus() {
-        return 0;
+        double blueImpact = this.blueAttack.effect.value * ATTACK_WEIGHT;
+        double redImpact = this.redAttack.effect.value * ATTACK_WEIGHT;
+        if (blueImpact == Effectiveness.IMMUN.value && redImpact == Effectiveness.IMMUN.value) {
+            return 0;
+        } else {
+            return blueImpact - redImpact;
+        }
 
     }
 
@@ -158,7 +164,7 @@ class BattleCalculation {
     private double blueSumDiff() {
         int sumRed = this.red.getStatSum();
         int sumBlue = this.blue.getStatSum();
-        return Math.round((sumBlue - sumRed) / STAT_WEIGHT);
+        return Math.round((sumBlue - sumRed) * STAT_WEIGHT);
     }
 }
 
