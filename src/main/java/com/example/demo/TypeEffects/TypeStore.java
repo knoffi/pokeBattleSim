@@ -132,21 +132,22 @@ class TypeData {
     }
 
     public Effectiveness getEffectivenessAgainstPokemon(String pokeType) {
+        Effectiveness test = Effectiveness.NORMAL;
         boolean isEffective = Arrays.stream(this.doubleDamageTo).anyMatch(type -> type.equals(pokeType));
         if (isEffective) {
 
-            return Effectiveness.VERY;
+            test = Effectiveness.VERY;
         }
         boolean isHalfDmg = Arrays.stream(this.halfDamageTo).anyMatch(type -> type.equals(pokeType));
         if (isHalfDmg) {
-            return Effectiveness.RESISTANT;
+            test = Effectiveness.RESISTANT;
         }
         boolean isUseless = Arrays.stream(this.noDamageTo).anyMatch(type -> type.equals(pokeType));
         if (isUseless) {
-            return Effectiveness.IMMUN;
-        } else {
-            return Effectiveness.NORMAL;
+            test = Effectiveness.IMMUN;
         }
+
+        return test;
     }
 
     public boolean equals(String type) {
