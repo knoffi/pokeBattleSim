@@ -36,26 +36,54 @@ public class Combat {
 }
 
 class BattleCalculation {
+    /**
+     *
+     */
+    private static final double STAT_WEIGHT = 1.0 / 15;
+    /**
+     *
+     */
+    private static final int EXHAUSTION_WEIGHT_BASE = 2;
+    /**
+     *
+     */
+    private static final int ATTACK_WEIGHT = 7;
     private Pokemon blue;
     private Pokemon red;
+    private AttackNameAndEffect blueAttack;
+    private AttackNameAndEffect redAttack;
 
     public BattleCalculation(Pokemon blue, Pokemon red) {
         this.blue = blue;
         this.red = red;
+        this.blueAttack = getBestAttackEffect(this.blue.getFinishingBlows(), this.red.getPokeTypes());
+        this.redAttack = getBestAttackEffect(this.red.getFinishingBlows(), this.blue.getPokeTypes());
     }
 
     public CombatResult getResult() {
-        int blueVictoryPoints = 0;
-        blueVictoryPoints += this.blueStatBonus();
-        blueVictoryPoints += this.blueExhaustionBonus();
+        double blueVictoryPoints = 0;
+        double statBonus = this.blueStatBonus();
+        int exhaustBonus = this.blueExhaustionBonus();
+        double attackBonus = this.blueAttackBonus();
+        System.out.println("stat bonus :" + statBonus);
+        System.out.println("exhaust bonus :" + exhaustBonus);
+        System.out.println("attack bonus :" + attackBonus);
+        blueVictoryPoints += statBonus + exhaustBonus + attackBonus;
+        System.out.println("result :" + blueVictoryPoints);
+        System.out.println("_________________________________");
         boolean blueWins = blueVictoryPoints != 0 ? blueVictoryPoints > 0 : this.blueWinsRandomly();
         final Stack<String> texts = this.getResultTexts(blueWins);
         return new CombatResult(blueWins, texts);
     }
 
+    private double blueAttackBonus() {
+        return 0;
+
+    }
+
     private Stack<String> getResultTexts(boolean blueWins) {
-        final String blueAttack = this.getAttackText(true);
-        final String redAttack = this.getAttackText(false);
+        final String blueAttack = AttackText.buildString(this.blue.getName(), this.blueAttack);
+        final String redAttack = AttackText.buildString(this.red.getName(), this.redAttack);
         final String loserName = blueWins ? this.red.getName() : this.blue.getName();
         Stack<String> texts = new Stack<String>();
         texts.add(blueAttack);
@@ -65,19 +93,12 @@ class BattleCalculation {
 
     }
 
-    private String getAttackText(boolean blueAttacks) {
-        Pokemon attacker = blueAttacks ? this.blue : this.red;
-        Pokemon defender = blueAttacks ? this.red : this.blue;
-        AttackNameAndEffect data = this.getBestAttackEffect(attacker.getFinishingBlows(), defender.getPokeTypes());
-        return new AttackText(attacker.getName(), data.attack, data.effect).buildText();
-    }
-
-    private AttackNameAndEffect getBestAttackEffect(Attack[] attacks, Type[] defender) {
+    private static AttackNameAndEffect getBestAttackEffect(Attack[] attacks, Type[] defender) {
         Effectiveness maxEffectiveness = Effectiveness.IMMUN;
 
         String bestAttackName = "struggle";
         for (Attack attack : attacks) {
-            Effectiveness newEffectiveness = this.getEffectiveness(attack.getType(), defender);
+            Effectiveness newEffectiveness = getEffectiveness(attack.getType(), defender);
             if (isBiggerOrEqual(newEffectiveness, maxEffectiveness)) {
                 bestAttackName = attack.getName();
                 maxEffectiveness = newEffectiveness;
@@ -94,7 +115,7 @@ class BattleCalculation {
         }
     }
 
-    private Effectiveness getEffectiveness(Type attackType, Type[] defenderTypes) {
+    private static Effectiveness getEffectiveness(Type attackType, Type[] defenderTypes) {
         // TODO: use OPTIONAL instead
         Type firstType, secondType;
         double effectivenessValue;
@@ -115,11 +136,11 @@ class BattleCalculation {
         int blueExhaustioDiff = this.blue.getExhaustion() - this.red.getExhaustion();
         boolean blueIsExhausted = blueExhaustioDiff > 0;
         if (blueIsExhausted) {
-            return -(int) Math.pow(2, blueExhaustioDiff);
+            return -(int) Math.pow(EXHAUSTION_WEIGHT_BASE, blueExhaustioDiff);
         } else {
             boolean redIsExhausted = blueExhaustioDiff < 0;
             if (redIsExhausted) {
-                return (int) Math.pow(2, -blueExhaustioDiff);
+                return (int) Math.pow(EXHAUSTION_WEIGHT_BASE, -blueExhaustioDiff);
             }
         }
         return 0;
@@ -130,31 +151,22 @@ class BattleCalculation {
         return blueWins;
     }
 
-    private int blueStatBonus() {
+    private double blueStatBonus() {
         return this.blueSumDiff();
     }
 
-    private int blueSumDiff() {
+    private double blueSumDiff() {
         int sumRed = this.red.getStatSum();
         int sumBlue = this.blue.getStatSum();
-        return (int) Math.round((sumBlue - sumRed) / 15);
+        return Math.round((sumBlue - sumRed) / STAT_WEIGHT);
     }
 }
 
 class AttackText {
-    private Effectiveness effect;
-    private String attack;
-    private String attacker;
 
-    AttackText(String attacker, String attack, Effectiveness effect) {
-        this.effect = effect;
-        this.attack = attack;
-        this.attacker = attacker;
-    }
-
-    public String buildText() {
+    public static String buildString(String attacker, AttackNameAndEffect move) {
         String effectString;
-        switch (this.effect) {
+        switch (move.effect) {
             case IMMUN:
                 effectString = "Nothing happened!";
                 break;
@@ -174,7 +186,7 @@ class AttackText {
                 effectString = "";
                 break;
         }
-        return this.attacker + " uses " + this.attack + "! " + effectString;
+        return attacker + " uses " + move.attack + "! " + effectString;
     }
 
 }
