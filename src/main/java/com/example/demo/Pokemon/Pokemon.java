@@ -49,25 +49,6 @@ public class Pokemon {
         return this.types;
     }
 
-    public void print() {
-        String namePrinter = "I am " + this.name + "\n";
-        String statPrinter = "stats:\n";
-        for (int i = 0; i < this.stats.length; i++) {
-            statPrinter += this.stats[i].name + " " + this.stats[i].value + "\n";
-        }
-        String typePrinter = "";
-        for (int i = 0; i < this.types.length; i++) {
-            statPrinter += this.types[i].name + "\n";
-        }
-        String attackPrinter = "";
-        for (int i = 0; i < this.attacks.length; i++) {
-            statPrinter += this.attacks[i].name + " (" + this.attacks[i].meta.category + ")\n";
-        }
-        String completePrinter = namePrinter + statPrinter + " my types:\n" + typePrinter + " my attacks:\n"
-                + attackPrinter;
-        System.out.println(completePrinter);
-    }
-
     public LogPokemon getLogData() {
 
         return new LogPokemon(this.name, this.backSpriteUrl, this.frontSpriteUrl);
