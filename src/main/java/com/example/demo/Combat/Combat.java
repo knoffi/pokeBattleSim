@@ -73,24 +73,24 @@ class BattleCalculation {
     }
 
     private AttackNameAndEffect getBestAttackEffect(Attack[] attacks, Type[] defender) {
-        Effectiveness bestEffectiveness = Effectiveness.IMMUN;
+        Effectiveness maxEffectiveness = Effectiveness.IMMUN;
+
         String bestAttackName = "struggle";
         for (Attack attack : attacks) {
-            Effectiveness newEffectiveness = this.getMax(bestEffectiveness, attack.getType(), defender);
-            if (newEffectiveness.value >= bestEffectiveness.value) {
+            Effectiveness newEffectiveness = this.getEffectiveness(attack.getType(), defender);
+            if (isBiggerOrEqual(newEffectiveness, maxEffectiveness)) {
                 bestAttackName = attack.getName();
-                bestEffectiveness = newEffectiveness;
+                maxEffectiveness = newEffectiveness;
             }
         }
-        return new AttackNameAndEffect(bestAttackName, bestEffectiveness);
+        return new AttackNameAndEffect(bestAttackName, maxEffectiveness);
     }
 
-    private Effectiveness getMax(Effectiveness prevEffectiveness, Type attackType, Type[] defenderTypes) {
-        Effectiveness attackEffect = this.getEffectiveness(attackType, defenderTypes);
-        if (prevEffectiveness.value > attackEffect.value) {
-            return prevEffectiveness;
+    private static boolean isBiggerOrEqual(Effectiveness a, Effectiveness b) {
+        if (a.value >= b.value) {
+            return true;
         } else {
-            return attackEffect;
+            return false;
         }
     }
 
