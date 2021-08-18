@@ -15,10 +15,11 @@ import com.example.demo.Searches.MoveSearch.MoveSearch;
 import com.example.demo.Searches.PokemonSearch.NameHolder;
 
 public class AttackStore {
-    private final static String SUPPORT_ATTACKS_FILE_PATH = "./src/main/java/com/example/demo/SupportedAttacks/supportAttackNames.txt";
+    private final static String SUPPORTED_ATTACKS_FILE_PATH = "pokeBattleSim/src/main/java/com/example/demo/SupportedAttacks/supportAttackNames.txt";
 
     private static String[] loadSupportedNames() {
-        File file = new File(SUPPORT_ATTACKS_FILE_PATH);
+        // TODO: test if this works with docker
+        File file = new File(SUPPORTED_ATTACKS_FILE_PATH).getAbsoluteFile();
         try {
             Scanner sc = new Scanner(file);
             String supportedAttacksString = "";
@@ -71,7 +72,7 @@ public class AttackStore {
     }
 
     public static void update() throws IOException {
-        FileWriter fileWriter = new FileWriter(SUPPORT_ATTACKS_FILE_PATH);
+        FileWriter fileWriter = new FileWriter(SUPPORTED_ATTACKS_FILE_PATH);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         String supportedAttackNames = "";
         Attack[] classicalAttacks = getClassicalAttacks();

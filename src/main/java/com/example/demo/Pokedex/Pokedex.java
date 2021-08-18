@@ -7,15 +7,11 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 import com.example.demo.JSONHandler;
 import com.example.demo.RequestMode;
 import com.example.demo.Searches.PokemonSearch.PokemonSearch;
-import com.example.demo.Searches.PokemonsSearch.PokemonBySearch;
-import com.example.demo.Searches.PokemonsSearch.PokemonsSearch;
 
 public class Pokedex {
     /**
@@ -24,16 +20,13 @@ public class Pokedex {
     public static final int CLASSICAL_POKEMON_RANGE = 151;
     public static final String HOST = "https://pokeapi.co/";
     public static final String API_PATH = "api/v2/";
-    public static final String POKEMON_PATH = "pokemon/";;
+    public static final String POKEMON_PATH = "pokemon/";
     public static final String CLASSICAL_POKEMON_QUERY = "?limit=" + CLASSICAL_POKEMON_RANGE + "/";
     public static final String CLASSICAL_VERSION_PATH = "version-group/1/";
     public static final String GENERATION_I_PATH = "generation/1/";
+    public static final String CLASSICAL_TYPES_PATH = "type?limit=16";
 
-    public static List<String> getClassicalPokemons(RequestMode mode) throws IOException, InterruptedException {
-        PokemonBySearch[] pokemons = mode == RequestMode.JAVA_11 ? getClassicalPokemonModernly()
-                : getClassicalPokemonNotModernly();
-        return getNames(pokemons);
-    }
+    
 
     public static String getClassicalVersionKey() {
         String key = "red-blue";
@@ -43,11 +36,6 @@ public class Pokedex {
             System.out.println("___VERSION NAME NOT FOUND___" + e.getClass());
         }
         return key;
-    }
-
-    private static PokemonBySearch[] getClassicalPokemonModernly() throws IOException, InterruptedException {
-        return getPokeDataModernly(API_PATH + POKEMON_PATH + CLASSICAL_POKEMON_QUERY, PokemonsSearch.class).results;
-
     }
 
     public static <T> T getPokeData(String path, Class<T> type, RequestMode mode)
@@ -86,17 +74,6 @@ public class Pokedex {
         return data;
     }
 
-    private static PokemonBySearch[] getClassicalPokemonNotModernly() throws RuntimeException, IOException {
-        return getPokeDataNotModernly(API_PATH + POKEMON_PATH + CLASSICAL_POKEMON_QUERY, PokemonsSearch.class).results;
-    }
-
-    private static ArrayList<String> getNames(PokemonBySearch[] pokemons) {
-        ArrayList<String> names = new ArrayList<String>();
-        for (PokemonBySearch pokemon : pokemons) {
-            names.add(pokemon.name);
-        }
-        return names;
-    }
 
     public static String getStringPokeData(int index) throws IOException, InterruptedException {
         var url = URI.create(HOST + POKEMON_PATH + index);

@@ -25,7 +25,7 @@ public class Pokemon {
         this.name = data.name;
         this.stats = Arrays.stream(data.stats).map(StatBySearch::convert).toArray(Stat[]::new);
         this.types = Arrays.stream(data.types).map(TypeHolder::convert).toArray(Type[]::new);
-        this.attacks = getAttacks(data.moves);
+        this.attacks = creatAttacks(data.moves);
         this.backSpriteUrl = data.sprites.back_default;
         this.frontSpriteUrl = data.sprites.front_default;
         this.exhaustionPoint = 0;
@@ -45,23 +45,8 @@ public class Pokemon {
         this.exhaustionPoint++;
     }
 
-    public void print() {
-        String namePrinter = "I am " + this.name + "\n";
-        String statPrinter = "stats:\n";
-        for (int i = 0; i < this.stats.length; i++) {
-            statPrinter += this.stats[i].name + " " + this.stats[i].value + "\n";
-        }
-        String typePrinter = "";
-        for (int i = 0; i < this.types.length; i++) {
-            statPrinter += this.types[i].name + "\n";
-        }
-        String attackPrinter = "";
-        for (int i = 0; i < this.attacks.length; i++) {
-            statPrinter += this.attacks[i].name + " (" + this.attacks[i].meta.category + ")\n";
-        }
-        String completePrinter = namePrinter + statPrinter + " my types:\n" + typePrinter + " my attacks:\n"
-                + attackPrinter;
-        System.out.println(completePrinter);
+    public Type[] getPokeTypes() {
+        return this.types;
     }
 
     public LogPokemon getLogData() {
@@ -73,13 +58,9 @@ public class Pokemon {
         return this.name;
     }
 
-    public String getFinishingBlow() {
+    public Attack[] getFinishingBlows() {
         Attack[] finishingAttacks = Arrays.stream(this.attacks).filter(Attack::doesDamage).toArray(Attack[]::new);
-        if (finishingAttacks.length > 0) {
-            int index = (int) Math.floor(Math.random() * finishingAttacks.length);
-            return finishingAttacks[index].getName();
-        }
-        return "struggle";
+        return finishingAttacks;
     }
 
     private static int[] getMoveSelection(int maxIndex) {
@@ -100,7 +81,7 @@ public class Pokemon {
         return Arrays.stream(indices).limit(trimIndex).anyMatch(index -> index == newIndex);
     }
 
-    private Attack[] getAttacks(MoveBySearch[] moves) {
+    private Attack[] creatAttacks(MoveBySearch[] moves) {
         String[] filteredURLs = Arrays.stream(moves).filter(MoveBySearch::isSupported).map(move -> move.move.url)
                 .toArray(String[]::new);
         int moveAmount = filteredURLs.length;
@@ -112,7 +93,7 @@ public class Pokemon {
             for (int k = 0; k < selectionSize; k++) {
                 int selectedIndex = selectedIndices[k];
                 String selectedURL = filteredURLs[selectedIndex];
-                selectedAttacks[k] = getAttack(selectedURL);
+                selectedAttacks[k] = createAttack(selectedURL);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("___INDEX OUT OF BOUNCE DURING ATTACK SELECTION___" + e.getClass());
@@ -122,10 +103,11 @@ public class Pokemon {
         return selectedAttacks;
     }
 
-    static private Attack getAttack(String URL) {
+    static private Attack createAttack(String URL) {
         String attackPath = Pokedex.getPathFromURL(URL);
         try {
-            Attack attack = Pokedex.getPokeData(attackPath, MoveSearch.class, RequestMode.JAVA_11).convert();
+            MoveSearch move = Pokedex.getPokeData(attackPath, MoveSearch.class, RequestMode.JAVA_11);
+            Attack attack = move.convert();
             return attack;
         } catch (IOException | InterruptedException e) {
             System.out.println("___ATTACK BUILDING FAILED___" + e.getClass());
