@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class DuellController {
     @GetMapping(value = "/getTrainerDuell")
-    public @ResponseBody DuellLog index(@RequestParam String lng) {
+    public @ResponseBody DuellLog index(@RequestParam(required = false) String lng) {
         try {
+            System.out.println(lng);
             Pokemon[] blue = this.getRandomPokemonTeam();
             Pokemon[] red = this.getRandomPokemonTeam();
             LogPokemon[] blueLogPokemon = Arrays.stream(blue).map(pokemon -> pokemon.getLogData())
