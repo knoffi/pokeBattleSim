@@ -4,8 +4,8 @@ import { Pokemon } from "./Pokemon";
 export const makeRedPokemon = (scene: Scene, name: string) =>
     new Pokemon(scene, {
         name,
-        x: 70,
-        y: 145,
+        x: 66,
+        y: 115,
         texture: withBack(name),
         depth: 1,
         nameTextX: 160,

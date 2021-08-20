@@ -12,6 +12,7 @@ export class MainScene extends Scene {
     private round!: number;
     private blue: Pokemon | undefined;
     private red: Pokemon | undefined;
+    private mask!: Phaser.Display.Masks.GeometryMask;
 
     public constructor() {
         super({
@@ -29,6 +30,8 @@ export class MainScene extends Scene {
                 .image(`${pkmn.name}back`, pkmn.backSprite)
                 .image(pkmn.name, pkmn.frontSprite)
         );
+        // this.load.audio("attack", "./assets/sounds/attack_01.ogg");
+        this.load.image("textbox", "./assets/textbox.nineslice.png");
     }
 
     public create(): void {
@@ -36,9 +39,25 @@ export class MainScene extends Scene {
 
         this.cameras.main.setBackgroundColor(Color.InBattleWhite);
 
+        this.addTextboxWithMask();
+
         // enforce renders
         this.events.on("next round", () => this.nextRound());
         this.events.emit("next round");
+    }
+
+    private addTextboxWithMask() {
+        const textbox = this.add.nineslice(0, 130, 70, 34, "textbox", 8);
+        textbox.setScale(2).setDepth(1000);
+        textbox.displayWidth = this.scale.width;
+        const shape = this.make
+            .graphics({
+                x: 0,
+                y: 130,
+            })
+            .fillRect(0, 0, this.scale.width, 100);
+        this.mask = shape.createGeometryMask();
+        this.mask.setInvertAlpha();
     }
 
     public shutdown() {
@@ -55,10 +74,10 @@ export class MainScene extends Scene {
         const round = this.battle.rounds[this.round];
         this.blue = this.blue?.active
             ? this.blue
-            : this.nextBluePkmn(round.blueCombatant);
+            : this.nextBluePkmn(round.blueCombatant, this.mask);
         this.red = this.red?.active
             ? this.red
-            : this.nextRedPkmn(round.redCombatant);
+            : this.nextRedPkmn(round.redCombatant, this.mask);
 
         const onDefeat = (defender: Pokemon | undefined) => () => {
             defender?.deactivate();
@@ -89,6 +108,7 @@ export class MainScene extends Scene {
             ease: "sine",
             duration: 250,
             yoyo: true,
+            // onYoyo: () => this.sound.play("attack"),
         });
         // start blinking
         timeline.add({
@@ -127,11 +147,21 @@ export class MainScene extends Scene {
         return timeline;
     }
 
-    private nextBluePkmn(pokemon: string) {
-        return makeBluePokemon(this, pokemon);
+    private nextBluePkmn(
+        pokemon: string,
+        mask: Phaser.Display.Masks.GeometryMask
+    ) {
+        const pkmn = makeBluePokemon(this, pokemon);
+        pkmn.setMask(mask);
+        return pkmn;
     }
 
-    private nextRedPkmn(pokemon: string) {
-        return makeRedPokemon(this, pokemon);
+    private nextRedPkmn(
+        pokemon: string,
+        mask: Phaser.Display.Masks.GeometryMask
+    ) {
+        const pkmn = makeRedPokemon(this, pokemon);
+        pkmn.setMask(mask);
+        return pkmn;
     }
 }
