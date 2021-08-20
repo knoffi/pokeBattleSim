@@ -11,12 +11,13 @@ import com.example.demo.TrainerDuell.TrainerDuell;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class DuellController {
     @GetMapping(value = "/getTrainerDuell")
-    public @ResponseBody DuellLog index() {
+    public @ResponseBody DuellLog index(@RequestParam String lng) {
         try {
             Pokemon[] blue = this.getRandomPokemonTeam();
             Pokemon[] red = this.getRandomPokemonTeam();
