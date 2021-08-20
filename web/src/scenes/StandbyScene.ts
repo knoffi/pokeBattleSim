@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import { GameObjects, Scene, Time } from "phaser";
 import { DEV, isProd } from "../dev-config";
 import { ApiRes, IPokemon } from "../interfaces";
 import { Color } from "../styles/Color";
@@ -51,6 +51,7 @@ const url = "/getTrainerDuell?lng=es";
 
 export class StandbyScene extends Scene {
     private gameboyLogo?: GameObjects.Image;
+    private mainSceneStarting?: Time.TimerEvent;
 
     constructor(key = Scenes.Standby) {
         super(key);
@@ -80,12 +81,14 @@ export class StandbyScene extends Scene {
 
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         startBattle.addEventListener("click", async () => {
-            if (this.scene.isActive(Scenes.Main)) {
+            if (this.scene.get(Scenes.Main)) {
                 this.stopGameboy();
                 startBattle.innerHTML = "Start Battle";
             } else {
-                await this.startGameboy();
-                startBattle.innerHTML = "End Battle";
+                if (!this.mainSceneStarting) {
+                    await this.startGameboy();
+                    startBattle.innerHTML = "End Battle";
+                }
             }
         });
     }
@@ -108,7 +111,7 @@ export class StandbyScene extends Scene {
         const minTimeHasNotPassedYet =
             beforeFetch + cfg.minTimeShowingStartScreenInMs > this.time.now;
         if (minTimeHasNotPassedYet) {
-            this.time.delayedCall(
+            this.mainSceneStarting = this.time.delayedCall(
                 cfg.minTimeShowingStartScreenInMs -
                     (this.time.now - beforeFetch),
                 startMainScene,
@@ -122,6 +125,7 @@ export class StandbyScene extends Scene {
 
     private stopGameboy() {
         this.gameboyLogo?.destroy();
+        this.mainSceneStarting = undefined;
         const mainscene = this.scene.get(Scenes.Main);
         (mainscene as MainScene).shutdown();
         this.scene.stop(Scenes.Main);
