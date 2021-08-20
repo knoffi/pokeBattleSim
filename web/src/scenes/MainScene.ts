@@ -41,6 +41,10 @@ export class MainScene extends Scene {
         this.events.emit("next round");
     }
 
+    public shutdown() {
+        this.events.destroy();
+    }
+
     /** recursively calling this method via event. Anchor on all rounds having been displayed. */
     private nextRound() {
         const finalRoundEnded = this.round >= this.battle.rounds.length;

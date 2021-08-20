@@ -85,8 +85,16 @@ export class StandbyScene extends Scene {
                 (x) => x.json() as Partial<ApiRes>
             );
             assertApiRes(data);
-            const startMainScene = () =>
-                this.scene.add(Scenes.Main, MainScene, true, data);
+            const startMainScene = () => {
+                if (this.scene.isActive(Scenes.Main)) {
+                    const mainscene = this.scene.get(Scenes.Main);
+                    (mainscene as MainScene).shutdown();
+                    this.scene.stop(Scenes.Main);
+                    this.scene.remove(Scenes.Main);
+                } else {
+                    this.scene.add(Scenes.Main, MainScene, true, data);
+                }
+            };
 
             // show the start screen for at least minTimeShowingStartScreenInMs
             const minTimeHasNotPassedYet =
