@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const pathToPhaser = path.join(__dirname, "/node_modules/phaser/");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
 
@@ -28,4 +29,17 @@ module.exports = {
             phaser,
         },
     },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./index.template.html",
+            filename: "index.html",
+            inject: "body",
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: "assets", to: "assets" },
+                { from: "index.css", to: "index.css" },
+            ],
+        }),
+    ],
 };
