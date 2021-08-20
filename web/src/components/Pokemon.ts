@@ -22,6 +22,7 @@ export class Pokemon extends GameObjects.Image {
         super(scene, x, y, texture);
         scene.add.existing(this);
         this.setScale(scale).setDepth(depth);
+        this.name = name;
 
         this.nameText = scene.add
             .text(nameTextX, nameTextY, name.toUpperCase(), TextConfig.md)
@@ -43,5 +44,10 @@ export class Pokemon extends GameObjects.Image {
         super.setVisible(value);
         this.nameText.setVisible(value);
         return this;
+    }
+
+    public destroy() {
+        this.nameText.destroy();
+        super.destroy();
     }
 }
