@@ -19,9 +19,10 @@ public class DuellController {
     @GetMapping(value = "/getTrainerDuell")
     public @ResponseBody DuellLog index(@RequestParam(required = false) String lng) {
         try {
-            System.out.println(lng);
             Pokemon[] blue = this.getRandomPokemonTeam();
             Pokemon[] red = this.getRandomPokemonTeam();
+            this.translatePokemons(blue, lng);
+            this.translatePokemons(red, lng);
             LogPokemon[] blueLogPokemon = Arrays.stream(blue).map(pokemon -> pokemon.getLogData())
                     .toArray(LogPokemon[]::new);
             LogPokemon[] redLogPokemon = Arrays.stream(red).map(pokemon -> pokemon.getLogData())
@@ -41,6 +42,10 @@ public class DuellController {
         Pokemon[] randomTeam = Arrays.stream(pokemonSearches).map(search -> search.convert()).toArray(Pokemon[]::new);
         return randomTeam;
 
+    }
+
+    private void translatePokemons(Pokemon[] pokemons, String translationRequestParam) {
+        Arrays.stream(pokemons).forEach(pokemon -> pokemon.translateName(translationRequestParam));
     }
 
 }
