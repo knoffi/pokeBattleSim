@@ -28,7 +28,7 @@ public class DuellController {
             LogPokemon[] redLogPokemon = Arrays.stream(red).map(pokemon -> pokemon.getLogData())
                     .toArray(LogPokemon[]::new);
             TrainerDuell duell = new TrainerDuell(red, blue);
-            LogRound[] rounds = duell.letThemFight();
+            LogRound[] rounds = duell.letThemFight(lng);
             boolean blueWon = rounds[rounds.length - 1].blueWon;
             return new DuellLog(blueLogPokemon, redLogPokemon, rounds, blueWon);
         } catch (RuntimeException | IOException | InterruptedException e) {

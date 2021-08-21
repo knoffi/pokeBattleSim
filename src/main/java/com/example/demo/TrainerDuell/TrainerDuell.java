@@ -23,13 +23,13 @@ public class TrainerDuell {
         this.duellSummary = new Stack<LogRound>();
     }
 
-    public LogRound[] letThemFight() {
+    public LogRound[] letThemFight(String languageParam) {
         boolean blueCanFight = !this.blueTeam.empty();
         boolean redCanFight = !this.redTeam.empty();
         while (blueCanFight && redCanFight) {
             Pokemon blueFighter = this.blueTeam.pop();
             Pokemon redFighter = this.redTeam.pop();
-            LogRound roundSummary = new Combat(redFighter, blueFighter).getResult();
+            LogRound roundSummary = new Combat(redFighter, blueFighter, languageParam).getResult();
             this.duellSummary.push(roundSummary);
             if (roundSummary.blueWon) {
                 this.blueTeam.push(blueFighter);

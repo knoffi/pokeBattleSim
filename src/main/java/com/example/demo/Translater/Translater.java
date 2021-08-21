@@ -29,6 +29,23 @@ public class Translater {
         }
         return englishName;
     }
+
+    public static String getTranslatedAttack(String englishAttack, String languageParam) {
+        try {
+            String specificPath = POKE_MOVE_PATH + englishAttack;
+            TranslationHolder translations = Pokedex.getPokeData(specificPath, TranslationHolder.class,
+                    RequestMode.JAVA_11);
+            String languageKey = TranslationKeyMapper.getKey(languageParam);
+            Optional<Name> translation = Arrays.stream(translations.names)
+                    .filter(name -> name.language.name.equals(languageKey)).findFirst();
+            if (translation.isPresent()) {
+                return translation.get().name;
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("___FAIL ON TRANSLATED NAME___" + e.getClass());
+        }
+        return englishAttack;
+    }
 }
 
 class TranslationHolder {

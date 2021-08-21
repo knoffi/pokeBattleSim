@@ -6,6 +6,7 @@ import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.Pokemon;
 import com.example.demo.Pokemon.Type;
+import com.example.demo.Translater.Translater;
 import com.example.demo.TypeEffects.Effectiveness;
 import com.example.demo.TypeEffects.TypeStore;
 
@@ -13,23 +14,25 @@ public class Combat {
     private Pokemon red;
     private Pokemon blue;
     private Stack<String> combatSummary;
+    private String languageParam;
 
-    public Combat(Pokemon pokemonRed, Pokemon pokemonBlue) {
+    public Combat(Pokemon pokemonRed, Pokemon pokemonBlue, String languageParam) {
         this.red = pokemonRed;
         this.blue = pokemonBlue;
         this.combatSummary = new Stack<String>();
+        this.languageParam = languageParam;
     }
 
     public LogRound getResult() {
-        CombatResult combatResult = new BattleCalculation(this.blue, this.red).getResult();
-        boolean blueWins = combatResult.blueWin;
-        Pokemon winner = blueWins ? this.blue : this.red;
+        final CombatResult combatResult = new BattleCalculation(this.blue, this.red, languageParam).getResult();
+        final boolean blueWins = combatResult.blueWin;
+        final Pokemon winner = blueWins ? this.blue : this.red;
 
         winner.addExhaustion();
 
         this.combatSummary.addAll(combatResult.texts);
 
-        String[] combatSummary = this.combatSummary.toArray(String[]::new);
+        final String[] combatSummary = this.combatSummary.toArray(String[]::new);
         return new LogRound(this.red.getName(), this.blue.getName(), combatSummary, blueWins);
     }
 
@@ -52,12 +55,14 @@ class BattleCalculation {
     private Pokemon red;
     private AttackNameAndEffect blueAttack;
     private AttackNameAndEffect redAttack;
+    private String languageParam;
 
-    public BattleCalculation(Pokemon blue, Pokemon red) {
+    public BattleCalculation(Pokemon blue, Pokemon red, String languageParam) {
         this.blue = blue;
         this.red = red;
-        this.blueAttack = getBestAttackEffect(this.blue.getFinishingBlows(), this.red.getPokeTypes());
-        this.redAttack = getBestAttackEffect(this.red.getFinishingBlows(), this.blue.getPokeTypes());
+        this.blueAttack = getBestAttackEffect(this.blue.getFinishingBlows(), this.red.getPokeTypes(), languageParam);
+        this.redAttack = getBestAttackEffect(this.red.getFinishingBlows(), this.blue.getPokeTypes(), languageParam);
+        this.languageParam = languageParam;
     }
 
     public CombatResult getResult() {
@@ -65,12 +70,12 @@ class BattleCalculation {
         double statBonus = this.blueStatBonus();
         int exhaustBonus = this.blueExhaustionBonus();
         double attackBonus = this.blueAttackBonus();
-        System.out.println("stat bonus :" + statBonus);
-        System.out.println("exhaust bonus :" + exhaustBonus);
-        System.out.println("attack bonus :" + attackBonus);
+        // System.out.println("stat bonus :" + statBonus);
+        // System.out.println("exhaust bonus :" + exhaustBonus);
+        // System.out.println("attack bonus :" + attackBonus);
         blueVictoryPoints += statBonus + exhaustBonus + attackBonus;
-        System.out.println("result :" + blueVictoryPoints);
-        System.out.println("_________________________________");
+        // System.out.println("result :" + blueVictoryPoints);
+        // System.out.println("_________________________________");
         boolean blueWins = blueVictoryPoints != 0 ? blueVictoryPoints > 0 : this.blueWinsRandomly();
         final Stack<String> texts = this.getResultTexts(blueWins);
         return new CombatResult(blueWins, texts);
@@ -99,7 +104,7 @@ class BattleCalculation {
 
     }
 
-    private static AttackNameAndEffect getBestAttackEffect(Attack[] attacks, Type[] defender) {
+    private static AttackNameAndEffect getBestAttackEffect(Attack[] attacks, Type[] defender, String languageParam) {
         Effectiveness maxEffectiveness = Effectiveness.IMMUN;
 
         String bestAttackName = "struggle";
@@ -110,7 +115,7 @@ class BattleCalculation {
                 maxEffectiveness = newEffectiveness;
             }
         }
-        return new AttackNameAndEffect(bestAttackName, maxEffectiveness);
+        return new AttackNameAndEffect(bestAttackName, maxEffectiveness, languageParam);
     }
 
     private static boolean isBiggerOrEqual(Effectiveness a, Effectiveness b) {
@@ -201,8 +206,8 @@ class AttackNameAndEffect {
     public String attack;
     public Effectiveness effect;
 
-    AttackNameAndEffect(String attack, Effectiveness effect) {
-        this.attack = attack;
+    AttackNameAndEffect(String attack, Effectiveness effect, String languageParam) {
+        this.attack = Translater.getTranslatedAttack(attack, languageParam);
         this.effect = effect;
     }
 }
