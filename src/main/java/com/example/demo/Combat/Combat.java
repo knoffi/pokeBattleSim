@@ -98,13 +98,10 @@ class BattleCalculation {
         final String loserName = blueWins ? this.red.getName() : this.blue.getName();
         final String endResult = loserName + " was defeated!";
 
-        final String translatedBlueAttack = Translater.getTranslatedText(blueAttack, this.languageParam);
-        final String translatedRedAttack = Translater.getTranslatedText(redAttack, this.languageParam);
-        final String translatedEndResult = Translater.getTranslatedText(endResult, this.languageParam);
         Stack<String> texts = new Stack<String>();
-        texts.add(translatedBlueAttack);
-        texts.add(translatedRedAttack);
-        texts.add(translatedEndResult);
+        texts.add(blueAttack);
+        texts.add(redAttack);
+        texts.add(endResult);
         return texts;
 
     }

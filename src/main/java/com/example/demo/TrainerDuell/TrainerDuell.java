@@ -1,10 +1,14 @@
 package com.example.demo.TrainerDuell;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import com.example.demo.Combat.Combat;
 import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Pokemon;
+import com.example.demo.Translater.Translater;
 
 public class TrainerDuell {
     private Stack<Pokemon> redTeam;
@@ -39,7 +43,27 @@ public class TrainerDuell {
                 blueCanFight = !this.blueTeam.empty();
             }
         }
+        this.translateBattleLogs(languageParam);
         return this.duellSummary.toArray(LogRound[]::new);
+    }
+
+    private void translateBattleLogs(String languageParam) {
+        List<String> battleTexts = this.duellSummary.stream().flatMap(round -> Arrays.stream(round.battleLog))
+                .collect(Collectors.toList());
+        var translatedBattleTexts = Translater.getTranslatedTexts(battleTexts, languageParam);
+        var textsIterator = translatedBattleTexts.iterator();
+        var roundIterator = this.duellSummary.iterator();
+        while (textsIterator.hasNext()) {
+            String firstText = textsIterator.next();
+            String secondText = textsIterator.next();
+            String thirdText = textsIterator.next();
+
+            LogRound round = roundIterator.next();
+
+            String[] newBatteLog = { firstText, secondText, thirdText };
+            round.battleLog = newBatteLog;
+
+        }
     }
 
 }

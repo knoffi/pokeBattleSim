@@ -3,8 +3,9 @@ package com.example.demo.Translater;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Pokedex.Pokedex;
@@ -33,7 +34,7 @@ public class Translater {
                 return translation.get().name;
             }
         } catch (IOException | InterruptedException e) {
-            System.out.println("___FAIL ON TRANSLATED NAME___" + e.getClass());
+            System.out.println("___FAIL ON TRANSLATED POKEMON NAME___" + e.getClass());
         }
         return englishName;
     }
@@ -50,7 +51,7 @@ public class Translater {
                 return translation.get().name;
             }
         } catch (IOException | InterruptedException e) {
-            System.out.println("___FAIL ON TRANSLATED NAME___" + e.getClass());
+            System.out.println("___FAIL ON TRANSLATED ATTACK NAME___" + e.getClass());
         }
         return englishAttack;
     }
@@ -70,6 +71,25 @@ public class Translater {
             return englishText;
         }
     }
+
+    public static List<String> getTranslatedTexts(List<String> englishTexts, String languageParam) {
+        try {
+            Translate translate = TranslateOptions.newBuilder()
+                    .setCredentials(ServiceAccountCredentials.fromStream(new FileInputStream(
+                            "C:/Users/monop/programming/pokeFightApi/jsons/ace-case-323614-5db3d27519e9.json")))
+                    .build().getService();
+
+            List<Translation> translations = translate.translate(englishTexts,
+                    Translate.TranslateOption.sourceLanguage("en"),
+                    Translate.TranslateOption.targetLanguage(languageParam), Translate.TranslateOption.model("base"));
+            List<String> translatedList = translations.stream().map(translation -> translation.getTranslatedText())
+                    .collect(Collectors.toList());
+            return translatedList;
+        } catch (IOException e) {
+            System.out.println("___FAIL ON FINDING FILE WITH API KEY___" + e.getClass());
+            return englishTexts;
+        }
+    }
 }
 
 class TranslationHolder {
@@ -79,17 +99,4 @@ class TranslationHolder {
 class Name {
     public String name;
     public NameHolder language;
-}
-
-class TranslationKeyMapper {
-    // mapping for Pokemon API
-    private static HashMap<String, String> keyMap = new HashMap<String, String>();
-    static {
-        keyMap.put("en", "en");
-        keyMap.put("de", "de");
-    }
-
-    public static String getKey(String languageParam) {
-        return keyMap.get(languageParam);
-    }
 }
