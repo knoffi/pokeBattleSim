@@ -24,7 +24,7 @@ public class Combat {
     }
 
     public LogRound getResult() {
-        final CombatResult combatResult = new BattleCalculation(this.blue, this.red, languageParam).getResult();
+        final CombatResult combatResult = new BattleCalculation(this.blue, this.red, this.languageParam).getResult();
         final boolean blueWins = combatResult.blueWin;
         final Pokemon winner = blueWins ? this.blue : this.red;
 
@@ -96,10 +96,15 @@ class BattleCalculation {
         final String blueAttack = AttackText.buildString(this.blue.getName(), this.blueAttack);
         final String redAttack = AttackText.buildString(this.red.getName(), this.redAttack);
         final String loserName = blueWins ? this.red.getName() : this.blue.getName();
+        final String endResult = loserName + " was defeated!";
+
+        final String translatedBlueAttack = Translater.getTranslatedText(blueAttack, this.languageParam);
+        final String translatedRedAttack = Translater.getTranslatedText(redAttack, this.languageParam);
+        final String translatedEndResult = Translater.getTranslatedText(endResult, this.languageParam);
         Stack<String> texts = new Stack<String>();
-        texts.add(blueAttack);
-        texts.add(redAttack);
-        texts.add(loserName + " was defeated!");
+        texts.add(translatedBlueAttack);
+        texts.add(translatedRedAttack);
+        texts.add(translatedEndResult);
         return texts;
 
     }
@@ -179,7 +184,7 @@ class AttackText {
         String effectString;
         switch (move.effect) {
             case IMMUN:
-                effectString = "Nothing happened!";
+                effectString = "Nothing happens!";
                 break;
             case VERY:
                 effectString = "It's very effective!";
