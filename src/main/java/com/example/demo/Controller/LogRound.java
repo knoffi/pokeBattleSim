@@ -12,4 +12,5 @@ public class LogRound {
         this.battleLog = battleLog;
         this.blueWon = blueWon;
     }
+
 }

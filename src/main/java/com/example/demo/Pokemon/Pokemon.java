@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.example.demo.RequestMode;
+import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Controller.LogPokemon;
 import com.example.demo.Pokedex.Pokedex;
 import com.example.demo.Searches.MoveSearch.MoveSearch;
@@ -11,6 +12,7 @@ import com.example.demo.Searches.PokemonSearch.MoveBySearch;
 import com.example.demo.Searches.PokemonSearch.PokemonSearch;
 import com.example.demo.Searches.PokemonSearch.StatBySearch;
 import com.example.demo.Searches.PokemonSearch.TypeHolder;
+import com.example.demo.Translater.Translater;
 
 public class Pokemon {
     private String name;
@@ -35,6 +37,10 @@ public class Pokemon {
         var statValues = Arrays.stream(this.stats).map(stat -> stat.value);
         int sum = statValues.reduce(0, (cur, prev) -> cur + prev);
         return sum;
+    }
+
+    public void translateName(Languages language) {
+        this.name = Translater.getTranslatedName(this.name, language);
     }
 
     public int getExhaustion() {
@@ -103,7 +109,7 @@ public class Pokemon {
         return selectedAttacks;
     }
 
-    static private Attack createAttack(String URL) {
+    private Attack createAttack(String URL) {
         String attackPath = Pokedex.getPathFromURL(URL);
         try {
             MoveSearch move = Pokedex.getPokeData(attackPath, MoveSearch.class, RequestMode.JAVA_11);
