@@ -2,6 +2,8 @@ package com.example.demo.Combat;
 
 import java.util.Stack;
 
+import com.example.demo.Combat.PhraseStore.Languages;
+import com.example.demo.Combat.PhraseStore.PhraseStore;
 import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.Pokemon;
@@ -14,17 +16,17 @@ public class Combat {
     private Pokemon red;
     private Pokemon blue;
     private Stack<String> combatSummary;
-    private String languageParam;
+    private Languages language;
 
-    public Combat(Pokemon pokemonRed, Pokemon pokemonBlue, String languageParam) {
+    public Combat(Pokemon pokemonRed, Pokemon pokemonBlue, Languages language) {
         this.red = pokemonRed;
         this.blue = pokemonBlue;
         this.combatSummary = new Stack<String>();
-        this.languageParam = languageParam;
+        this.language = language;
     }
 
     public LogRound getResult() {
-        final CombatResult combatResult = new BattleCalculation(this.blue, this.red, this.languageParam).getResult();
+        final CombatResult combatResult = new BattleCalculation(this.blue, this.red, language).getResult();
         final boolean blueWins = combatResult.blueWin;
         final Pokemon winner = blueWins ? this.blue : this.red;
 
@@ -55,9 +57,9 @@ class BattleCalculation {
     private Pokemon red;
     private AttackNameAndEffect blueAttack;
     private AttackNameAndEffect redAttack;
-    private String languageParam;
+    private Languages languageParam;
 
-    public BattleCalculation(Pokemon blue, Pokemon red, String languageParam) {
+    public BattleCalculation(Pokemon blue, Pokemon red, Languages languageParam) {
         this.blue = blue;
         this.red = red;
         this.blueAttack = getBestAttackEffect(this.blue.getFinishingBlows(), this.red.getPokeTypes(), languageParam);
@@ -93,10 +95,10 @@ class BattleCalculation {
     }
 
     private Stack<String> getResultTexts(boolean blueWins) {
-        final String blueAttack = AttackText.buildString(this.blue.getName(), this.blueAttack);
-        final String redAttack = AttackText.buildString(this.red.getName(), this.redAttack);
+        final String blueAttack = CombatText.getAttackText(this.blue.getName(), this.blueAttack, this.languageParam);
+        final String redAttack = CombatText.getAttackText(this.red.getName(), this.redAttack, this.languageParam);
         final String loserName = blueWins ? this.red.getName() : this.blue.getName();
-        final String endResult = loserName + " was defeated!";
+        final String endResult = CombatText.getResultText(loserName, this.languageParam);
 
         Stack<String> texts = new Stack<String>();
         texts.add(blueAttack);
@@ -106,7 +108,7 @@ class BattleCalculation {
 
     }
 
-    private static AttackNameAndEffect getBestAttackEffect(Attack[] attacks, Type[] defender, String languageParam) {
+    private static AttackNameAndEffect getBestAttackEffect(Attack[] attacks, Type[] defender, Languages language) {
         Effectiveness maxEffectiveness = Effectiveness.IMMUN;
 
         String bestAttackName = "struggle";
@@ -117,7 +119,7 @@ class BattleCalculation {
                 maxEffectiveness = newEffectiveness;
             }
         }
-        return new AttackNameAndEffect(bestAttackName, maxEffectiveness, languageParam);
+        return new AttackNameAndEffect(bestAttackName, maxEffectiveness, language);
     }
 
     private static boolean isBiggerOrEqual(Effectiveness a, Effectiveness b) {
@@ -175,31 +177,20 @@ class BattleCalculation {
     }
 }
 
-class AttackText {
+class CombatText {
 
-    public static String buildString(String attacker, AttackNameAndEffect move) {
-        String effectString;
-        switch (move.effect) {
-            case IMMUN:
-                effectString = "Nothing happens!";
-                break;
-            case VERY:
-                effectString = "It's very effective!";
-                break;
-            case SUPER:
-                effectString = "It's super effective!";
-                break;
-            case SUPER_BAD:
-                effectString = "It's nearly ineffective!";
-                break;
-            case RESISTANT:
-                effectString = "It's not very effective!";
-                break;
-            default:
-                effectString = "";
-                break;
-        }
-        return attacker + " uses " + move.attack + "! " + effectString;
+    public static String getAttackText(String attacker, AttackNameAndEffect move, Languages language) {
+        String effectString = PhraseStore.getEffectPhrase(move.effect, language);
+        String attackString = PhraseStore.getAttackPhrase(language).replace("XXX", attacker).replace("YYY",
+                move.attack);
+
+        return attackString + " " + effectString;
+    }
+
+    public static String getResultText(String loser, Languages language) {
+        String resultString = PhraseStore.getResultPhrase(language).replace("XXX", loser);
+
+        return resultString;
     }
 
 }
@@ -208,8 +199,8 @@ class AttackNameAndEffect {
     public String attack;
     public Effectiveness effect;
 
-    AttackNameAndEffect(String attack, Effectiveness effect, String languageParam) {
-        this.attack = Translater.getTranslatedAttack(attack, languageParam);
+    AttackNameAndEffect(String attack, Effectiveness effect, Languages language) {
+        this.attack = Translater.getTranslatedAttack(attack, language);
         this.effect = effect;
     }
 }

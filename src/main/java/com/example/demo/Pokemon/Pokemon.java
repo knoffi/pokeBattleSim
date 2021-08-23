@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.example.demo.RequestMode;
+import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Controller.LogPokemon;
 import com.example.demo.Pokedex.Pokedex;
 import com.example.demo.Searches.MoveSearch.MoveSearch;
@@ -38,8 +39,8 @@ public class Pokemon {
         return sum;
     }
 
-    public void translateName(String languageRequestParam) {
-        this.name = Translater.getTranslatedName(this.name, languageRequestParam);
+    public void translateName(Languages language) {
+        this.name = Translater.getTranslatedName(this.name, language);
     }
 
     public int getExhaustion() {

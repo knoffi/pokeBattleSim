@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.example.demo.RequestMode;
+import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Pokedex.Pokedex;
 import com.example.demo.Searches.PokemonSearch.NameHolder;
 import com.google.auth.oauth2.ServiceAccountCredentials;
@@ -22,12 +23,12 @@ public class Translater {
     // TODO: make this into a bean (add constructor which maps officialLanguageKey
     // to data field pokeAPILanguageKey by TranslationKeyMapper)
 
-    public static String getTranslatedName(String englishName, String languageParam) {
+    public static String getTranslatedName(String englishName, Languages language) {
         try {
             String specificPath = POKEMON_SPECIES_PATH + englishName;
             TranslationHolder translations = Pokedex.getPokeData(specificPath, TranslationHolder.class,
                     RequestMode.JAVA_11);
-            String languageKey = TranslationKeyMapper.getKey(languageParam);
+            String languageKey = TranslationKeyMapper.getKey(language.key);
             Optional<Name> translation = Arrays.stream(translations.names)
                     .filter(name -> name.language.name.equals(languageKey)).findFirst();
             if (translation.isPresent()) {
@@ -39,12 +40,12 @@ public class Translater {
         return englishName;
     }
 
-    public static String getTranslatedAttack(String englishAttack, String languageParam) {
+    public static String getTranslatedAttack(String englishAttack, Languages language) {
         try {
             String specificPath = POKE_MOVE_PATH + englishAttack;
             TranslationHolder translations = Pokedex.getPokeData(specificPath, TranslationHolder.class,
                     RequestMode.JAVA_11);
-            String languageKey = TranslationKeyMapper.getKey(languageParam);
+            String languageKey = TranslationKeyMapper.getKey(language.key);
             Optional<Name> translation = Arrays.stream(translations.names)
                     .filter(name -> name.language.name.equals(languageKey)).findFirst();
             if (translation.isPresent()) {

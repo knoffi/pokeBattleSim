@@ -1,5 +1,6 @@
 package com.example.demo.Pokemon;
 
+import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Translater.Translater;
 
 public class Attack {
@@ -38,8 +39,8 @@ public class Attack {
         this.meta = meta;
     }
 
-    public void translateName(String languageRequestParam) {
-        this.name = Translater.getTranslatedAttack(this.name, languageRequestParam);
+    public void translateName(Languages language) {
+        this.name = Translater.getTranslatedAttack(this.name, language);
     }
 
     public Type getType() {

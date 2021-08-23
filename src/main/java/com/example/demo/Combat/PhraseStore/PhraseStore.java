@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PhraseStore {
     final static private String PHRASES_FILE_PATH = "./pokeBattleSim/src/main/java/com/example/demo/Combat/PhraseStore/PhraseTable.json";
-    final static private PhraseTable PHRASES = getPhrases();
+    static private PhraseTable PHRASES = getPhrases();
 
     public static void update() {
         ObjectMapper mapper = new ObjectMapper();
@@ -56,6 +56,10 @@ public class PhraseStore {
         return PHRASES.getAttackPhrase(language);
     }
 
+    public static String getResultPhrase(Languages language) {
+        return PHRASES.getResultPhrase(language);
+    }
+
 }
 
 class PhraseTable {
@@ -66,6 +70,10 @@ class PhraseTable {
                 .toArray(PhraseRow[]::new);
     }
 
+    public void print() {
+        System.out.println(this.rows.length);
+    }
+
     public String getAttackPhrase(Languages language) {
         Optional<String> attackText = Arrays.stream(this.rows).filter(row -> row.belongsToLanguage(language))
                 .map(row -> row.getAttackText()).findAny();
@@ -73,7 +81,20 @@ class PhraseTable {
         if (attackText.isPresent()) {
             return attackText.get();
         } else {
+            this.throwRowNotFound();
             return PhraseRow.defaultAttackText;
+        }
+    }
+
+    public String getResultPhrase(Languages language) {
+        Optional<String> resultText = Arrays.stream(this.rows).filter(row -> row.belongsToLanguage(language))
+                .map(row -> row.getResultText()).findAny();
+
+        if (resultText.isPresent()) {
+            return resultText.get();
+        } else {
+            this.throwRowNotFound();
+            return PhraseRow.defaultResultText;
         }
     }
 
@@ -84,12 +105,16 @@ class PhraseTable {
         if (effectText.isPresent()) {
             return effectText.get();
         } else {
-            try {
-                throw new Exception("LanguageRowNotFound");
-            } catch (Exception e) {
-                System.out.println("___NO ROW FOR DESIRED LANGUAGE___" + e.getClass());
-            }
+            this.throwRowNotFound();
             return PhraseRow.defaultEffectText;
+        }
+    }
+
+    private void throwRowNotFound() {
+        try {
+            throw new Exception("LanguageRowNotFound");
+        } catch (Exception e) {
+            System.out.println("___NO ROW FOR DESIRED LANGUAGE___" + e.getClass());
         }
     }
 
@@ -97,6 +122,7 @@ class PhraseTable {
 
 class PhraseRow {
     final static public String defaultAttackText = "XXX uses YYY.";
+    final static public String defaultResultText = "XXX was defeated!";
     final static public String defaultEffectText = "";
 
     private String languageKey;
@@ -107,6 +133,7 @@ class PhraseRow {
     private String notVeryEffective;
     private String normalEffective;
     private String attackText;
+    private String resultText;
 
     PhraseRow(Languages language) {
         this.languageKey = language.key;
@@ -117,14 +144,23 @@ class PhraseRow {
         this.barelyEffective = Translater.getTranslatedText("It is nearly ineffective!", language.key);
         this.immunEffective = Translater.getTranslatedText("Nothing happens!", language.key);
         this.attackText = Translater.getTranslatedText(defaultAttackText, language.key);
+        this.resultText = Translater.getTranslatedText(defaultResultText, language.key);
+    }
+
+    PhraseRow() {
+
     }
 
     public boolean belongsToLanguage(Languages language) {
-        return this.languageKey == language.key;
+        return this.languageKey.equals(language.key);
     }
 
     public String getAttackText() {
         return this.attackText;
+    }
+
+    public String getResultText() {
+        return this.resultText;
     }
 
     public String getEffectText(Effectiveness effect) {

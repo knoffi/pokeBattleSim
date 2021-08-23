@@ -1,14 +1,11 @@
 package com.example.demo.TrainerDuell;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
-import java.util.stream.Collectors;
 
 import com.example.demo.Combat.Combat;
+import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Pokemon;
-import com.example.demo.Translater.Translater;
 
 public class TrainerDuell {
     private Stack<Pokemon> redTeam;
@@ -27,13 +24,13 @@ public class TrainerDuell {
         this.duellSummary = new Stack<LogRound>();
     }
 
-    public LogRound[] letThemFight(String languageParam) {
+    public LogRound[] letThemFight(Languages language) {
         boolean blueCanFight = !this.blueTeam.empty();
         boolean redCanFight = !this.redTeam.empty();
         while (blueCanFight && redCanFight) {
             Pokemon blueFighter = this.blueTeam.pop();
             Pokemon redFighter = this.redTeam.pop();
-            LogRound roundSummary = new Combat(redFighter, blueFighter, languageParam).getResult();
+            LogRound roundSummary = new Combat(redFighter, blueFighter, language).getResult();
             this.duellSummary.push(roundSummary);
             if (roundSummary.blueWon) {
                 this.blueTeam.push(blueFighter);
@@ -43,29 +40,8 @@ public class TrainerDuell {
                 blueCanFight = !this.blueTeam.empty();
             }
         }
-        this.translateBattleLogs(languageParam);
         return this.duellSummary.toArray(LogRound[]::new);
     }
-
-    private void translateBattleLogs(String languageParam) {
-        List<String> battleTexts = this.duellSummary.stream().flatMap(round -> Arrays.stream(round.battleLog))
-                .collect(Collectors.toList());
-        var translatedBattleTexts = Translater.getTranslatedTexts(battleTexts, languageParam);
-        var textsIterator = translatedBattleTexts.iterator();
-        var roundIterator = this.duellSummary.iterator();
-        while (textsIterator.hasNext()) {
-            String firstText = textsIterator.next();
-            String secondText = textsIterator.next();
-            String thirdText = textsIterator.next();
-
-            LogRound round = roundIterator.next();
-
-            String[] newBatteLog = { firstText, secondText, thirdText };
-            round.battleLog = newBatteLog;
-
-        }
-    }
-
 }
 
 class IntermediateResult {
