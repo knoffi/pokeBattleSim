@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PhraseStore {
     final static private String PHRASES_FILE_PATH = "./pokeBattleSim/src/main/java/com/example/demo/Combat/PhraseStore/PhraseTable.json";
+    final static private PhraseTable PHRASES = getPhrases();
 
     public static void update() {
         ObjectMapper mapper = new ObjectMapper();
@@ -32,34 +33,27 @@ public class PhraseStore {
         }
     }
 
-    public static String getEffectPhrase(Effectiveness effect, Languages language) {
+    private static PhraseTable getPhrases() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
         try {
             Path jsonPath = Paths.get(PHRASES_FILE_PATH);
             PhraseTable table = mapper.readValue(jsonPath.toFile(), PhraseTable.class);
-            return table.getEffectPhrase(language, effect);
+            return table;
 
         } catch (IOException e) {
             System.out.println("___FINDING PHRASE TABLE FAILED___" + e.getClass());
         }
-        return PhraseRow.defaultAttackText;
+        return new PhraseTable();
+    }
+
+    public static String getEffectPhrase(Effectiveness effect, Languages language) {
+        return PHRASES.getEffectPhrase(language, effect);
     }
 
     public static String getAttackPhrase(Languages language) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-        try {
-            Path jsonPath = Paths.get(PHRASES_FILE_PATH);
-            PhraseTable table = mapper.readValue(jsonPath.toFile(), PhraseTable.class);
-            return table.getAttackPhrase(language);
-
-        } catch (IOException e) {
-            System.out.println("___FINDING PHRASE TABLE FAILED___" + e.getClass());
-        }
-        return PhraseRow.defaultAttackText;
+        return PHRASES.getAttackPhrase(language);
     }
 
 }
