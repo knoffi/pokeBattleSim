@@ -14,6 +14,7 @@ class TranslationKeyMapper {
         keyMap.put("it", "it");
         keyMap.put("zh", "zh-hant");
         keyMap.put("zh-hant", "zh-hant");
+        keyMap.put("zh-TW", "zh-hant");
         keyMap.put("ja", "ja");
     }
 
