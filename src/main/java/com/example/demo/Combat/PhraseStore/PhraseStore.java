@@ -2,20 +2,22 @@ package com.example.demo.Combat.PhraseStore;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.Optional;
 
+import com.example.demo.JSONHandler;
 import com.example.demo.Translater.Translater;
 import com.example.demo.TypeEffects.Effectiveness;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PhraseStore {
-    final static private String PHRASES_FILE_PATH = "./pokeBattleSim/src/main/java/com/example/demo/Combat/PhraseStore/PhraseTable.json";
+    final static private String PHRASES_FILE_PATH = "http://localhost:8080/PhraseTable.json";
     static private PhraseTable PHRASES = getPhrases();
 
     public static void update() {
@@ -34,17 +36,19 @@ public class PhraseStore {
     }
 
     private static PhraseTable getPhrases() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
         try {
-            Path jsonPath = Paths.get(PHRASES_FILE_PATH);
-            PhraseTable table = mapper.readValue(jsonPath.toFile(), PhraseTable.class);
-            return table;
+            var url = URI.create(PHRASES_FILE_PATH);
+            var client = HttpClient.newHttpClient();
+            var request = HttpRequest.newBuilder(url).build();
 
-        } catch (IOException e) {
-            System.out.println("___FINDING PHRASE TABLE FAILED___" + e.getClass());
+            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String responseBody = response.body();
+            PhraseTable table = JSONHandler.convertJSON(responseBody, PhraseTable.class);
+            return table;
+        } catch (IOException | InterruptedException e) {
+            System.out.print("___GET REQUEST FOR PHRASE TABLE FAILED___" + e.getClass());
         }
+        ;
         return new PhraseTable();
     }
 

@@ -47,7 +47,7 @@ function assertApiRes(x: undefined | Partial<ApiRes>): asserts x is ApiRes {
 }
 
 const devUrl = "./db.json";
-const url = "/getTrainerDuell";
+const url = "/getTrainerDuell?lng=es";
 
 export class StandbyScene extends Scene {
     constructor(key = Scenes.Standby) {
