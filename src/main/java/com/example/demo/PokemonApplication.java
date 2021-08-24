@@ -7,6 +7,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PokemonApplication {
 
 	public static void main(String[] args) {
+
+		if (System.getenv("GOOGLE_APPLICATION_CREDENTIALS") == null) {
+			System.out.println(
+					"Environment variable GOOGLE_APPLICATION_CREDENTIALS is null. It needs to equal the location of your google translation API key.");
+			System.exit(-1);
+
+		}
+		;
 		SpringApplication.run(PokemonApplication.class, args);
 	}
 

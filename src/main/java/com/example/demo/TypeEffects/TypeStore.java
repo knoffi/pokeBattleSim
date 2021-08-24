@@ -1,170 +1,44 @@
 package com.example.demo.TypeEffects;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Optional;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
-import com.example.demo.RequestMode;
-import com.example.demo.Pokedex.Pokedex;
-import com.example.demo.Searches.PokemonSearch.NameHolder;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.demo.JSONHandler;
 
 public class TypeStore {
-    final static private String TYPE_FILE_PATH = "./pokeBattleSim/src/main/java/com/example/demo/TypeEffects/TypeTable.json";
-    // BEWARE: api does not support checks for types form classical generation, thus
-    // index array is hard coded
-    // TODO: Test with api call whether we get the desired hard coded names by hard
-    // coded index
-    final static private int[] CLASSICAL_TYPE_INDICES = { 1, 2, 3, 4, 5, 6, 7, 8,
-            /* path ending "9" is steel type, which is not classical */ 10, 11, 12, 13, 14, 15, 16 };
+    final static private String TYPE_FILE_PATH = "http://localhost:8080/TypeTable.json";
+    static private TypeTable typeTable = getTypeTable();
 
-    public static void updateTypes() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+    private static TypeTable getTypeTable() {
         try {
-            FileWriter file = new FileWriter(TYPE_FILE_PATH);
-            TypeTable table = new TypeTable(getTypes());
-            String data = mapper.writeValueAsString(table);
-            file.write(data);
-            file.close();
+            var url = URI.create(TYPE_FILE_PATH);
+            var client = HttpClient.newHttpClient();
+            var request = HttpRequest.newBuilder(url).build();
 
-        } catch (IOException e) {
-            System.out.println("___WRITING TYPE TABLE FAILED___" + e.getClass());
-        }
+            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            String responseBody = response.body();
+            TypeTable table = JSONHandler.convertJSON(responseBody, TypeTable.class);
+            if (table == null) {
+                System.out.println("___TYPE TABLE IS NULL___");
+                return new TypeTable();
 
-    };
-
-    private static TypeData[] getTypes() {
-        TypeData[] types = new TypeData[15];
-        for (int i = 0; i < CLASSICAL_TYPE_INDICES.length; i++) {
-            int typeIndex = CLASSICAL_TYPE_INDICES[i];
-            types[i] = getTypeData(typeIndex);
-        }
-        return types;
-    }
-
-    private static TypeData getTypeData(int typeIndex) {
-        try {
-            var types = Pokedex.getPokeData(Pokedex.API_PATH + "type/" + typeIndex + "/", TypeDataSearch.class,
-                    RequestMode.JAVA_11);
-            return types.convert();
+            }
+            return table;
         } catch (IOException | InterruptedException e) {
-            System.out.println("___FAILING TYPE LOADING___" + e.getClass());
+            System.out.print("___GET REQUEST FOR TYPE TABLE FAILED___" + e.getClass());
         }
-
-        return new TypeData();
+        return new TypeTable();
     }
 
     public static Effectiveness getEffectiveness(String pokemonType, String attackType) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-        try {
-            Path jsonPath = Paths.get(TYPE_FILE_PATH);
-            TypeTable table = mapper.readValue(jsonPath.toFile(), TypeTable.class);
-            return table.getEffectiveness(pokemonType, attackType);
-
-        } catch (IOException e) {
-            System.out.println("___FINDING TYPE TABLE FAILED___" + e.getClass());
+        if (typeTable == null) {
+            System.out.println("___NULL TYPE TABLE___");
+            return Effectiveness.VERY;
         }
-        return Effectiveness.NORMAL;
-
+        return typeTable.getEffectiveness(pokemonType, attackType);
     }
 
-}
-
-class TypeTable {
-    private TypeData[] types;
-
-    TypeTable() {
-
-    }
-
-    TypeTable(TypeData[] types) {
-        this.types = types;
-    }
-
-    void print() {
-        System.out.println(this.types.length);
-    }
-
-    public Effectiveness getEffectiveness(String pokemonType, String attackType) {
-        Optional<TypeData> typeRow = Arrays.stream(types).filter(type -> type.equals(attackType)).findAny();
-        if (typeRow.isEmpty()) {
-            try {
-                throw new Exception("MissingPokeTypeRow");
-            } catch (Throwable e) {
-                System.out.println("___NO ROW FOR ATTACK TYPE " + attackType.toUpperCase() + "___" + e.getClass());
-                return Effectiveness.NORMAL;
-            }
-        } else {
-            TypeData attackData = typeRow.get();
-            return attackData.getEffectivenessAgainstPokemon(pokemonType);
-
-        }
-    }
-}
-
-class TypeDataSearch {
-    public DamageRelationsBySearch damage_relations;
-    public String name;
-
-    public TypeData convert() {
-        return new TypeData(this);
-    }
-
-}
-
-class TypeData {
-    private String typeName;
-    private String[] doubleDamageTo;
-    private String[] halfDamageTo;
-    private String[] noDamageTo;
-
-    TypeData() {
-
-    }
-
-    public Effectiveness getEffectivenessAgainstPokemon(String pokeType) {
-        Effectiveness test = Effectiveness.NORMAL;
-        boolean isEffective = Arrays.stream(this.doubleDamageTo).anyMatch(type -> type.equals(pokeType));
-        if (isEffective) {
-
-            test = Effectiveness.VERY;
-        }
-        boolean isHalfDmg = Arrays.stream(this.halfDamageTo).anyMatch(type -> type.equals(pokeType));
-        if (isHalfDmg) {
-            test = Effectiveness.RESISTANT;
-        }
-        boolean isUseless = Arrays.stream(this.noDamageTo).anyMatch(type -> type.equals(pokeType));
-        if (isUseless) {
-            test = Effectiveness.IMMUN;
-        }
-
-        return test;
-    }
-
-    public boolean equals(String type) {
-        return type.equals(this.typeName);
-    }
-
-    TypeData(TypeDataSearch data) {
-        this.doubleDamageTo = data.damage_relations.getDamageNames(1);
-        this.halfDamageTo = data.damage_relations.getDamageNames(3);
-        this.noDamageTo = data.damage_relations.getDamageNames(5);
-        this.typeName = data.name;
-    }
-}
-
-class TypesSearch {
-    public NameHolder[] results;
-
-    TypesSearch() {
-    }
 }
