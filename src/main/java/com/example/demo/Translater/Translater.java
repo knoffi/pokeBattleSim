@@ -17,6 +17,10 @@ import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 
 public class Translater {
+    /**
+     *
+     */
+    private static final String SOURCE_LANGUAGE = "en";
     private final static String POKE_MOVE_PATH = "api/v2/move/";
     private final static String POKEMON_SPECIES_PATH = "api/v2/pokemon-species/";
 
@@ -64,7 +68,8 @@ public class Translater {
                             "C:/Users/monop/programming/pokeFightApi/jsons/ace-case-323614-5db3d27519e9.json")))
                     .build().getService();
 
-            Translation translation = translate.translate(englishText, Translate.TranslateOption.sourceLanguage("en"),
+            Translation translation = translate.translate(englishText,
+                    Translate.TranslateOption.sourceLanguage(SOURCE_LANGUAGE),
                     Translate.TranslateOption.targetLanguage(languageParam), Translate.TranslateOption.model("base"));
             return translation.getTranslatedText();
         } catch (IOException e) {
@@ -81,7 +86,7 @@ public class Translater {
                     .build().getService();
 
             List<Translation> translations = translate.translate(englishTexts,
-                    Translate.TranslateOption.sourceLanguage("en"),
+                    Translate.TranslateOption.sourceLanguage(SOURCE_LANGUAGE),
                     Translate.TranslateOption.targetLanguage(languageParam), Translate.TranslateOption.model("base"));
             List<String> translatedList = translations.stream().map(translation -> translation.getTranslatedText())
                     .collect(Collectors.toList());
