@@ -17,5 +17,8 @@ FROM adoptopenjdk/openjdk11:alpine
 WORKDIR /usr/src/app
 COPY --from=packager /usr/src/app/target .
 
+# dont env var change name. will be used by google-cloud-translate library
+ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/mnt/secrets/google-translate-api-key.json
+
 EXPOSE 8080
 CMD ["java", "-jar", "./demo-0.0.1-SNAPSHOT.jar" ]
