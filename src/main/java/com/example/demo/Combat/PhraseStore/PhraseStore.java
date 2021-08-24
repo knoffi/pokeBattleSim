@@ -70,12 +70,12 @@ class PhraseTable {
     private PhraseRow[] rows;
 
     PhraseTable() {
-        this.rows = Arrays.stream(Languages.values()).map(language -> new PhraseRow(language))
-                .toArray(PhraseRow[]::new);
+
     }
 
-    public void print() {
-        System.out.println(this.rows.length);
+    public void updateTranslations() {
+        this.rows = Arrays.stream(Languages.values()).map(language -> new PhraseRow(language))
+                .toArray(PhraseRow[]::new);
     }
 
     public String getAttackPhrase(Languages language) {
@@ -139,7 +139,7 @@ class PhraseRow {
     private String attackText;
     private String resultText;
 
-    PhraseRow(Languages language) {
+    public PhraseRow(Languages language) {
         this.languageKey = language.key;
         this.veryEffective = Translater.getTranslatedText("It is very effective!", language.key);
         this.superEffective = Translater.getTranslatedText("It is super effective!", language.key);

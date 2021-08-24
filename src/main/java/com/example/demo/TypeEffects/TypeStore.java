@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import com.example.demo.JSONHandler;
-import com.example.demo.Searches.PokemonSearch.NameHolder;
 
 public class TypeStore {
     final static private String TYPE_FILE_PATH = "http://localhost:8080/TypeTable.json";
@@ -47,9 +46,13 @@ public class TypeStore {
 }
 
 class TypeTable {
-    public TypeData[] types;
+    private TypeData[] types;
 
     TypeTable() {
+    }
+
+    TypeTable(TypeData[] types) {
+        this.types = types;
     }
 
     public Effectiveness getEffectiveness(String pokemonType, String attackType) {
@@ -69,21 +72,11 @@ class TypeTable {
     }
 }
 
-class TypeDataSearch {
-    public DamageRelationsBySearch damage_relations;
-    public String name;
-
-    public TypeData convert() {
-        return new TypeData(this);
-    }
-
-}
-
 class TypeData {
-    public String typeName;
-    public String[] doubleDamageTo;
-    public String[] halfDamageTo;
-    public String[] noDamageTo;
+    private String typeName;
+    private String[] doubleDamageTo;
+    private String[] halfDamageTo;
+    private String[] noDamageTo;
 
     TypeData() {
 
@@ -112,17 +105,4 @@ class TypeData {
         return type.equals(this.typeName);
     }
 
-    TypeData(TypeDataSearch data) {
-        this.doubleDamageTo = data.damage_relations.getDamageNames(1);
-        this.halfDamageTo = data.damage_relations.getDamageNames(3);
-        this.noDamageTo = data.damage_relations.getDamageNames(5);
-        this.typeName = data.name;
-    }
-}
-
-class TypesSearch {
-    public NameHolder[] results;
-
-    TypesSearch() {
-    }
 }
