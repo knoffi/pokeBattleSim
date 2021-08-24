@@ -1,6 +1,5 @@
 package com.example.demo.Translater;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -11,7 +10,6 @@ import com.example.demo.RequestMode;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Pokedex.Pokedex;
 import com.example.demo.Searches.PokemonSearch.NameHolder;
-import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
@@ -58,38 +56,22 @@ public class Translater {
     }
 
     public static String getTranslatedText(String englishText, String languageParam) {
-        try {
-            Translate translate = TranslateOptions.newBuilder()
-                    .setCredentials(ServiceAccountCredentials.fromStream(new FileInputStream(
-                            "C:/Users/monop/programming/pokeFightApi/jsons/ace-case-323614-5db3d27519e9.json")))
-                    .build().getService();
+        Translate translate = TranslateOptions.getDefaultInstance().getService();
 
-            Translation translation = translate.translate(englishText, Translate.TranslateOption.sourceLanguage("en"),
-                    Translate.TranslateOption.targetLanguage(languageParam), Translate.TranslateOption.model("base"));
-            return translation.getTranslatedText();
-        } catch (IOException e) {
-            System.out.println("___FAIL ON FINDING FILE WITH API KEY___" + e.getClass());
-            return englishText;
-        }
+        Translation translation = translate.translate(englishText, Translate.TranslateOption.sourceLanguage("en"),
+                Translate.TranslateOption.targetLanguage(languageParam), Translate.TranslateOption.model("base"));
+        return translation.getTranslatedText();
     }
 
     public static List<String> getTranslatedTexts(List<String> englishTexts, String languageParam) {
-        try {
-            Translate translate = TranslateOptions.newBuilder()
-                    .setCredentials(ServiceAccountCredentials.fromStream(new FileInputStream(
-                            "C:/Users/monop/programming/pokeFightApi/jsons/ace-case-323614-5db3d27519e9.json")))
-                    .build().getService();
+        Translate translate = TranslateOptions.getDefaultInstance().getService();
 
-            List<Translation> translations = translate.translate(englishTexts,
-                    Translate.TranslateOption.sourceLanguage("en"),
-                    Translate.TranslateOption.targetLanguage(languageParam), Translate.TranslateOption.model("base"));
-            List<String> translatedList = translations.stream().map(translation -> translation.getTranslatedText())
-                    .collect(Collectors.toList());
-            return translatedList;
-        } catch (IOException e) {
-            System.out.println("___FAIL ON FINDING FILE WITH API KEY___" + e.getClass());
-            return englishTexts;
-        }
+        List<Translation> translations = translate.translate(englishTexts,
+                Translate.TranslateOption.sourceLanguage("en"), Translate.TranslateOption.targetLanguage(languageParam),
+                Translate.TranslateOption.model("base"));
+        List<String> translatedList = translations.stream().map(translation -> translation.getTranslatedText())
+                .collect(Collectors.toList());
+        return translatedList;
     }
 }
 
