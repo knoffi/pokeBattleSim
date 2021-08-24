@@ -15,9 +15,7 @@ import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 
 public class Translater {
-    /**
-     *
-     */
+    private static final String GOOGLE_TRANSLATION_MODE = "base";
     private static final String SOURCE_LANGUAGE = "en";
     private final static String POKE_MOVE_PATH = "api/v2/move/";
     private final static String POKEMON_SPECIES_PATH = "api/v2/pokemon-species/";
@@ -62,8 +60,10 @@ public class Translater {
     public static String getTranslatedText(String englishText, String languageParam) {
         Translate translate = TranslateOptions.getDefaultInstance().getService();
 
-        Translation translation = translate.translate(englishText, Translate.TranslateOption.sourceLanguage("en"),
-                Translate.TranslateOption.targetLanguage(languageParam), Translate.TranslateOption.model("base"));
+        Translation translation = translate.translate(englishText,
+                Translate.TranslateOption.sourceLanguage(SOURCE_LANGUAGE),
+                Translate.TranslateOption.targetLanguage(languageParam),
+                Translate.TranslateOption.model(GOOGLE_TRANSLATION_MODE));
         return translation.getTranslatedText();
     }
 
@@ -71,8 +71,9 @@ public class Translater {
         Translate translate = TranslateOptions.getDefaultInstance().getService();
 
         List<Translation> translations = translate.translate(englishTexts,
-                Translate.TranslateOption.sourceLanguage("en"), Translate.TranslateOption.targetLanguage(languageParam),
-                Translate.TranslateOption.model("base"));
+                Translate.TranslateOption.sourceLanguage(SOURCE_LANGUAGE),
+                Translate.TranslateOption.targetLanguage(languageParam),
+                Translate.TranslateOption.model(GOOGLE_TRANSLATION_MODE));
         List<String> translatedList = translations.stream().map(translation -> translation.getTranslatedText())
                 .collect(Collectors.toList());
         return translatedList;
