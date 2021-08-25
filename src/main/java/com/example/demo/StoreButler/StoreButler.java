@@ -14,16 +14,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class StoreButler {
 
     private static final String WRAPPER_FIELD = "record";
-    private static String responseBody = getResponseBody();
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final String HEADER_FIELD = "X-Master-Key";
+    private static final String JSON_BIN_URL = "https://api.jsonbin.io/v3/b/61264e27c5159b35ae03b301/latest";
+    private static final String JSON_BIN_API_KEY = System.getenv("JSON_BIN_API_KEY");
+    private static ObjectMapper MAPPER = new ObjectMapper();
+    private static String RESPONSE_BODY = getResponseBody();
 
     private static String getResponseBody() {
-        String headerField = "X-Master-Key";
-        String testKey = "$2b$10$x6ODCTAqgUywRPunUmSpKOy.dcMwp/FnOmVl3RVF4ERQJsWf0B/Q2";
         try {
-            var url = URI.create("https://api.jsonbin.io/v3/b/6125fd7ec5159b35ae0391be/latest");
+            var url = URI.create(JSON_BIN_URL);
             var client = HttpClient.newHttpClient();
-            var request = HttpRequest.newBuilder(url).header(headerField, testKey).build();
+            var request = HttpRequest.newBuilder(url).header(HEADER_FIELD, JSON_BIN_API_KEY).build();
 
             var response = client.send(request, HttpResponse.BodyHandlers.ofString());
             String responseBody = response.body();
@@ -35,7 +36,7 @@ public class StoreButler {
     }
 
     public static <T> T getData(StoreButlerServices service, Class<T> type) throws JsonProcessingException, Exception {
-        JsonNode responseObject = mapper.readTree(responseBody);
+        JsonNode responseObject = MAPPER.readTree(RESPONSE_BODY);
         if (!responseObject.has(WRAPPER_FIELD)) {
             throw new Exception("ResponseHasNoRecordField");
         } else {
