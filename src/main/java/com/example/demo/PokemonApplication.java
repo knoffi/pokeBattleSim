@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.SupportedAttacks.AttackStore;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,8 +16,12 @@ public class PokemonApplication {
 			System.exit(-1);
 
 		}
-		;
-		SpringApplication.run(PokemonApplication.class, args);
+		int a = 4;
+		int b = 5;
+		AttackStore.testUpdate();
+		if (b < a) {
+			SpringApplication.run(PokemonApplication.class, args);
+		}
 	}
 
 }
