@@ -1,7 +1,7 @@
 package com.example.demo.Combat.PhraseStore;
 
 public enum Languages {
-    DE("de"), KO("ko"), FR("fr"), IT("it"), JA("ja"), ZH("zh-TW"), ES("es");
+    DE("de"), KO("ko"), FR("fr"), IT("it"), JA("ja"), ZH("zh-TW"), ES("es"), EN("en");
 
     public final String key;
 

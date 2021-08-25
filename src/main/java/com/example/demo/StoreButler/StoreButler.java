@@ -15,7 +15,7 @@ public class StoreButler {
 
     private static final String WRAPPER_FIELD = "record";
     private static final String HEADER_FIELD = "X-Master-Key";
-    private static final String JSON_BIN_URL = "https://api.jsonbin.io/v3/b/61264e27c5159b35ae03b301/latest";
+    private static final String JSON_BIN_URL = "https://api.jsonbin.io/v3/b/61265c142aa80036126f7f7b/latest";
     private static final String JSON_BIN_API_KEY = System.getenv("JSON_BIN_API_KEY");
     private static ObjectMapper MAPPER = new ObjectMapper();
     private static String RESPONSE_BODY = getResponseBody();

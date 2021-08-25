@@ -2,6 +2,17 @@
     "phraseTable": {
         "rows": [
             {
+                "languageKey": "en",
+                "veryEffective": "It is very effective!",
+                "superEffective": "It is super effective!",
+                "immunEffective": "Nothing happens!",
+                "barelyEffective": "It is nearly ineffective!",
+                "notVeryEffective": "It is not very effective!",
+                "normalEffective": "",
+                "attackText": "XXX uses YYY.",
+                "resultText": "XXX Was defeated!"
+            },
+            {
                 "languageKey": "de",
                 "veryEffective": "Es ist sehr effektiv!",
                 "superEffective": "Es ist super effektiv!",
