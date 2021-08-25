@@ -1,8 +1,8 @@
 // TODO make dev easy again
-export const isProd = true; // window.location.hostname !== "localhost";
+export const isProd = process.env.NODE_ENV === "production";
 export const DEV = isProd
     ? {}
     : {
-          inBattleImmediately: false,
+          inBattleImmediately: true,
           enableSceneWatcher: false,
       };
