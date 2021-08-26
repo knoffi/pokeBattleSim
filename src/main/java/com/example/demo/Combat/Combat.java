@@ -67,7 +67,6 @@ class BattleCalculation {
         return new CombatResult(blueWins, texts);
     }
 
-    // TODO: needs testing
     private boolean blueWonSimulation() {
         boolean blueStarted = this.blue.getSpeedStat() >= this.red.getSpeedStat();
         double blueAttackValue = this.getAttackValue(this.blueAttack, true);
@@ -87,7 +86,8 @@ class BattleCalculation {
         boolean winnerHadFirstStrike = blueWon ? blueStarted : !blueStarted;
 
         this.dealDamage(winner, loser, loserSurvivedRounds, loserAttackValue, winnerHadFirstStrike);
-        return blueWonBarely || blueWonClearly;
+
+        return blueWon;
     }
 
     private int getSurvivableRounds(int defenderHP, double attackerDamage) {
@@ -108,6 +108,14 @@ class BattleCalculation {
         int loserLandedHits = loserSurvivedRounds + (winnerHadFirstStrike ? 0 : 1);
         int sufferedDamage = loserLandedHits * (int) loserAttack;
         winner.takesDamage(sufferedDamage);
+        if (winner.isKO()) {
+            try {
+                throw new Exception("DeadWinnerGoesToNextRound");
+            } catch (Exception e) {
+                winner.revive();
+                System.out.print("___WINNER GOES WITH = HP TO NEXT TO NEXT ROUND___");
+            }
+        }
     }
 
     private Stack<String> getResultTexts(boolean blueWon) {
