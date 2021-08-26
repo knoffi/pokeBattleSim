@@ -30,7 +30,6 @@ export class MainScene extends Scene {
                 .image(`${pkmn.name}back`, pkmn.backSprite)
                 .image(pkmn.name, pkmn.frontSprite)
         );
-        // this.load.audio("attack", "./assets/sounds/attack_01.ogg");
         this.load.image("textbox", "./assets/textbox.nineslice.png");
     }
 
@@ -108,7 +107,6 @@ export class MainScene extends Scene {
             ease: "sine",
             duration: 250,
             yoyo: true,
-            // onYoyo: () => this.sound.play("attack"),
         });
         // start blinking
         timeline.add({
