@@ -2,6 +2,7 @@ package com.example.demo.Pokemon;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Combat.PhraseStore.Languages;
@@ -15,6 +16,8 @@ import com.example.demo.Searches.PokemonSearch.TypeHolder;
 import com.example.demo.Translater.Translater;
 
 public class Pokemon {
+    private static final int MAXIMAL_LEVEL = 100;
+    private static final int MAXIMAL_EFFORT_VALUE = 265;
     private String name;
     private Stat[] stats;
     private Type[] types;
@@ -22,6 +25,8 @@ public class Pokemon {
     private String frontSpriteUrl;
     private String backSpriteUrl;
     private int exhaustionPoint;
+    private int level = MAXIMAL_LEVEL;
+    private int effortValue = MAXIMAL_EFFORT_VALUE;
 
     public Pokemon(PokemonSearch data) {
         this.name = data.name;
@@ -51,6 +56,10 @@ public class Pokemon {
         this.exhaustionPoint++;
     }
 
+    public int getLevel() {
+        return this.level;
+    }
+
     public Type[] getPokeTypes() {
         return this.types;
     }
@@ -62,6 +71,72 @@ public class Pokemon {
 
     public String getName() {
         return this.name;
+    }
+
+    private int getBaseAttackStat() throws Exception {
+        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals("attack")).findAny();
+        if (attackStat.isPresent()) {
+            return attackStat.get().value;
+        } else {
+            throw new Exception("NoAttackStatFound");
+        }
+    }
+
+    private int getBaseHPStat() throws Exception {
+        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals("hp")).findAny();
+        if (attackStat.isPresent()) {
+            return attackStat.get().value;
+        } else {
+            throw new Exception("NoAttackStatFound");
+        }
+    }
+
+    private int getBaseDefenseStat() throws Exception {
+        Optional<Stat> defenseStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals("defense")).findAny();
+        if (defenseStat.isPresent()) {
+            return defenseStat.get().value;
+        } else {
+            throw new Exception("NoDefenseStatFound");
+        }
+    }
+
+    public int getAttackStat() {
+        try {
+            int baseValue = this.getBaseAttackStat();
+            int levelValue = this.calculateStatFromLevel(baseValue, false);
+            return levelValue;
+        } catch (Exception e) {
+            System.out.println("___NO ATTACK STAT FOUND FOR " + this.name + "___");
+        }
+        return 40;
+    }
+
+    public int getHPStat() {
+        try {
+            int baseValue = this.getBaseHPStat();
+            int levelValue = this.calculateStatFromLevel(baseValue, true);
+            return levelValue;
+        } catch (Exception e) {
+            System.out.println("___NO HP STAT FOUND FOR " + this.name + "___");
+        }
+        return 110;
+    }
+
+    public int getDefenseStat() {
+        try {
+            int baseValue = this.getBaseDefenseStat();
+            int levelValue = this.calculateStatFromLevel(baseValue, false);
+            return levelValue;
+        } catch (Exception e) {
+            System.out.println("___NO DEFENSE STAT FOUND FOR " + this.name + "___");
+        }
+        return 40;
+    }
+
+    private int calculateStatFromLevel(int baseValue, boolean isAboutHP) {
+        double mainFactor = (baseValue * 2 + Math.floor(this.effortValue / 4.0)) / 100.0 * this.level;
+        int summandOffSet = isAboutHP ? this.level + 10 : 5;
+        return (int) mainFactor + summandOffSet;
     }
 
     public Attack[] getFinishingBlows() {
