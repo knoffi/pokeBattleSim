@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const pathToPhaser = path.join(__dirname, "/node_modules/phaser/");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
     entry: "./src/index.ts",
@@ -28,6 +29,23 @@ module.exports = {
         alias: {
             phaser,
         },
+    },
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    warnings: false,
+                    parse: {},
+                    compress: {},
+                    mangle: true,
+                    output: null,
+                    toplevel: false,
+                    nameCache: null,
+                    ie8: false,
+                    keep_fnames: false,
+                },
+            }),
+        ],
     },
     plugins: [
         new HtmlWebpackPlugin({
