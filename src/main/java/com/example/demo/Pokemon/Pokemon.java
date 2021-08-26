@@ -27,6 +27,7 @@ public class Pokemon {
     private int exhaustionPoint;
     private int level = MAXIMAL_LEVEL;
     private int effortValue = MAXIMAL_EFFORT_VALUE;
+    private int HP;
 
     public Pokemon(PokemonSearch data) {
         this.name = data.name;
@@ -36,6 +37,7 @@ public class Pokemon {
         this.backSpriteUrl = data.sprites.back_default;
         this.frontSpriteUrl = data.sprites.front_default;
         this.exhaustionPoint = 0;
+        this.HP = this.getStartHP();
     }
 
     public int getStatSum() {
@@ -111,7 +113,7 @@ public class Pokemon {
         return 40;
     }
 
-    public int getHPStat() {
+    private int getStartHP() {
         try {
             int baseValue = this.getBaseHPStat();
             int levelValue = this.calculateStatFromLevel(baseValue, true);
@@ -120,6 +122,22 @@ public class Pokemon {
             System.out.println("___NO HP STAT FOUND FOR " + this.name + "___");
         }
         return 110;
+    }
+
+    public int getHP() {
+        return this.HP;
+    }
+
+    public int takesDamage(int damage) {
+        return this.HP -= damage;
+    }
+
+    public boolean isKO() {
+        return this.HP <= 0;
+    }
+
+    public boolean canFight() {
+        return this.HP > 0;
     }
 
     public int getDefenseStat() {

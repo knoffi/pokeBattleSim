@@ -61,12 +61,31 @@ class BattleCalculation {
     }
 
     public CombatResult getResult() {
-
-        double blueAttackValue = this.getAttackValue(this.blueAttack, true);
-        double redAttackValue = this.getAttackValue(this.redAttack, false);
-        boolean blueWins = blueAttackValue > redAttackValue;
+        boolean blueWins = this.blueWonSimulation();
         Stack<String> texts = this.getResultTexts(blueWins);
         return new CombatResult(blueWins, texts);
+    }
+
+    // TODO: needs testing
+    private boolean blueWonSimulation() {
+        double blueAttackValue = this.getAttackValue(this.blueAttack, true);
+        double redAttackValue = this.getAttackValue(this.redAttack, false);
+        int roundsBlueCanSurvive = (int) (this.blue.getHP() / redAttackValue);
+        int roundsRedCanSurvive = (int) (this.red.getHP() / blueAttackValue);
+        // TODO: use speed factor here to decide equality case :: I assume here that the
+        // winner always had first strike
+        boolean blueWon = roundsBlueCanSurvive >= roundsRedCanSurvive;
+        if (blueWon) {
+            int sufferedDamage = roundsRedCanSurvive * (int) redAttackValue;
+            this.blue.takesDamage(sufferedDamage);
+
+            return true;
+        } else {
+            int sufferedDamage = roundsBlueCanSurvive * (int) blueAttackValue;
+            this.red.takesDamage(sufferedDamage);
+
+            return false;
+        }
     }
 
     private Stack<String> getResultTexts(boolean blueWon) {
@@ -141,11 +160,6 @@ class BattleCalculation {
                     * TypeStore.getEffectiveness(secondType.name, attackType.name).value;
         }
         return Effectiveness.findKeyFromValue(effectivenessValue);
-    }
-
-    private boolean blueWinsRandomly() {
-        boolean blueWins = Math.random() < 0.5;
-        return blueWins;
     }
 }
 
