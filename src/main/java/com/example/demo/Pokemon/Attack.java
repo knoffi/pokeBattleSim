@@ -4,7 +4,7 @@ import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Translater.Translater;
 
 public class Attack {
-    private static Type POKE_TYPE_NORMAL = new Type("normal", "https://pokeapi.co/api/v2/type/1/");
+    private final static Type POKE_TYPE_NORMAL = new Type("normal", "https://pokeapi.co/api/v2/type/1/");
     private String name;
     private int power;
     private DamageClass damageClass;
@@ -51,7 +51,11 @@ public class Attack {
         return this.name;
     }
 
-    public String getCategory() {
-        return this.type.name.toUpperCase().equals("DARK") ? "physical" : this.meta.category;
+    public DamageClass getDamageClass() {
+        return this.type.name.toUpperCase().equals("DARK") ? DamageClass.PHYSICAL : this.damageClass;
+    }
+
+    public int getPower() {
+        return this.power;
     }
 }

@@ -62,7 +62,7 @@ class BattleCalculation {
 
     public CombatResult getResult() {
 
-        boolean blueWins = this.blueWinsRandomly();
+        boolean blueWins = true;
         Stack<String> texts = this.getResultTexts(blueWins);
         return new CombatResult(blueWins, texts);
     }
@@ -83,11 +83,34 @@ class BattleCalculation {
     }
 
     private double getAttackValue(Attack attack, boolean blueAttacks) {
-        return 10;
+        // TODO: test each step of factor calculation with easy examples
+        Pokemon attacker = blueAttacks ? this.blue : this.red;
+        Pokemon defender = blueAttacks ? this.red : this.blue;
+
+        Effectiveness effect = getEffectiveness(attack.getType(), defender.getPokeTypes());
+        int attackStat = attacker.getAttackStat();
+        int defenseStat = defender.getDefenseStat();
+        int attackerLevel = attacker.getLevel();
+
+        double levelFactor = 2 * attackerLevel / 5.0 + 2;
+        double statFactor = attackStat * 1.0 / defenseStat;
+        double powerFactor = attack.getPower() / 50.0;
+        double randomFactor = (217 + Math.random() * 38) / 255;
+        double effectFactor = effect.value;
+        // -> getBestAttackEffect
+        return (levelFactor * statFactor * powerFactor + 2) * randomFactor * effectFactor;
     }
 
     private Attack getBestAttack(Attack[] attacks, boolean blueAttacks) {
         Optional<Attack> bestAttack = Arrays.stream(attacks).max((a, b) -> this.compare(a, b, blueAttacks));
+        Pokemon attacker = blueAttacks ? this.blue : this.red;
+        Pokemon defender = blueAttacks ? this.red : this.blue;
+        String attackResults = attacker.getName() + " vs " + defender.getName() + " : | ";
+        for (Attack attack : attacks) {
+            attackResults += attack.getName() + " " + (int) this.getAttackValue(attack, blueAttacks) + " -> "
+                    + defender.getHPStat() + " | ";
+        }
+        System.out.println(attackResults);
         if (bestAttack.isPresent()) {
             return bestAttack.get();
         } else {

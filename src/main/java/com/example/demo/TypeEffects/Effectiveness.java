@@ -1,7 +1,7 @@
 package com.example.demo.TypeEffects;
 
 public enum Effectiveness {
-    IMMUN(Double.NEGATIVE_INFINITY), RESISTANT(-1), NORMAL(0), VERY(1), SUPER(2), SUPER_BAD(-2);
+    IMMUN(0), RESISTANT(0.5), NORMAL(1), VERY(2), SUPER(4), SUPER_BAD(0.25);
 
     public final double value;
 
@@ -31,7 +31,7 @@ public enum Effectiveness {
             try {
                 throw new Exception("EffectValueNotFound");
             } catch (Exception e) {
-                System.out.println("___EFFECT VALUE NOT FOUND___" + e.getClass());
+                System.out.println("___EFFECT VALUE NOT FOUND" + value + "___" + e.getClass());
             }
             return NORMAL;
         }
