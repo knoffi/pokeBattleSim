@@ -24,8 +24,6 @@ public class DuellController {
         try {
             Pokemon[] blue = this.getRandomPokemonTeam();
             Pokemon[] red = this.getRandomPokemonTeam();
-            this.translatePokemons(blue, language);
-            this.translatePokemons(red, language);
             LogPokemon[] blueLogPokemon = Arrays.stream(blue).map(pokemon -> pokemon.getLogData())
                     .toArray(LogPokemon[]::new);
             LogPokemon[] redLogPokemon = Arrays.stream(red).map(pokemon -> pokemon.getLogData())
@@ -61,10 +59,6 @@ public class DuellController {
         Pokemon[] randomTeam = Arrays.stream(pokemonSearches).map(search -> search.convert()).toArray(Pokemon[]::new);
         return randomTeam;
 
-    }
-
-    private void translatePokemons(Pokemon[] pokemons, Languages language) {
-        Arrays.stream(pokemons).forEach(pokemon -> pokemon.translateName(language));
     }
 
 }
