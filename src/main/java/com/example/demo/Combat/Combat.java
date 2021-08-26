@@ -69,24 +69,33 @@ class BattleCalculation {
 
     // TODO: needs testing
     private boolean blueWonSimulation() {
+        boolean blueStarted = this.blue.getSpeedStat() >= this.red.getSpeedStat();
         double blueAttackValue = this.getAttackValue(this.blueAttack, true);
         double redAttackValue = this.getAttackValue(this.redAttack, false);
+
         int roundsBlueCanSurvive = (int) (this.blue.getHP() / redAttackValue);
         int roundsRedCanSurvive = (int) (this.red.getHP() / blueAttackValue);
-        // TODO: use speed factor here to decide equality case :: I assume here that the
-        // winner always had first strike
-        boolean blueWon = roundsBlueCanSurvive >= roundsRedCanSurvive;
-        if (blueWon) {
-            int sufferedDamage = roundsRedCanSurvive * (int) redAttackValue;
-            this.blue.takesDamage(sufferedDamage);
 
-            return true;
-        } else {
-            int sufferedDamage = roundsBlueCanSurvive * (int) blueAttackValue;
-            this.red.takesDamage(sufferedDamage);
+        boolean blueWonClearly = roundsBlueCanSurvive > roundsRedCanSurvive;
+        boolean blueWonBarely = roundsBlueCanSurvive == roundsRedCanSurvive && blueStarted;
+        boolean blueWon = blueWonBarely || blueWonClearly;
 
-            return false;
-        }
+        Pokemon winner = blueWon ? this.blue : this.red;
+        Pokemon loser = blueWon ? this.red : this.blue;
+        int loserSurvivedRounds = blueWon ? roundsRedCanSurvive : roundsBlueCanSurvive;
+        double loserAttackValue = blueWon ? redAttackValue : blueAttackValue;
+        boolean winnerHadFirstStrike = blueWon ? blueStarted : !blueStarted;
+
+        this.dealDamage(winner, loser, loserSurvivedRounds, loserAttackValue, winnerHadFirstStrike);
+        return blueWonBarely || blueWonClearly;
+    }
+
+    private void dealDamage(Pokemon winner, Pokemon loser, int loserSurvivedRounds, double loserAttack,
+            boolean winnerHadFirstStrike) {
+        loser.setKO();
+        int loserLandedHits = loserSurvivedRounds + (winnerHadFirstStrike ? 0 : 1);
+        int sufferedDamage = loserLandedHits * (int) loserAttack;
+        winner.takesDamage(sufferedDamage);
     }
 
     private Stack<String> getResultTexts(boolean blueWon) {

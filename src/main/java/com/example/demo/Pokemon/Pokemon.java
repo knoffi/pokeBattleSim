@@ -167,6 +167,16 @@ public class Pokemon {
         return this.HP;
     }
 
+    public void setKO() {
+        this.HP = 0;
+    }
+
+    public void revive() {
+        if (this.HP == 0) {
+            this.HP = 1;
+        }
+    }
+
     public int takesDamage(int damage) {
         return this.HP -= damage;
     }
