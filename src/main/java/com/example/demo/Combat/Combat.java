@@ -103,14 +103,6 @@ class BattleCalculation {
 
     private Attack getBestAttack(Attack[] attacks, boolean blueAttacks) {
         Optional<Attack> bestAttack = Arrays.stream(attacks).max((a, b) -> this.compare(a, b, blueAttacks));
-        Pokemon attacker = blueAttacks ? this.blue : this.red;
-        Pokemon defender = blueAttacks ? this.red : this.blue;
-        String attackResults = attacker.getName() + " vs " + defender.getName() + " : | ";
-        for (Attack attack : attacks) {
-            attackResults += attack.getName() + " " + (int) this.getAttackValue(attack, blueAttacks) + " -> "
-                    + defender.getHPStat() + " | ";
-        }
-        System.out.println(attackResults);
         if (bestAttack.isPresent()) {
             return bestAttack.get();
         } else {
