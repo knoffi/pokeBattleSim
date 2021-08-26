@@ -35,7 +35,7 @@ public class Translater {
                 return translation.get().name;
             }
         } catch (IOException | InterruptedException e) {
-            System.out.println("___FAIL ON TRANSLATED POKEMON NAME___" + e.getClass());
+            System.out.println("___FAIL ON TRANSLATED POKEMON NAME " + englishName + "___" + e.getClass());
         }
         return englishName;
     }
