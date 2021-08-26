@@ -1,4 +1,4 @@
-import { Scene } from "phaser";
+import { GameObjects, Scene, Time } from "phaser";
 import { DEV, isProd } from "../dev-config";
 import { ApiRes, IPokemon } from "../interfaces";
 import { Color } from "../styles/Color";
@@ -50,6 +50,9 @@ const devUrl = "./db.json";
 const url = "/getTrainerDuell?lng=es";
 
 export class StandbyScene extends Scene {
+    private gameboyLogo?: GameObjects.Image;
+    private mainSceneStarting?: Time.TimerEvent;
+
     constructor(key = Scenes.Standby) {
         super(key);
     }
@@ -78,30 +81,54 @@ export class StandbyScene extends Scene {
 
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         startBattle.addEventListener("click", async () => {
-            this.add.image(0, 0, "gbastartscreen").setOrigin(0).setScale(1.01); // remove 1-3px thin grey line on the right
-            const beforeFetch = this.time.now;
-            const api = isProd ? url : devUrl;
-            const data = await fetch(api).then(
-                (x) => x.json() as Partial<ApiRes>
-            );
-            assertApiRes(data);
-            const startMainScene = () =>
-                this.scene.add(Scenes.Main, MainScene, true, data);
-
-            // show the start screen for at least minTimeShowingStartScreenInMs
-            const minTimeHasNotPassedYet =
-                beforeFetch + cfg.minTimeShowingStartScreenInMs > this.time.now;
-            if (minTimeHasNotPassedYet) {
-                this.time.delayedCall(
-                    cfg.minTimeShowingStartScreenInMs -
-                        (this.time.now - beforeFetch),
-                    startMainScene,
-                    undefined,
-                    this
-                );
+            if (this.scene.get(Scenes.Main)) {
+                this.stopGameboy();
+                startBattle.innerHTML = "Start Battle";
             } else {
-                startMainScene();
+                if (!this.mainSceneStarting) {
+                    await this.startGameboy();
+                    startBattle.innerHTML = "End Battle";
+                }
             }
         });
+    }
+
+    private async startGameboy() {
+        this.gameboyLogo = this.add
+            .image(0, 0, "gbastartscreen")
+            .setOrigin(0)
+            .setScale(1.01); // remove 1-3px thin grey line on the right
+
+        const beforeFetch = this.time.now;
+        const api = isProd ? url : devUrl;
+        const data = await fetch(api).then((x) => x.json() as Partial<ApiRes>);
+        assertApiRes(data);
+        const startMainScene = () => {
+            this.scene.add(Scenes.Main, MainScene, true, data);
+        };
+
+        // show the start screen for at least minTimeShowingStartScreenInMs
+        const minTimeHasNotPassedYet =
+            beforeFetch + cfg.minTimeShowingStartScreenInMs > this.time.now;
+        if (minTimeHasNotPassedYet) {
+            this.mainSceneStarting = this.time.delayedCall(
+                cfg.minTimeShowingStartScreenInMs -
+                    (this.time.now - beforeFetch),
+                startMainScene,
+                undefined,
+                this
+            );
+        } else {
+            startMainScene();
+        }
+    }
+
+    private stopGameboy() {
+        this.gameboyLogo?.destroy();
+        this.mainSceneStarting = undefined;
+        const mainscene = this.scene.get(Scenes.Main);
+        (mainscene as MainScene).shutdown();
+        this.scene.stop(Scenes.Main);
+        this.scene.remove(Scenes.Main);
     }
 }

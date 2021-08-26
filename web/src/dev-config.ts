@@ -4,4 +4,5 @@ export const DEV = isProd
     ? {}
     : {
           inBattleImmediately: false,
+          enableSceneWatcher: false,
       };
