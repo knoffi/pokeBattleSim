@@ -75,8 +75,9 @@ public class Pokemon {
         return this.name;
     }
 
-    private int getBaseAttackStat() throws Exception {
-        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals("attack")).findAny();
+    private int getBaseAttackStat(boolean forPhysical) throws Exception {
+        String statKey = forPhysical ? "attack" : "special-attack";
+        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
         if (attackStat.isPresent()) {
             return attackStat.get().value;
         } else {
@@ -85,7 +86,8 @@ public class Pokemon {
     }
 
     private int getBaseHPStat() throws Exception {
-        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals("hp")).findAny();
+        String statKey = "hp";
+        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
         if (attackStat.isPresent()) {
             return attackStat.get().value;
         } else {
@@ -93,8 +95,9 @@ public class Pokemon {
         }
     }
 
-    private int getBaseDefenseStat() throws Exception {
-        Optional<Stat> defenseStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals("defense")).findAny();
+    private int getBaseDefenseStat(boolean forPhysical) throws Exception {
+        String statKey = forPhysical ? "defense" : "special-defense";
+        Optional<Stat> defenseStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
         if (defenseStat.isPresent()) {
             return defenseStat.get().value;
         } else {
@@ -102,9 +105,9 @@ public class Pokemon {
         }
     }
 
-    public int getAttackStat() {
+    public int getAttackStat(boolean isPhysical) {
         try {
-            int baseValue = this.getBaseAttackStat();
+            int baseValue = this.getBaseAttackStat(isPhysical);
             int levelValue = this.calculateStatFromLevel(baseValue, false);
             return levelValue;
         } catch (Exception e) {
@@ -140,9 +143,9 @@ public class Pokemon {
         return this.HP > 0;
     }
 
-    public int getDefenseStat() {
+    public int getDefenseStat(boolean isPhysical) {
         try {
-            int baseValue = this.getBaseDefenseStat();
+            int baseValue = this.getBaseDefenseStat(isPhysical);
             int levelValue = this.calculateStatFromLevel(baseValue, false);
             return levelValue;
         } catch (Exception e) {
