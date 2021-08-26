@@ -16,8 +16,12 @@ import com.example.demo.Searches.PokemonSearch.TypeHolder;
 import com.example.demo.Translater.Translater;
 
 public class Pokemon {
+
+    private static final int DEFAULT_HP = 110;
+    private static final int DEFAULT_STAT = 40;
     private static final int MAXIMAL_LEVEL = 100;
     private static final int MAXIMAL_EFFORT_VALUE = 265;
+
     private String name;
     private Stat[] stats;
     private Type[] types;
@@ -91,7 +95,17 @@ public class Pokemon {
         if (attackStat.isPresent()) {
             return attackStat.get().value;
         } else {
-            throw new Exception("NoAttackStatFound");
+            throw new Exception("NoHPStatFound");
+        }
+    }
+
+    private int getBaseSpeedStat() throws Exception {
+        String statKey = "speed";
+        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
+        if (attackStat.isPresent()) {
+            return attackStat.get().value;
+        } else {
+            throw new Exception("NoSpeedStatFound");
         }
     }
 
@@ -113,7 +127,18 @@ public class Pokemon {
         } catch (Exception e) {
             System.out.println("___NO ATTACK STAT FOUND FOR " + this.name + "___");
         }
-        return 40;
+        return DEFAULT_STAT;
+    }
+
+    public int getSpeedStat() {
+        try {
+            int baseValue = this.getBaseSpeedStat();
+            int levelValue = this.calculateStatFromLevel(baseValue, false);
+            return levelValue;
+        } catch (Exception e) {
+            System.out.println("___NO SPEED STAT FOUND FOR " + this.name + "___");
+        }
+        return DEFAULT_STAT;
     }
 
     private int getStartHP() {
@@ -124,7 +149,18 @@ public class Pokemon {
         } catch (Exception e) {
             System.out.println("___NO HP STAT FOUND FOR " + this.name + "___");
         }
-        return 110;
+        return DEFAULT_HP;
+    }
+
+    public int getDefenseStat(boolean isPhysical) {
+        try {
+            int baseValue = this.getBaseDefenseStat(isPhysical);
+            int levelValue = this.calculateStatFromLevel(baseValue, false);
+            return levelValue;
+        } catch (Exception e) {
+            System.out.println("___NO DEFENSE STAT FOUND FOR " + this.name + "___");
+        }
+        return DEFAULT_STAT;
     }
 
     public int getHP() {
@@ -141,17 +177,6 @@ public class Pokemon {
 
     public boolean canFight() {
         return this.HP > 0;
-    }
-
-    public int getDefenseStat(boolean isPhysical) {
-        try {
-            int baseValue = this.getBaseDefenseStat(isPhysical);
-            int levelValue = this.calculateStatFromLevel(baseValue, false);
-            return levelValue;
-        } catch (Exception e) {
-            System.out.println("___NO DEFENSE STAT FOUND FOR " + this.name + "___");
-        }
-        return 40;
     }
 
     private int calculateStatFromLevel(int baseValue, boolean isAboutHP) {
