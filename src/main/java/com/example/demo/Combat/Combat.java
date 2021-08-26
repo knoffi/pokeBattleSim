@@ -7,6 +7,7 @@ import java.util.Stack;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Attack;
+import com.example.demo.Pokemon.DamageClass;
 import com.example.demo.Pokemon.Pokemon;
 import com.example.demo.Pokemon.Type;
 import com.example.demo.TypeEffects.Effectiveness;
@@ -109,8 +110,9 @@ class BattleCalculation {
         Pokemon defender = blueAttacks ? this.red : this.blue;
 
         Effectiveness effect = getEffectiveness(attack.getType(), defender.getPokeTypes());
-        int attackStat = attacker.getAttackStat();
-        int defenseStat = defender.getDefenseStat();
+        boolean isPhysicalAttack = attack.getDamageClass().equals(DamageClass.PHYSICAL);
+        int attackStat = attacker.getAttackStat(isPhysicalAttack);
+        int defenseStat = defender.getDefenseStat(isPhysicalAttack);
         int attackerLevel = attacker.getLevel();
 
         double levelFactor = 2 * attackerLevel / 5.0 + 2;
