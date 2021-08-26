@@ -2,12 +2,9 @@ package com.example.demo.Combat.PhraseStore;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
-import com.example.demo.JSONHandler;
+import com.example.demo.StoreButler.StoreButler;
+import com.example.demo.StoreButler.StoreButlerServices;
 import com.example.demo.TypeEffects.Effectiveness;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -34,15 +31,9 @@ public class PhraseStore {
 
     private static PhraseTable getPhrases() {
         try {
-            var url = URI.create(PHRASES_FILE_PATH);
-            var client = HttpClient.newHttpClient();
-            var request = HttpRequest.newBuilder(url).build();
-
-            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            String responseBody = response.body();
-            PhraseTable table = JSONHandler.convertJSON(responseBody, PhraseTable.class);
+            PhraseTable table = StoreButler.getData(StoreButlerServices.PHRASES, PhraseTable.class);
             return table;
-        } catch (IOException | InterruptedException e) {
+        } catch (Exception e) {
             System.out.print("___GET REQUEST FOR PHRASE TABLE FAILED___" + e.getClass());
         }
         ;

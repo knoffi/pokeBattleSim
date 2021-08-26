@@ -1,0 +1,626 @@
+{
+    "phraseTable": {
+        "rows": [
+            {
+                "languageKey": "en",
+                "veryEffective": "It is very effective!",
+                "superEffective": "It is super effective!",
+                "immunEffective": "Nothing happens!",
+                "barelyEffective": "It is nearly ineffective!",
+                "notVeryEffective": "It is not very effective!",
+                "normalEffective": "",
+                "attackText": "XXX uses YYY.",
+                "resultText": "XXX Was defeated!"
+            },
+            {
+                "languageKey": "de",
+                "veryEffective": "Es ist sehr effektiv!",
+                "superEffective": "Es ist super effektiv!",
+                "immunEffective": "Nichts passiert!",
+                "barelyEffective": "Es ist fast wirkungslos!",
+                "notVeryEffective": "Es ist nicht sehr effektiv!",
+                "normalEffective": "",
+                "attackText": "XXX verwendet YYY.",
+                "resultText": "XXX wurde besiegt!"
+            },
+            {
+                "languageKey": "ko",
+                "veryEffective": "매우 효과적입니다!",
+                "superEffective": "매우 효과적입니다!",
+                "immunEffective": "아무 반응이 없습니다!",
+                "barelyEffective": "거의 효과가 없습니다!",
+                "notVeryEffective": "별로 효과적이지 않습니다!",
+                "normalEffective": "",
+                "attackText": "XXX는 YYY를 사용합니다.",
+                "resultText": "XXX이(가) 패배했습니다!"
+            },
+            {
+                "languageKey": "fr",
+                "veryEffective": "C'est très efficace !",
+                "superEffective": "C'est hyper efficace !",
+                "immunEffective": "Rien ne se passe!",
+                "barelyEffective": "C'est presque inefficace !",
+                "notVeryEffective": "Ce n'est pas très efficace !",
+                "normalEffective": "",
+                "attackText": "XXX utilise YYY.",
+                "resultText": "XXX a été vaincu !"
+            },
+            {
+                "languageKey": "it",
+                "veryEffective": "È molto efficace!",
+                "superEffective": "È super efficace!",
+                "immunEffective": "Non succede niente!",
+                "barelyEffective": "È quasi inefficace!",
+                "notVeryEffective": "Non è molto efficace!",
+                "normalEffective": "",
+                "attackText": "XXX usa YYY.",
+                "resultText": "XXX è stato sconfitto!"
+            },
+            {
+                "languageKey": "ja",
+                "veryEffective": "とても効果的です！",
+                "superEffective": "超効果的です！",
+                "immunEffective": "何も起こりません！",
+                "barelyEffective": "それはほとんど効果がありません！",
+                "notVeryEffective": "あまり効果的ではありません！",
+                "normalEffective": "",
+                "attackText": "XXXはYYYを使用します。",
+                "resultText": "XXXが敗北しました！"
+            },
+            {
+                "languageKey": "zh-TW",
+                "veryEffective": "這是非常有效的！",
+                "superEffective": "它超級有效！",
+                "immunEffective": "沒發生什麼事！",
+                "barelyEffective": "幾乎無效！",
+                "notVeryEffective": "它不是很有效！",
+                "normalEffective": "",
+                "attackText": "XXX 使用 YYY。",
+                "resultText": "XXX被打敗了！"
+            },
+            {
+                "languageKey": "es",
+                "veryEffective": "¡Es muy eficaz!",
+                "superEffective": "¡Es súper efectivo!",
+                "immunEffective": "¡No pasa nada!",
+                "barelyEffective": "¡Es casi ineficaz!",
+                "notVeryEffective": "¡No es muy eficaz!",
+                "normalEffective": "",
+                "attackText": "XXX usa YYY.",
+                "resultText": "¡XXX fue derrotado!"
+            }
+        ]
+    },
+    "attacks": [
+        "pound",
+        "karate-chop",
+        "double-slap",
+        "comet-punch",
+        "mega-punch",
+        "pay-day",
+        "fire-punch",
+        "ice-punch",
+        "thunder-punch",
+        "scratch",
+        "vise-grip",
+        "razor-wind",
+        "swords-dance",
+        "cut",
+        "gust",
+        "wing-attack",
+        "fly",
+        "bind",
+        "slam",
+        "vine-whip",
+        "stomp",
+        "double-kick",
+        "mega-kick",
+        "jump-kick",
+        "rolling-kick",
+        "sand-attack",
+        "headbutt",
+        "horn-attack",
+        "fury-attack",
+        "tackle",
+        "body-slam",
+        "wrap",
+        "take-down",
+        "thrash",
+        "double-edge",
+        "tail-whip",
+        "poison-sting",
+        "twineedle",
+        "pin-missile",
+        "leer",
+        "bite",
+        "growl",
+        "sonic-boom",
+        "acid",
+        "ember",
+        "flamethrower",
+        "water-gun",
+        "hydro-pump",
+        "surf",
+        "ice-beam",
+        "blizzard",
+        "psybeam",
+        "bubble-beam",
+        "aurora-beam",
+        "hyper-beam",
+        "peck",
+        "drill-peck",
+        "submission",
+        "low-kick",
+        "counter",
+        "seismic-toss",
+        "strength",
+        "growth",
+        "razor-leaf",
+        "solar-beam",
+        "petal-dance",
+        "string-shot",
+        "dragon-rage",
+        "fire-spin",
+        "thunder-shock",
+        "thunderbolt",
+        "thunder",
+        "rock-throw",
+        "earthquake",
+        "dig",
+        "confusion",
+        "psychic",
+        "meditate",
+        "agility",
+        "quick-attack",
+        "rage",
+        "night-shade",
+        "screech",
+        "double-team",
+        "harden",
+        "minimize",
+        "smokescreen",
+        "withdraw",
+        "defense-curl",
+        "barrier",
+        "bide",
+        "self-destruct",
+        "egg-bomb",
+        "lick",
+        "smog",
+        "sludge",
+        "bone-club",
+        "fire-blast",
+        "waterfall",
+        "clamp",
+        "swift",
+        "skull-bash",
+        "spike-cannon",
+        "constrict",
+        "amnesia",
+        "kinesis",
+        "high-jump-kick",
+        "barrage",
+        "sky-attack",
+        "bubble",
+        "dizzy-punch",
+        "flash",
+        "psywave",
+        "acid-armor",
+        "crabhammer",
+        "explosion",
+        "fury-swipes",
+        "bonemerang",
+        "rock-slide",
+        "hyper-fang",
+        "sharpen",
+        "tri-attack",
+        "super-fang",
+        "slash",
+        "struggle"
+    ],
+    "typeTable": {
+        "types": [
+            {
+                "typeName": "normal",
+                "doubleDamageFrom": [
+                    "fighting"
+                ],
+                "doubleDamageTo": [],
+                "halfDamageFrom": [],
+                "halfDamageTo": [
+                    "rock",
+                    "steel"
+                ],
+                "noDamageFrom": [
+                    "ghost"
+                ],
+                "noDamageTo": [
+                    "ghost"
+                ]
+            },
+            {
+                "typeName": "fighting",
+                "doubleDamageFrom": [
+                    "flying",
+                    "psychic",
+                    "fairy"
+                ],
+                "doubleDamageTo": [
+                    "normal",
+                    "rock",
+                    "steel",
+                    "ice",
+                    "dark"
+                ],
+                "halfDamageFrom": [
+                    "rock",
+                    "bug",
+                    "dark"
+                ],
+                "halfDamageTo": [
+                    "flying",
+                    "poison",
+                    "bug",
+                    "psychic",
+                    "fairy"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": [
+                    "ghost"
+                ]
+            },
+            {
+                "typeName": "flying",
+                "doubleDamageFrom": [
+                    "rock",
+                    "electric",
+                    "ice"
+                ],
+                "doubleDamageTo": [
+                    "fighting",
+                    "bug",
+                    "grass"
+                ],
+                "halfDamageFrom": [
+                    "fighting",
+                    "bug",
+                    "grass"
+                ],
+                "halfDamageTo": [
+                    "rock",
+                    "steel",
+                    "electric"
+                ],
+                "noDamageFrom": [
+                    "ground"
+                ],
+                "noDamageTo": []
+            },
+            {
+                "typeName": "poison",
+                "doubleDamageFrom": [
+                    "ground",
+                    "psychic"
+                ],
+                "doubleDamageTo": [
+                    "grass",
+                    "fairy"
+                ],
+                "halfDamageFrom": [
+                    "fighting",
+                    "poison",
+                    "bug",
+                    "grass",
+                    "fairy"
+                ],
+                "halfDamageTo": [
+                    "poison",
+                    "ground",
+                    "rock",
+                    "ghost"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": [
+                    "steel"
+                ]
+            },
+            {
+                "typeName": "ground",
+                "doubleDamageFrom": [
+                    "water",
+                    "grass",
+                    "ice"
+                ],
+                "doubleDamageTo": [
+                    "poison",
+                    "rock",
+                    "steel",
+                    "fire",
+                    "electric"
+                ],
+                "halfDamageFrom": [
+                    "poison",
+                    "rock"
+                ],
+                "halfDamageTo": [
+                    "bug",
+                    "grass"
+                ],
+                "noDamageFrom": [
+                    "electric"
+                ],
+                "noDamageTo": [
+                    "flying"
+                ]
+            },
+            {
+                "typeName": "rock",
+                "doubleDamageFrom": [
+                    "fighting",
+                    "ground",
+                    "steel",
+                    "water",
+                    "grass"
+                ],
+                "doubleDamageTo": [
+                    "flying",
+                    "bug",
+                    "fire",
+                    "ice"
+                ],
+                "halfDamageFrom": [
+                    "normal",
+                    "flying",
+                    "poison",
+                    "fire"
+                ],
+                "halfDamageTo": [
+                    "fighting",
+                    "ground",
+                    "steel"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": []
+            },
+            {
+                "typeName": "bug",
+                "doubleDamageFrom": [
+                    "flying",
+                    "rock",
+                    "fire"
+                ],
+                "doubleDamageTo": [
+                    "grass",
+                    "psychic",
+                    "dark"
+                ],
+                "halfDamageFrom": [
+                    "fighting",
+                    "ground",
+                    "grass"
+                ],
+                "halfDamageTo": [
+                    "fighting",
+                    "flying",
+                    "poison",
+                    "ghost",
+                    "steel",
+                    "fire",
+                    "fairy"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": []
+            },
+            {
+                "typeName": "ghost",
+                "doubleDamageFrom": [
+                    "ghost",
+                    "dark"
+                ],
+                "doubleDamageTo": [
+                    "ghost",
+                    "psychic"
+                ],
+                "halfDamageFrom": [
+                    "poison",
+                    "bug"
+                ],
+                "halfDamageTo": [
+                    "dark"
+                ],
+                "noDamageFrom": [
+                    "normal",
+                    "fighting"
+                ],
+                "noDamageTo": [
+                    "normal"
+                ]
+            },
+            {
+                "typeName": "fire",
+                "doubleDamageFrom": [
+                    "ground",
+                    "rock",
+                    "water"
+                ],
+                "doubleDamageTo": [
+                    "bug",
+                    "steel",
+                    "grass",
+                    "ice"
+                ],
+                "halfDamageFrom": [
+                    "bug",
+                    "steel",
+                    "fire",
+                    "grass",
+                    "ice",
+                    "fairy"
+                ],
+                "halfDamageTo": [
+                    "rock",
+                    "fire",
+                    "water",
+                    "dragon"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": []
+            },
+            {
+                "typeName": "water",
+                "doubleDamageFrom": [
+                    "grass",
+                    "electric"
+                ],
+                "doubleDamageTo": [
+                    "ground",
+                    "rock",
+                    "fire"
+                ],
+                "halfDamageFrom": [
+                    "steel",
+                    "fire",
+                    "water",
+                    "ice"
+                ],
+                "halfDamageTo": [
+                    "water",
+                    "grass",
+                    "dragon"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": []
+            },
+            {
+                "typeName": "grass",
+                "doubleDamageFrom": [
+                    "flying",
+                    "poison",
+                    "bug",
+                    "fire",
+                    "ice"
+                ],
+                "doubleDamageTo": [
+                    "ground",
+                    "rock",
+                    "water"
+                ],
+                "halfDamageFrom": [
+                    "ground",
+                    "water",
+                    "grass",
+                    "electric"
+                ],
+                "halfDamageTo": [
+                    "flying",
+                    "poison",
+                    "bug",
+                    "steel",
+                    "fire",
+                    "grass",
+                    "dragon"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": []
+            },
+            {
+                "typeName": "electric",
+                "doubleDamageFrom": [
+                    "ground"
+                ],
+                "doubleDamageTo": [
+                    "flying",
+                    "water"
+                ],
+                "halfDamageFrom": [
+                    "flying",
+                    "steel",
+                    "electric"
+                ],
+                "halfDamageTo": [
+                    "grass",
+                    "electric",
+                    "dragon"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": [
+                    "ground"
+                ]
+            },
+            {
+                "typeName": "psychic",
+                "doubleDamageFrom": [
+                    "bug",
+                    "ghost",
+                    "dark"
+                ],
+                "doubleDamageTo": [
+                    "fighting",
+                    "poison"
+                ],
+                "halfDamageFrom": [
+                    "fighting",
+                    "psychic"
+                ],
+                "halfDamageTo": [
+                    "steel",
+                    "psychic"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": [
+                    "dark"
+                ]
+            },
+            {
+                "typeName": "ice",
+                "doubleDamageFrom": [
+                    "fighting",
+                    "rock",
+                    "steel",
+                    "fire"
+                ],
+                "doubleDamageTo": [
+                    "flying",
+                    "ground",
+                    "grass",
+                    "dragon"
+                ],
+                "halfDamageFrom": [
+                    "ice"
+                ],
+                "halfDamageTo": [
+                    "steel",
+                    "fire",
+                    "water",
+                    "ice"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": []
+            },
+            {
+                "typeName": "dragon",
+                "doubleDamageFrom": [
+                    "ice",
+                    "dragon",
+                    "fairy"
+                ],
+                "doubleDamageTo": [
+                    "dragon"
+                ],
+                "halfDamageFrom": [
+                    "fire",
+                    "water",
+                    "grass",
+                    "electric"
+                ],
+                "halfDamageTo": [
+                    "steel"
+                ],
+                "noDamageFrom": [],
+                "noDamageTo": [
+                    "fairy"
+                ]
+            }
+        ]
+    }
+}

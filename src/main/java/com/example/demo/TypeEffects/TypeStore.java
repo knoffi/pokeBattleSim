@@ -1,34 +1,17 @@
 package com.example.demo.TypeEffects;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-
-import com.example.demo.JSONHandler;
+import com.example.demo.StoreButler.StoreButler;
+import com.example.demo.StoreButler.StoreButlerServices;
 
 public class TypeStore {
-    final static private String TYPE_FILE_PATH = "http://localhost:8080/TypeTable.json";
     static private TypeTable typeTable = getTypeTable();
 
     private static TypeTable getTypeTable() {
         try {
-            var url = URI.create(TYPE_FILE_PATH);
-            var client = HttpClient.newHttpClient();
-            var request = HttpRequest.newBuilder(url).build();
-
-            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            String responseBody = response.body();
-            TypeTable table = JSONHandler.convertJSON(responseBody, TypeTable.class);
-            if (table == null) {
-                System.out.println("___TYPE TABLE IS NULL___");
-                return new TypeTable();
-
-            }
+            TypeTable table = StoreButler.getData(StoreButlerServices.TYPES, TypeTable.class);
             return table;
-        } catch (IOException | InterruptedException e) {
-            System.out.print("___GET REQUEST FOR TYPE TABLE FAILED___" + e.getClass());
+        } catch (Exception e) {
+            System.out.print("___GOT NOTHING FOR TYPE TABLE___" + e.getClass());
         }
         return new TypeTable();
     }

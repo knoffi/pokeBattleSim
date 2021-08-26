@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class DuellController {
     @GetMapping(value = "/getTrainerDuell")
-    public @ResponseBody DuellLog index(@RequestParam(required = false) String lng) {
+    public @ResponseBody DuellLog index(@RequestParam(defaultValue = "en") String lng) {
         Languages language = this.getLanguageFromQuery(lng);
         try {
             Pokemon[] blue = this.getRandomPokemonTeam();
