@@ -73,8 +73,8 @@ class BattleCalculation {
         double blueAttackValue = this.getAttackValue(this.blueAttack, true);
         double redAttackValue = this.getAttackValue(this.redAttack, false);
 
-        int roundsBlueCanSurvive = (int) (this.blue.getHP() / redAttackValue);
-        int roundsRedCanSurvive = (int) (this.red.getHP() / blueAttackValue);
+        int roundsBlueCanSurvive = this.getSurvivableRounds(this.blue.getHP(), redAttackValue);
+        int roundsRedCanSurvive = this.getSurvivableRounds(this.red.getHP(), blueAttackValue);
 
         boolean blueWonClearly = roundsBlueCanSurvive > roundsRedCanSurvive;
         boolean blueWonBarely = roundsBlueCanSurvive == roundsRedCanSurvive && blueStarted;
@@ -88,6 +88,18 @@ class BattleCalculation {
 
         this.dealDamage(winner, loser, loserSurvivedRounds, loserAttackValue, winnerHadFirstStrike);
         return blueWonBarely || blueWonClearly;
+    }
+
+    private int getSurvivableRounds(int defenderHP, double attackerDamage) {
+        int rounds = (int) (defenderHP / attackerDamage);
+        int remainingHP = (int) (defenderHP - rounds * attackerDamage);
+        if (remainingHP == 0) {
+            System.out.println("Edge case can really happen!");
+            return rounds - 1;
+        } else {
+            return rounds;
+        }
+
     }
 
     private void dealDamage(Pokemon winner, Pokemon loser, int loserSurvivedRounds, double loserAttack,
