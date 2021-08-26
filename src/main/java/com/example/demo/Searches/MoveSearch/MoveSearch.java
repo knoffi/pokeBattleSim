@@ -18,8 +18,8 @@ public class MoveSearch {
     public MetaBySearch meta;
 
     public Attack convert() {
-        DamageClass damageClass = this.damage_class.name == "special" ? DamageClass.SPECIAL
-                : this.damage_class.name == "status" ? DamageClass.STATUS : DamageClass.PHYSICAL;
+        DamageClass damageClass = this.damage_class.name.equals("special") ? DamageClass.SPECIAL
+                : this.damage_class.name.equals("status") ? DamageClass.STATUS : DamageClass.PHYSICAL;
         StatChange[] changes = Arrays.stream(this.stat_changes).map(change -> change.convert())
                 .toArray(StatChange[]::new);
         Meta meta = this.meta.convert();
