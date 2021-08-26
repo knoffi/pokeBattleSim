@@ -62,7 +62,9 @@ class BattleCalculation {
 
     public CombatResult getResult() {
 
-        boolean blueWins = true;
+        double blueAttackValue = this.getAttackValue(this.blueAttack, true);
+        double redAttackValue = this.getAttackValue(this.redAttack, false);
+        boolean blueWins = blueAttackValue > redAttackValue;
         Stack<String> texts = this.getResultTexts(blueWins);
         return new CombatResult(blueWins, texts);
     }
