@@ -149,12 +149,26 @@ class BattleCalculation {
         double powerFactor = attack.getPower() / 50.0;
         double randomFactor = (217 + Math.random() * 38) / 255;
         double effectFactor = effect.value;
+        double sameTypeFactor = this.getSameTypeFactor(attack.getType(), attacker);
         // -> getBestAttackEffect
-        return (levelFactor * statFactor * powerFactor + 2) * randomFactor * effectFactor;
+        return (levelFactor * statFactor * powerFactor + 2) * randomFactor * effectFactor * sameTypeFactor;
+    }
+
+    private double getSameTypeFactor(Type type, Pokemon attacker) {
+
+        boolean attackerSharesType = Arrays.stream(attacker.getPokeTypes())
+                .anyMatch(pokeType -> type.name.equals(pokeType.name));
+
+        if (attackerSharesType) {
+            return 1.5;
+        } else {
+            return 1.0;
+        }
     }
 
     private Attack getBestAttack(Attack[] attacks, boolean blueAttacks) {
         Optional<Attack> bestAttack = Arrays.stream(attacks).max((a, b) -> this.compare(a, b, blueAttacks));
+
         if (bestAttack.isPresent()) {
             return bestAttack.get();
         } else {

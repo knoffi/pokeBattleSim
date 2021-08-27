@@ -17,6 +17,8 @@ import com.example.demo.Translater.Translater;
 
 public class Pokemon {
 
+    private static final int MAXIMAL_ATTACK_AMOUNT = 6;
+
     private static final int DEFAULT_HP = 110;
     private static final int DEFAULT_STAT = 40;
     private static final int MAXIMAL_LEVEL = 100;
@@ -201,7 +203,7 @@ public class Pokemon {
     }
 
     private static int[] getMoveSelection(int maxIndex) {
-        int selectionSize = Math.min(4, maxIndex + 1);
+        int selectionSize = Math.min(MAXIMAL_ATTACK_AMOUNT, maxIndex + 1);
         int[] randomMoveIndices = new int[selectionSize];
         for (int i = 0; i < selectionSize; i++) {
             int randomIndex;
@@ -224,7 +226,7 @@ public class Pokemon {
         int moveAmount = filteredURLs.length;
         int[] selectedIndices = getMoveSelection(moveAmount - 1);
         // TODO: throw exception and use "Verzweifler" if selectionSize is less than 1
-        int selectionSize = Math.min(4, moveAmount);
+        int selectionSize = Math.min(MAXIMAL_ATTACK_AMOUNT, moveAmount);
         Attack[] selectedAttacks = new Attack[selectionSize];
         try {
             for (int k = 0; k < selectionSize; k++) {
