@@ -1,4 +1,5 @@
 import { Types } from "phaser";
+import { Plugin as NineSlicePlugin } from "phaser3-nineslice";
 import { DEV } from "./dev-config";
 import { StandbyScene } from "./scenes/StandbyScene";
 
@@ -29,7 +30,7 @@ export const gameConfig: Types.Core.GameConfig = {
         height: 198, // gba screen height
     },
     plugins: {
-        global: [...DebugPlugins],
+        global: [NineSlicePlugin.DefaultCfg, ...DebugPlugins],
     },
     callbacks: {
         postBoot: (game) => {
