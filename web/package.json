@@ -4,10 +4,8 @@
     "description": "Pokemon Battle Sim",
     "scripts": {
         "prebuild": "del-cli build",
-        "build": "webpack --mode production",
-        "build-serve": "webpack --mode production && webpack-dev-server --mode production",
-        "dev": "webpack --mode development && webpack-dev-server --mode development",
-        "dev:server": "cd ../server && npm run dev",
+        "build": "NODE_ENV=production webpack --mode production",
+        "dev": "webpack --mode development  && webpack-dev-server --mode development",
         "lint": "npm run lint:eslint:fix && npm run lint:prettier:fix",
         "lint:eslint": "eslint -c .eslintrc.js --ext .ts .",
         "lint:eslint:fix": "npm run lint:eslint -- --fix",
