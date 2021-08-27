@@ -47,7 +47,7 @@ public class Pokemon {
     }
 
     public int getStatSum() {
-        var statValues = Arrays.stream(this.stats).map(stat -> stat.value);
+        var statValues = Arrays.stream(this.stats).map(stat -> stat.getValue());
         int sum = statValues.reduce(0, (cur, prev) -> cur + prev);
         return sum;
     }
@@ -85,7 +85,7 @@ public class Pokemon {
         String statKey = forPhysical ? "attack" : "special-attack";
         Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
         if (attackStat.isPresent()) {
-            return attackStat.get().value;
+            return attackStat.get().getValue();
         } else {
             throw new Exception("NoAttackStatFound");
         }
@@ -95,7 +95,7 @@ public class Pokemon {
         String statKey = "hp";
         Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
         if (attackStat.isPresent()) {
-            return attackStat.get().value;
+            return attackStat.get().getValue();
         } else {
             throw new Exception("NoHPStatFound");
         }
@@ -105,7 +105,7 @@ public class Pokemon {
         String statKey = "speed";
         Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
         if (attackStat.isPresent()) {
-            return attackStat.get().value;
+            return attackStat.get().getValue();
         } else {
             throw new Exception("NoSpeedStatFound");
         }
@@ -115,7 +115,7 @@ public class Pokemon {
         String statKey = forPhysical ? "defense" : "special-defense";
         Optional<Stat> defenseStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
         if (defenseStat.isPresent()) {
-            return defenseStat.get().value;
+            return defenseStat.get().getValue();
         } else {
             throw new Exception("NoDefenseStatFound");
         }
