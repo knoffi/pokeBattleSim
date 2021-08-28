@@ -3,9 +3,12 @@ import { Pokemon } from "../components/Pokemon";
 import { makeBluePokemon, makeRedPokemon } from "../components/TeamPokemons";
 import { ApiRes } from "../interfaces";
 import { Color } from "../styles/Color";
+import { TextConfig } from "../styles/TextConfig";
 import { Scenes } from "./Scenes";
 
-const cfg = {};
+const cfg = {
+    charactersPerLine: 19,
+};
 
 export class MainScene extends Scene {
     private battle!: ApiRes;
@@ -13,6 +16,7 @@ export class MainScene extends Scene {
     private blue: Pokemon | undefined;
     private red: Pokemon | undefined;
     private mask!: Phaser.Display.Masks.GeometryMask;
+    private text!: Phaser.GameObjects.Text;
 
     public constructor() {
         super({
@@ -49,6 +53,15 @@ export class MainScene extends Scene {
         const textbox = this.add.nineslice(0, 130, 70, 34, "textbox", 8);
         textbox.setScale(2).setDepth(1000);
         textbox.displayWidth = this.scale.width;
+
+        this.text = this.add
+            .text(30, 150, "", {
+                ...TextConfig.battleLog,
+                wordWrap: { width: 250, useAdvancedWrap: true },
+            })
+            .setLineSpacing(10)
+            .setMaxLines(2);
+
         const shape = this.make
             .graphics({
                 x: 0,
@@ -77,6 +90,13 @@ export class MainScene extends Scene {
         this.red = this.red?.active
             ? this.red
             : this.nextRedPkmn(round.redCombatant, this.mask);
+
+        // TODO #52 - first iteration as Proof of Concept
+        const nextMsg = round.battleLog[0];
+        // const msgChunks = chunk(nextMsg, cfg.charactersPerLine)
+        //     .map((charsInLine) => charsInLine.join("").trim())
+        //     .slice(0, 2);
+        this.text.setText(nextMsg);
 
         const onDefeat = (defender: Pokemon | undefined) => () => {
             defender?.deactivate();

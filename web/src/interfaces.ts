@@ -11,6 +11,7 @@ export interface ApiRes {
         redCombatant: string;
         blueCombatant: string;
         blueWon: boolean;
+        battleLog: string[];
     }>;
     blueWon: boolean;
 }
