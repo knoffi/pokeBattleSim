@@ -68,57 +68,60 @@
             "redCombatant": "meowth",
             "blueCombatant": "ekans",
             "battleLog": [
-                {
-                    "type": "textonly",
-                    "text": "I choose you, meowth!"
-                },
-                {
-                    "type": "attack",
-                    "isBlue": true,
-                    "attackName": "struggle",
-                    "damage": 821,
-                    "superEffective": true
-                },
-                {
-                    "type": "win",
-                    "isBlue": true
-                }
+                "Go Meowth!",
+                "Blue sent out EKANS",
+                "Red MEOWTH used SCRATCH!",
+                "Blue EKANS used TACKLE!",
+                "Red MEOWTH used SCRATCH!",
+                "Critical hit!",
+                "Blue EKANS fainted",
+                "MEOWTH gained 1352 EXP. Points!"
             ],
             "blueWon": true
         },
         {
             "redCombatant": "marowak",
             "blueCombatant": "ekans",
+            "battleLog": [""],
             "blueWon": true
         },
         {
             "redCombatant": "dewgong",
             "blueCombatant": "ekans",
+            "battleLog": ["I can do that. And dont call me Surely."],
             "blueWon": true
         },
         {
             "redCombatant": "dewgong",
             "blueCombatant": "ekans",
+            "battleLog": [],
             "blueWon": false
         },
         {
             "redCombatant": "dewgong",
             "blueCombatant": "clefable",
+            "battleLog": [],
             "blueWon": false
         },
         {
             "redCombatant": "dewgong",
             "blueCombatant": "beedrill",
+            "battleLog": [],
             "blueWon": true
         },
         {
             "redCombatant": "caterpie",
             "blueCombatant": "beedrill",
+            "battleLog": [
+                "Looks like we are in a Pokemon battle, M-M-Morty",
+                "Oh geez, Rick!"
+            ],
             "blueWon": true
         },
         {
             "redCombatant": "magnemite",
             "blueCombatant": "beedrill",
+            "battleLog": [],
             "blueWon": true
         }
     ],
