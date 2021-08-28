@@ -19,8 +19,8 @@ public class Pokemon {
 
     private static final int MAXIMAL_ATTACK_AMOUNT = 6;
 
-    private static final int DEFAULT_HP = 110;
-    private static final int DEFAULT_STAT = 40;
+    private static final int DEFAULT_HP = 150;
+    private static final int DEFAULT_STAT = 100;
     private static final int MAXIMAL_LEVEL = 100;
 
     private String name;
@@ -41,7 +41,7 @@ public class Pokemon {
         this.backSpriteUrl = data.sprites.back_default;
         this.frontSpriteUrl = data.sprites.front_default;
         this.exhaustionPoint = 0;
-        this.HP = this.getStartHP();
+        this.HP = this.getStatValue(StatKeys.HP);
     }
 
     public void translateName(Languages language) {
@@ -89,59 +89,41 @@ public class Pokemon {
 
     private void changeStat(StatChange change) {
         try {
-            Stat targetedStat = this.getStatFromKey(change.stat);
-            targetedStat.changeModifier(change.value);
+            Optional<StatKeys> key = Arrays.stream(StatKeys.values())
+                    .filter(statKey -> statKey.name.equals(change.stat)).findFirst();
+            if (key.isEmpty()) {
+                throw new Exception("StatKeyNotFound");
+            } else {
+                Stat targetedStat = this.getStatFromKey(key.get());
+                targetedStat.changeModifier(change.value);
+            }
         } catch (Exception e) {
             System.out.println("___STAT " + change.stat + " WAS NOT FOUND FOR CHANGE___");
         }
     }
 
-    // TODO: Use enum and one single method for all stats: public int
-    // getStat(StatKey key){...}
-    public int getAttackStat(boolean isPhysical) {
+    public int getStatValue(StatKeys key) {
         try {
-            String key = isPhysical ? "attack" : "special-attack";
             int levelValue = this.getStatFromKey(key).getValue(this.level);
             return levelValue;
         } catch (Exception e) {
-            System.out.println("___NO ATTACK STAT FOUND FOR " + this.name + "___");
+            System.out.println("___NO " + key.name + " STAT FOUND FOR " + this.name + "___");
         }
-        return DEFAULT_STAT;
+        boolean isForHP = key == StatKeys.HP;
+        return getDefaultValue(isForHP);
     }
 
-    public int getSpeedStat() {
-        try {
-            int levelValue = this.getStatFromKey("speed").getValue(this.level);
-            return levelValue;
-        } catch (Exception e) {
-            System.out.println("___NO SPEED STAT FOUND FOR " + this.name + "___");
+    private int getDefaultValue(boolean isForHP) {
+        if (isForHP) {
+            return DEFAULT_HP;
+        } else {
+            return DEFAULT_STAT;
         }
-        return DEFAULT_STAT;
+
     }
 
-    private int getStartHP() {
-        try {
-            int levelValue = this.getStatFromKey("hp").getValue(this.level);
-            return levelValue;
-        } catch (Exception e) {
-            System.out.println("___NO HP STAT FOUND FOR " + this.name + "___");
-        }
-        return DEFAULT_HP;
-    }
-
-    public int getDefenseStat(boolean isPhysical) {
-        try {
-            String key = isPhysical ? "defense" : "special-defense";
-            int levelValue = this.getStatFromKey(key).getValue(this.level);
-            return levelValue;
-        } catch (Exception e) {
-            System.out.println("___NO DEFENSE STAT FOUND FOR " + this.name + "___");
-        }
-        return DEFAULT_STAT;
-    }
-
-    private Stat getStatFromKey(String key) throws Exception {
-        Optional<Stat> desiredStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(key)).findAny();
+    private Stat getStatFromKey(StatKeys key) throws Exception {
+        Optional<Stat> desiredStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(key.name)).findAny();
 
         if (desiredStat.isEmpty()) {
             throw new Exception(key + "NotFound");

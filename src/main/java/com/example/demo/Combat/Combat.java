@@ -10,6 +10,7 @@ import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.DamageClass;
 import com.example.demo.Pokemon.Pokemon;
+import com.example.demo.Pokemon.StatKeys;
 import com.example.demo.Pokemon.Type;
 import com.example.demo.TypeEffects.Effectiveness;
 import com.example.demo.TypeEffects.TypeStore;
@@ -70,7 +71,7 @@ class BattleCalculation {
     }
 
     private boolean blueWonSimulation() {
-        int blueSpeedAdvantage = this.blue.getSpeedStat() - this.red.getSpeedStat();
+        int blueSpeedAdvantage = this.blue.getStatValue(StatKeys.SPEED) - this.red.getStatValue(StatKeys.SPEED);
 
         this.resolveSpeedAdvantage(blueSpeedAdvantage);
         boolean blueStarted = blueSpeedAdvantage >= 0;
@@ -135,7 +136,6 @@ class BattleCalculation {
         } else {
             Attack move = randomMove.get();
             Pokemon target = move.enemyIsTarget() ? enemy : user;
-            System.out.println(user.getName() + " used " + move.getName() + " on " + target.getName());
             target.applyStatChanger(move);
         }
     }
@@ -190,8 +190,11 @@ class BattleCalculation {
 
         Effectiveness effect = getEffectiveness(attack.getType(), defender.getPokeTypes());
         boolean isPhysicalAttack = attack.getDamageClass().equals(DamageClass.PHYSICAL);
-        int attackStat = attacker.getAttackStat(isPhysicalAttack);
-        int defenseStat = defender.getDefenseStat(isPhysicalAttack);
+        StatKeys attackKey = isPhysicalAttack ? StatKeys.ATT : StatKeys.SPEC_ATT;
+        StatKeys defenseKey = isPhysicalAttack ? StatKeys.DEF : StatKeys.SPEC_DEF;
+
+        int attackStat = attacker.getStatValue(attackKey);
+        int defenseStat = defender.getStatValue(defenseKey);
         int attackerLevel = attacker.getLevel();
 
         double levelFactor = 2 * attackerLevel / 5.0 + 2;
