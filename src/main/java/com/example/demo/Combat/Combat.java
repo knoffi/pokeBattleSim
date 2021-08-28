@@ -3,6 +3,7 @@ package com.example.demo.Combat;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.stream.IntStream;
 
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Controller.LogRound;
@@ -42,6 +43,7 @@ public class Combat {
 }
 
 class BattleCalculation {
+    private final static int SPEED_STEP = 40;
 
     private Pokemon blue;
     private Pokemon red;
@@ -68,10 +70,11 @@ class BattleCalculation {
     }
 
     private boolean blueWonSimulation() {
-        boolean blueStarted = this.blue.getSpeedStat() >= this.red.getSpeedStat();
-        System.out.println("speed diff between " + this.blue.getName() + " and " + this.red.getName() + " : "
-                + this.blue.getSpeedStat() + " & " + this.red.getSpeedStat() + " = "
-                + (this.blue.getSpeedStat() - this.red.getSpeedStat()));
+        int blueSpeedAdvantage = this.blue.getSpeedStat() - this.red.getSpeedStat();
+
+        this.resolveSpeedAdvantage(blueSpeedAdvantage);
+        boolean blueStarted = blueSpeedAdvantage >= 0;
+
         double blueAttackValue = this.getAttackValue(this.blueAttack, true);
         double redAttackValue = this.getAttackValue(this.redAttack, false);
 
@@ -91,6 +94,50 @@ class BattleCalculation {
         this.dealDamage(winner, loser, loserSurvivedRounds, loserAttackValue, winnerHadFirstStrike);
 
         return blueWon;
+    }
+
+    // TODO: make this into a "preBattle" and store results for text display and
+    // further
+    // combat
+    private void resolveSpeedAdvantage(int blueSpeedAdvantage) {
+        int speedDiff = Math.abs(blueSpeedAdvantage);
+
+        if (speedDiff < 1 * SPEED_STEP) {
+            return;
+        }
+
+        boolean blueIsFaster = blueSpeedAdvantage > 0;
+        Pokemon fastPokemon = blueIsFaster ? this.blue : this.red;
+        Pokemon slowPokemon = blueIsFaster ? this.red : this.blue;
+
+        int roundsAhead = speedDiff / SPEED_STEP;
+
+        Attack[] statChangers = fastPokemon.getPureStatChangers();
+
+        if (statChangers.length == 0) {
+            return;
+        } else {
+            // repeat this process as often as roundsAhead
+            IntStream.rangeClosed(1, roundsAhead)
+                    .forEach(step -> this.applyStatChangers(fastPokemon, slowPokemon, statChangers));
+        }
+    }
+
+    private void applyStatChangers(Pokemon user, Pokemon enemy, Attack[] statChangers) {
+        Optional<Attack> randomMove = Arrays.stream(statChangers).findAny();
+
+        if (randomMove.isEmpty()) {
+            try {
+                throw new Exception("EmptyStatChangers");
+            } catch (Exception e) {
+                System.out.print("___THERE ARE NO STAT CHANGERS TO USE___");
+            }
+        } else {
+            Attack move = randomMove.get();
+            Pokemon target = move.enemyIsTarget() ? enemy : user;
+            System.out.println(user.getName() + " used " + move.getName() + " on " + target.getName());
+            target.applyStatChanger(move);
+        }
     }
 
     private int getSurvivableRounds(int defenderHP, double attackerDamage) {
