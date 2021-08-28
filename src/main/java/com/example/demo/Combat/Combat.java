@@ -69,6 +69,9 @@ class BattleCalculation {
 
     private boolean blueWonSimulation() {
         boolean blueStarted = this.blue.getSpeedStat() >= this.red.getSpeedStat();
+        System.out.println("speed diff between " + this.blue.getName() + " and " + this.red.getName() + " : "
+                + this.blue.getSpeedStat() + " & " + this.red.getSpeedStat() + " = "
+                + (this.blue.getSpeedStat() - this.red.getSpeedStat()));
         double blueAttackValue = this.getAttackValue(this.blueAttack, true);
         double redAttackValue = this.getAttackValue(this.redAttack, false);
 

@@ -1,13 +1,15 @@
 package com.example.demo.Pokemon;
 
 public class Stat {
-    static final int MAX_MODIFIER = 6;
-    static final int MIN_MODIFIER = -6;
-    static final int MAX_VALUE = 999;
-    static final int MIN_VALUE = 1;
-    String name;
+    private static final int MAX_MODIFIER = 6;
+    private static final int MIN_MODIFIER = -6;
+    private static final int MAX_VALUE = 999;
+    private static final int MIN_VALUE = 1;
+    private static final int MAXIMAL_EFFORT_VALUE = 265;
+    public String name;
     private int value;
     private int modifier;
+    private int effortValue = MAXIMAL_EFFORT_VALUE;
 
     public Stat(String name, int value) {
         this.name = name;
@@ -15,8 +17,9 @@ public class Stat {
         this.modifier = 0;
     }
 
-    public int getValue() {
-        int productWithoutBoundCheck = (int) (this.value * this.getModifierFactor());
+    public int getValue(int pokemonLevel) {
+        int trainedValue = this.calculateValueFromLevel(pokemonLevel);
+        int productWithoutBoundCheck = (int) (trainedValue * this.getModifierFactor());
         return adjustToBounds(productWithoutBoundCheck, false);
 
     }
@@ -37,6 +40,13 @@ public class Stat {
             int adjustedCompletely = Math.min(MAX_VALUE, adjustedToLowerBound);
             return adjustedCompletely;
         }
+    }
+
+    private int calculateValueFromLevel(int level) {
+        boolean isAboutHP = this.name.equals("hp");
+        double mainFactor = (this.value * 2 + Math.floor(this.effortValue / 4.0)) / 100.0 * level;
+        int summandOffSet = isAboutHP ? (level + 10) : 5;
+        return (int) mainFactor + summandOffSet;
     }
 
     private double getModifierFactor() {
