@@ -10,6 +10,9 @@ const cfg = {
     charactersPerLine: 19,
 };
 
+type Image = GameObjects.Image;
+type AnimTimeline = Array<object | Phaser.Types.Tweens.TweenBuilderConfig>;
+
 export class MainScene extends Scene {
     private battle!: ApiRes;
     private round!: number;
@@ -91,12 +94,52 @@ export class MainScene extends Scene {
             ? this.red
             : this.nextRedPkmn(round.redCombatant, this.mask);
 
-        // TODO #52 - first iteration as Proof of Concept
-        const nextMsg = round.battleLog[0];
-        // const msgChunks = chunk(nextMsg, cfg.charactersPerLine)
-        //     .map((charsInLine) => charsInLine.join("").trim())
-        //     .slice(0, 2);
-        this.text.setText(nextMsg);
+        const timeline = this.tweens.timeline();
+        for (const event of round.battleLog) {
+            const addToTimeline = (tween: AnimTimeline[0]) =>
+                timeline.add(tween);
+            const setTextInTimeline = (text: string) =>
+                addToTimeline({
+                    delay: 1000,
+                    targets: [this.text],
+                    x: this.text.x,
+                    onStart: () => this.text.setText(text),
+                });
+            switch (event.type) {
+                case "attack":
+                    setTextInTimeline(event.message);
+                    if (event.blueActs) {
+                        this.attack(this.blue, this.red).forEach(addToTimeline);
+                    } else {
+                        this.attack(this.red, this.blue).forEach(addToTimeline);
+                    }
+                    break;
+                case "faint":
+                    const koPkmn = event.blueActs ? this.blue : this.red;
+                    animKO(koPkmn).forEach(addToTimeline);
+                    break;
+                case "text":
+                    addToTimeline({
+                        delay: 1000,
+                        targets: [this.text],
+                        x: this.text.x, // phaser timeline's need to have some prop to be able to tween. otherwise onStart never gets called.
+                        onStart: () => this.text.setText(event.message),
+                    });
+                    break;
+                case "summon":
+                    const pkmn = event.blueActs ? this.blue : this.red;
+                    setTextInTimeline(event.message);
+                    addToTimeline({
+                        targets: [pkmn],
+                        x: pkmn.x,
+                        onStart: () => pkmn.setVisible(true),
+                        duration: 500,
+                    });
+                    // TODO
+                    // addToTimeline(animSummon(pkmn));
+                    break;
+            }
+        }
 
         const onDefeat = (defender: Pokemon | undefined) => () => {
             defender?.deactivate();
@@ -104,65 +147,53 @@ export class MainScene extends Scene {
             this.events.emit("next round");
         };
         if (round.blueWon) {
-            const timeline = this.attackAndDie(this.blue, this.red);
             timeline.once("complete", onDefeat(this.red));
         } else {
-            const timeline = this.attackAndDie(this.red, this.blue);
             timeline.once("complete", onDefeat(this.blue));
         }
+        timeline.play();
     }
 
-    private attackAndDie(
-        attacker: GameObjects.Image,
-        defender: GameObjects.Image
-    ) {
-        const timeline = this.tweens.createTimeline();
+    private attack(attacker: Image, defender: Image): AnimTimeline {
         // wait after spawning enemy, then attack
-        timeline.add({
-            delay: 500,
-            x: attacker.x - 0.8 * (attacker.x - defender.x), // linear combination
-            y: attacker.y - 0.8 * (attacker.y - defender.y),
-            scale: attacker.scale - 0.8 * (attacker.scale - defender.scale), // scale to indicate distance to camera, i.e. coming closer or moving away from the camera
-            targets: [attacker],
-            ease: "sine",
-            duration: 250,
-            yoyo: true,
-        });
-        // start blinking
-        timeline.add({
-            delay: 100,
-            alpha: 0,
-            duration: 0,
-            targets: [defender],
-        });
-        timeline.add({
-            delay: 100,
-            alpha: 1,
-            duration: 1,
-            targets: [defender],
-        });
-        timeline.add({
-            delay: 100,
-            alpha: 0,
-            duration: 0,
-            targets: [defender],
-        });
-        timeline.add({
-            delay: 100,
-            alpha: 1,
-            duration: 1,
-            targets: [defender],
-        });
-        // end blinking
-        // start fall down
-        timeline.add({
-            delay: 200,
-            y: 500,
-            duration: 200,
-            targets: [defender],
-        });
-        timeline.play();
-        return timeline;
+        return [
+            {
+                delay: 500,
+                x: attacker.x - 0.8 * (attacker.x - defender.x), // linear combination
+                y: attacker.y - 0.8 * (attacker.y - defender.y),
+                scale: attacker.scale - 0.8 * (attacker.scale - defender.scale), // scale to indicate distance to camera, i.e. coming closer or moving away from the camera
+                targets: [attacker],
+                ease: "sine",
+                duration: 250,
+                yoyo: true,
+            },
+            // start blinking
+            {
+                delay: 100,
+                alpha: 0,
+                duration: 0,
+                targets: [defender],
+            },
+            {
+                delay: 100,
+                alpha: 1,
+                duration: 1,
+                targets: [defender],
+            },
+            {
+                delay: 100,
+                alpha: 0,
+                duration: 0,
+                targets: [defender],
+            },
+            {
+                delay: 100,
+                alpha: 1,
+                duration: 1,
+                targets: [defender],
+                completeDelay: 500,
+            },
+        ];
     }
 
     private nextBluePkmn(
@@ -171,6 +202,7 @@ export class MainScene extends Scene {
     ) {
         const pkmn = makeBluePokemon(this, pokemon);
         pkmn.setMask(mask);
+        pkmn.setVisible(false);
         return pkmn;
     }
 
@@ -180,6 +212,19 @@ export class MainScene extends Scene {
     ) {
         const pkmn = makeRedPokemon(this, pokemon);
         pkmn.setMask(mask);
+        pkmn.setVisible(false);
         return pkmn;
     }
 }
+
+const animKO = (defender: Image): AnimTimeline =>
+    // start fall down
+    [
+        {
+            delay: 300,
+            y: 500,
+            duration: 600,
+            targets: [defender],
+            completeDelay: 1500,
+        },
+    ];
