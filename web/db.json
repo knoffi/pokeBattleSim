@@ -68,15 +68,60 @@
             "redCombatant": "meowth",
             "blueCombatant": "ekans",
             "battleLog": [
-                "0123456789012345 678901234567890",
-                "Go MEOWTH!",
-                "Blue sent out EKANS",
-                "Red MEOWTH used SCRATCH!",
-                "Blue EKANS used TACKLE!",
-                "Red MEOWTH used SCRATCH!",
-                "Critical hit!",
-                "Blue EKANS fainted",
-                "MEOWTH gained 1352 EXP. Points!"
+                "Go! MEOWTH!",
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "0123456789012345 678901234567890"
+                },
+                {
+                    "type": "summon",
+                    "blueActs": false,
+                    "message": "Go! MEOWTH!"
+                },
+                {
+                    "type": "summon",
+                    "blueActs": true,
+                    "message": "Blue sent out EKANS!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "EKANS is quicker!"
+                },
+                {
+                    "type": "attack",
+                    "blueActs": true,
+                    "attackType": "statusChange",
+                    "message": "EKANS used LEET!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "MEOWTH's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": false,
+                    "message": "MEOWTH used SCRATCH!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "EKANS used BITE!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "It's very effective!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": true,
+                    "message": "MEOWTH's was defeated!"
+                }
             ],
             "blueWon": true
         },
