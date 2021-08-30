@@ -1,8 +1,8 @@
 import { GameObjects, Scene } from "phaser";
 import { Pokemon } from "../components/Pokemon";
 import { makeBluePokemon, makeRedPokemon } from "../components/TeamPokemons";
-import { ApiRes } from "../interfaces";
-import { Color } from "../styles/Color";
+import { ApiRes, AttackType } from "../interfaces";
+import { Color, toHex } from "../styles/Color";
 import { TextConfig } from "../styles/TextConfig";
 import { Scenes } from "./Scenes";
 
@@ -37,13 +37,24 @@ export class MainScene extends Scene {
                 .image(`${pkmn.name}back`, pkmn.backSprite)
                 .image(pkmn.name, pkmn.frontSprite)
         );
-        this.load.image("textbox", "./assets/textbox.nineslice.png");
+        this.load
+            .image("textbox", "./assets/textbox.nineslice.png")
+            .atlas(
+                "shapes",
+                "assets/particles/shapes.png",
+                "assets/particles/shapes.json"
+            )
+            .plugin(
+                "rexinversepipelineplugin",
+                "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinversepipelineplugin.min.js",
+                true
+            );
     }
 
     public create(): void {
         this.round = 0;
 
-        this.cameras.main.setBackgroundColor(Color.InBattleWhite);
+        this.setBgColor();
 
         this.addTextboxWithMask();
 
@@ -109,9 +120,17 @@ export class MainScene extends Scene {
                 case "attack":
                     setTextInTimeline(event.message);
                     if (event.blueActs) {
-                        this.attack(this.blue, this.red).forEach(addToTimeline);
+                        this.attack(
+                            this.blue,
+                            this.red,
+                            event.attackType
+                        ).forEach(addToTimeline);
                     } else {
-                        this.attack(this.red, this.blue).forEach(addToTimeline);
+                        this.attack(
+                            this.red,
+                            this.blue,
+                            event.attackType
+                        ).forEach(addToTimeline);
                     }
                     break;
                 case "faint":
@@ -154,46 +173,140 @@ export class MainScene extends Scene {
         timeline.play();
     }
 
-    private attack(attacker: Image, defender: Image): AnimTimeline {
+    private attack(
+        attacker: Image,
+        defender: Image,
+        attackType: AttackType
+    ): AnimTimeline {
         // wait after spawning enemy, then attack
+        switch (attackType) {
+            case "statusChange":
+                return this.animStatusChange(attacker, defender);
+            case "electric":
+                return this.animElectricAttack(attacker, defender);
+            case "normal":
+            default:
+                return [
+                    {
+                        delay: 500,
+                        x: attacker.x - 0.8 * (attacker.x - defender.x), // linear combination
+                        y: attacker.y - 0.8 * (attacker.y - defender.y),
+                        scale:
+                            attacker.scale -
+                            0.8 * (attacker.scale - defender.scale), // scale to indicate distance to camera, i.e. coming closer or moving away from the camera
+                        targets: [attacker],
+                        ease: "sine",
+                        duration: 250,
+                        yoyo: true,
+                    },
+                    // start blinking
+                    {
+                        delay: 100,
+                        alpha: 0,
+                        duration: 0,
+                        targets: [defender],
+                    },
+                    {
+                        delay: 100,
+                        alpha: 1,
+                        duration: 1,
+                        targets: [defender],
+                    },
+                    {
+                        delay: 100,
+                        alpha: 0,
+                        duration: 0,
+                        targets: [defender],
+                    },
+                    {
+                        delay: 100,
+                        alpha: 1,
+                        duration: 1,
+                        targets: [defender],
+                        completeDelay: 500,
+                    },
+                ];
+        }
+    }
+
+    private animElectricAttack(attacker: Image, defender: Image): AnimTimeline {
+        const spark: Image = this.add
+            .image(227, 55, "shapes", "spark_01")
+            .setScale(2)
+            .setTint(toHex(Color.Yellow2))
+            .setVisible(false);
+        const sparkAnim = {
+            targets: [defender],
+            x: defender.x,
+            onStart: () => spark.setVisible(true),
+            onComplete: () => spark.setVisible(false),
+            duration: 300,
+        };
         return [
+            sparkAnim,
+            animWait(300),
+            sparkAnim,
+            animWait(300),
+            sparkAnim,
+            animWait(300),
+            sparkAnim,
+            animWait(300),
             {
-                delay: 500,
-                x: attacker.x - 0.8 * (attacker.x - defender.x), // linear combination
-                y: attacker.y - 0.8 * (attacker.y - defender.y),
-                scale: attacker.scale - 0.8 * (attacker.scale - defender.scale), // scale to indicate distance to camera, i.e. coming closer or moving away from the camera
-                targets: [attacker],
-                ease: "sine",
-                duration: 250,
-                yoyo: true,
-            },
-            // start blinking
-            {
-                delay: 100,
-                alpha: 0,
-                duration: 0,
                 targets: [defender],
-            },
-            {
-                delay: 100,
-                alpha: 1,
-                duration: 1,
-                targets: [defender],
-            },
-            {
-                delay: 100,
-                alpha: 0,
-                duration: 0,
-                targets: [defender],
-            },
-            {
-                delay: 100,
-                alpha: 1,
-                duration: 1,
-                targets: [defender],
-                completeDelay: 500,
+                x: defender.x,
+                duration: 500,
+                onStart: () => this.cameras.main.shake(300),
             },
         ];
+    }
+
+    private animStatusChange(attacker: Image, defender: Image): AnimTimeline {
+        const blackenBackground = {
+            targets: {},
+            x: 1,
+            duration: 300,
+            onStart: () => this.setBgColor(Color.Black),
+            onComplete: () => this.setBgColor(),
+        };
+        const invertColors = {
+            targets: {},
+            x: 1,
+            duration: 300,
+            onStart: () => {
+                this.plugins
+                    .get("rexInversePipeline")
+                    // @ts-ignore
+                    .add(this.cameras.main, {});
+            },
+            onComplete: () => {
+                this.plugins
+                    .get("rexInversePipeline")
+                    // @ts-ignore
+                    .remove(this.cameras.main);
+            },
+        };
+        return [
+            invertColors,
+            animWait(300),
+            invertColors,
+            animWait(300),
+            invertColors,
+            animWait(300),
+            {
+                targets: [defender],
+                x: defender.x,
+                duration: 500,
+                onStart: () =>
+                    this.cameras.main.shake(
+                        300,
+                        new Phaser.Math.Vector2(0.01, 0)
+                    ),
+            },
+        ];
+    }
+
+    private setBgColor(color: Color = Color.InBattleWhite) {
+        this.cameras.main.setBackgroundColor(toHex(color));
     }
 
     private nextBluePkmn(
@@ -228,3 +341,9 @@ const animKO = (defender: Image): AnimTimeline =>
             completeDelay: 1500,
         },
     ];
+
+const animWait = (duration: number) => ({
+    targets: {},
+    x: 1,
+    duration,
+});

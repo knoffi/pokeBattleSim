@@ -18,7 +18,7 @@ export interface ApiRes {
 
 type BattleEvent = AttackEvent | FaintEvent | TextEvent | SummonEvent;
 
-type AttackType =
+export type AttackType =
     | "water"
     | "electric"
     | "grass"

@@ -9,6 +9,7 @@ export enum Color {
     HackerGreen = "#00ff00",
     LawnGreen = "#7CFC00",
     Yellow = "#FFFF00",
+    Yellow2 = "#FFF512",
     Orange = "#EC6C28",
     IceBlue = "#4CAAD4",
     Blue = "#3333FF",
