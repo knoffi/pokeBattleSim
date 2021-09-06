@@ -35,9 +35,17 @@ public class Combat {
         this.combatSummary.add(redSummon);
     }
 
+    private void pushFightResult(boolean blueWins) {
+        String loserName = blueWins ? this.red.getName() : this.blue.getName();
+        ResultLog fightResult = new ResultLog(blueWins, loserName);
+        this.combatSummary.push(fightResult);
+    }
+
     public LogRound getResult() {
         final CombatResult combatResult = new BattleCalculation(this.blue, this.red, language).getResult();
         final boolean blueWins = combatResult.blueWin;
+
+        this.pushFightResult(blueWins);
 
         CombatLog[] combatLogs = this.combatSummary.toArray(CombatLog[]::new);
         return new LogRound(this.red.getName(), this.blue.getName(), combatLogs, blueWins);
