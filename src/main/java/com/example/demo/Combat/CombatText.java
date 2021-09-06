@@ -40,13 +40,18 @@ public class CombatText {
     }
 
     public String getAttackText(boolean blueAttacks) {
-        Effectiveness effect = blueAttacks ? this.blueEffect : this.redEffect;
         String attacker = blueAttacks ? this.blue : this.red;
         String move = blueAttacks ? this.blueAttack : this.redAttack;
-        String effectString = PhraseStore.getEffectPhrase(effect, language);
         String attackString = PhraseStore.getAttackPhrase(language).replace("XXX", attacker).replace("YYY", move);
 
-        return attackString + " " + effectString;
+        return attackString;
+    }
+
+    public String getEffectivenessText(boolean blueAttacks) {
+        Effectiveness effect = blueAttacks ? this.blueEffect : this.redEffect;
+        String effectString = PhraseStore.getEffectPhrase(effect, language);
+
+        return effectString;
     }
 
     public String getResultText() {
