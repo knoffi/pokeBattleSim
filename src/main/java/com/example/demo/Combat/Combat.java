@@ -16,27 +16,32 @@ import com.example.demo.TypeEffects.TypeStore;
 public class Combat {
     private Pokemon red;
     private Pokemon blue;
-    private Stack<String> combatSummary;
+    private Stack<CombatLog> combatSummary;
     private Languages language;
 
     public Combat(Pokemon pokemonRed, Pokemon pokemonBlue, Languages language) {
         this.red = pokemonRed;
         this.blue = pokemonBlue;
-        this.combatSummary = new Stack<String>();
         this.language = language;
+        this.combatSummary = new Stack<CombatLog>();
+
+        this.pushPokemonSummons();
+    }
+
+    private void pushPokemonSummons() {
+        SummonLog blueSummon = new SummonLog(true, this.blue.getName());
+        SummonLog redSummon = new SummonLog(true, this.blue.getName());
+        this.combatSummary.add(blueSummon);
+        this.combatSummary.add(redSummon);
     }
 
     public LogRound getResult() {
         final CombatResult combatResult = new BattleCalculation(this.blue, this.red, language).getResult();
         final boolean blueWins = combatResult.blueWin;
         final Pokemon winner = blueWins ? this.blue : this.red;
-
+        CombatLog[] combatLogs = this.combatSummary.toArray(CombatLog[]::new);
         winner.addExhaustion();
-
-        this.combatSummary.addAll(combatResult.texts);
-
-        final String[] combatSummary = this.combatSummary.toArray(String[]::new);
-        return new LogRound(this.red.getName(), this.blue.getName(), combatSummary, blueWins);
+        return new LogRound(this.red.getName(), this.blue.getName(), combatLogs, blueWins);
     }
 
 }
