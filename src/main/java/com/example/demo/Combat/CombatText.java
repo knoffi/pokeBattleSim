@@ -19,12 +19,24 @@ public class CombatText {
             Effectiveness redEffect, Languages language, boolean blueWon) {
         this.language = language;
         this.blue = Translater.getTranslatedName(blue, language);
-        this.red = Translater.getTranslatedName(red, language);
+        this.red = Translater.getTranslatedName(red, language).toUpperCase();
         this.blueAttack = Translater.getTranslatedAttack(blueAttack, language);
-        this.redAttack = Translater.getTranslatedAttack(redAttack, language);
+        this.redAttack = Translater.getTranslatedAttack(redAttack, language).toUpperCase();
         this.blueWon = blueWon;
         this.blueEffect = blueEffect;
         this.redEffect = redEffect;
+
+        this.adjustNames();
+    }
+
+    private void adjustNames() {
+        boolean isEuropeanLanguage = this.language.isEuropean();
+        if (isEuropeanLanguage) {
+            this.red = this.red.toUpperCase();
+            this.redAttack = this.redAttack.toUpperCase();
+            this.blue = this.blue.toUpperCase();
+            this.blueAttack = this.blueAttack.toUpperCase();
+        }
     }
 
     public String getAttackText(boolean blueAttacks) {
