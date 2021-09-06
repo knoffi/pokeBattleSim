@@ -19,10 +19,9 @@ public class Pokemon {
 
     private static final int MAXIMAL_ATTACK_AMOUNT = 6;
 
-    private static final int DEFAULT_HP = 110;
-    private static final int DEFAULT_STAT = 40;
+    private static final int DEFAULT_HP = 150;
+    private static final int DEFAULT_STAT = 100;
     private static final int MAXIMAL_LEVEL = 100;
-    private static final int MAXIMAL_EFFORT_VALUE = 265;
 
     private String name;
     private Stat[] stats;
@@ -32,7 +31,6 @@ public class Pokemon {
     private String backSpriteUrl;
     private int exhaustionPoint;
     private int level = MAXIMAL_LEVEL;
-    private int effortValue = MAXIMAL_EFFORT_VALUE;
     private int HP;
 
     public Pokemon(PokemonSearch data) {
@@ -43,13 +41,7 @@ public class Pokemon {
         this.backSpriteUrl = data.sprites.back_default;
         this.frontSpriteUrl = data.sprites.front_default;
         this.exhaustionPoint = 0;
-        this.HP = this.getStartHP();
-    }
-
-    public int getStatSum() {
-        var statValues = Arrays.stream(this.stats).map(stat -> stat.value);
-        int sum = statValues.reduce(0, (cur, prev) -> cur + prev);
-        return sum;
+        this.HP = this.getStatValue(StatKeys.HP);
     }
 
     public void translateName(Languages language) {
@@ -81,88 +73,63 @@ public class Pokemon {
         return this.name;
     }
 
-    private int getBaseAttackStat(boolean forPhysical) throws Exception {
-        String statKey = forPhysical ? "attack" : "special-attack";
-        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
-        if (attackStat.isPresent()) {
-            return attackStat.get().value;
+    public void applyStatChanger(Attack move) {
+        if (move.isPureStatChanger()) {
+            StatChange[] changes = move.getStatChanges();
+            Arrays.stream(changes).forEach(change -> this.changeStat(change));
+
         } else {
-            throw new Exception("NoAttackStatFound");
+            try {
+                throw new Exception("InvalidStatChanger");
+            } catch (Exception e) {
+                System.out.println("___EXSPECTED A PURE STAT CHANGER___");
+            }
         }
     }
 
-    private int getBaseHPStat() throws Exception {
-        String statKey = "hp";
-        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
-        if (attackStat.isPresent()) {
-            return attackStat.get().value;
-        } else {
-            throw new Exception("NoHPStatFound");
-        }
-    }
-
-    private int getBaseSpeedStat() throws Exception {
-        String statKey = "speed";
-        Optional<Stat> attackStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
-        if (attackStat.isPresent()) {
-            return attackStat.get().value;
-        } else {
-            throw new Exception("NoSpeedStatFound");
-        }
-    }
-
-    private int getBaseDefenseStat(boolean forPhysical) throws Exception {
-        String statKey = forPhysical ? "defense" : "special-defense";
-        Optional<Stat> defenseStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(statKey)).findAny();
-        if (defenseStat.isPresent()) {
-            return defenseStat.get().value;
-        } else {
-            throw new Exception("NoDefenseStatFound");
-        }
-    }
-
-    public int getAttackStat(boolean isPhysical) {
+    private void changeStat(StatChange change) {
         try {
-            int baseValue = this.getBaseAttackStat(isPhysical);
-            int levelValue = this.calculateStatFromLevel(baseValue, false);
+            Optional<StatKeys> key = Arrays.stream(StatKeys.values())
+                    .filter(statKey -> statKey.name.equals(change.stat)).findFirst();
+            if (key.isEmpty()) {
+                throw new Exception("StatKeyNotFound");
+            } else {
+                Stat targetedStat = this.getStatFromKey(key.get());
+                targetedStat.changeModifier(change.value);
+            }
+        } catch (Exception e) {
+            System.out.println("___STAT " + change.stat + " WAS NOT FOUND FOR CHANGE___");
+        }
+    }
+
+    public int getStatValue(StatKeys key) {
+        try {
+            int levelValue = this.getStatFromKey(key).getValue(this.level);
             return levelValue;
         } catch (Exception e) {
-            System.out.println("___NO ATTACK STAT FOUND FOR " + this.name + "___");
+            System.out.println("___NO " + key.name + " STAT FOUND FOR " + this.name + "___");
         }
-        return DEFAULT_STAT;
+        boolean isForHP = key == StatKeys.HP;
+        return getDefaultValue(isForHP);
     }
 
-    public int getSpeedStat() {
-        try {
-            int baseValue = this.getBaseSpeedStat();
-            int levelValue = this.calculateStatFromLevel(baseValue, false);
-            return levelValue;
-        } catch (Exception e) {
-            System.out.println("___NO SPEED STAT FOUND FOR " + this.name + "___");
+    private int getDefaultValue(boolean isForHP) {
+        if (isForHP) {
+            return DEFAULT_HP;
+        } else {
+            return DEFAULT_STAT;
         }
-        return DEFAULT_STAT;
+
     }
 
-    private int getStartHP() {
-        try {
-            int baseValue = this.getBaseHPStat();
-            int levelValue = this.calculateStatFromLevel(baseValue, true);
-            return levelValue;
-        } catch (Exception e) {
-            System.out.println("___NO HP STAT FOUND FOR " + this.name + "___");
-        }
-        return DEFAULT_HP;
-    }
+    private Stat getStatFromKey(StatKeys key) throws Exception {
+        Optional<Stat> desiredStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(key.name)).findAny();
 
-    public int getDefenseStat(boolean isPhysical) {
-        try {
-            int baseValue = this.getBaseDefenseStat(isPhysical);
-            int levelValue = this.calculateStatFromLevel(baseValue, false);
-            return levelValue;
-        } catch (Exception e) {
-            System.out.println("___NO DEFENSE STAT FOUND FOR " + this.name + "___");
+        if (desiredStat.isEmpty()) {
+            throw new Exception(key + "NotFound");
+        } else {
+            return desiredStat.get();
         }
-        return DEFAULT_STAT;
     }
 
     public int getHP() {
@@ -191,15 +158,15 @@ public class Pokemon {
         return this.HP > 0;
     }
 
-    private int calculateStatFromLevel(int baseValue, boolean isAboutHP) {
-        double mainFactor = (baseValue * 2 + Math.floor(this.effortValue / 4.0)) / 100.0 * this.level;
-        int summandOffSet = isAboutHP ? this.level + 10 : 5;
-        return (int) mainFactor + summandOffSet;
-    }
-
     public Attack[] getFinishingBlows() {
         Attack[] finishingAttacks = Arrays.stream(this.attacks).filter(Attack::doesDamage).toArray(Attack[]::new);
         return finishingAttacks;
+    }
+
+    public Attack[] getPureStatChangers() {
+        Attack[] pureStatChangers = Arrays.stream(this.attacks).filter(Attack::isPureStatChanger)
+                .toArray(Attack[]::new);
+        return pureStatChangers;
     }
 
     private static int[] getMoveSelection(int maxIndex) {

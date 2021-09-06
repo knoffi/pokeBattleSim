@@ -12,6 +12,7 @@ public class Attack {
     private int accurancy;
     private StatChange[] statChanges;
     private Meta meta;
+    private boolean enemyIsTarget;
 
     public Attack() {
         this.name = "struggle";
@@ -21,14 +22,27 @@ public class Attack {
         this.accurancy = 100;
         this.statChanges = new StatChange[0];
         this.meta = new Meta();
+        this.enemyIsTarget = true;
     }
 
     public boolean doesDamage() {
         return this.power > 0 || this.meta.category.substring(0, 3).equals("dam");
     }
 
+    public boolean isPureStatChanger() {
+        return this.meta.category.substring(0, 3).equals("net");
+    }
+
+    public StatChange[] getStatChanges() {
+        return this.statChanges;
+    }
+
+    public boolean enemyIsTarget() {
+        return this.enemyIsTarget;
+    }
+
     public Attack(String name, int power, DamageClass damageClass, Type type, int accurancy, StatChange[] statChanges,
-            Meta meta) {
+            Meta meta, boolean enemyIsTarget) {
         Type classicalType = type.name.toUpperCase().equals("DARK") ? POKE_TYPE_NORMAL : type;
         this.name = name;
         this.power = power;
@@ -37,6 +51,7 @@ public class Attack {
         this.accurancy = accurancy;
         this.statChanges = statChanges;
         this.meta = meta;
+        this.enemyIsTarget = enemyIsTarget;
     }
 
     public void translateName(Languages language) {

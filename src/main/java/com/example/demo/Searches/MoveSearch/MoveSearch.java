@@ -16,6 +16,7 @@ public class MoveSearch {
     public int accurancy;
     public StatChangeBySearch[] stat_changes;
     public MetaBySearch meta;
+    public NameHolder target;
 
     public Attack convert() {
         DamageClass damageClass = this.damage_class.name.equals("special") ? DamageClass.SPECIAL
@@ -23,6 +24,36 @@ public class MoveSearch {
         StatChange[] changes = Arrays.stream(this.stat_changes).map(change -> change.convert())
                 .toArray(StatChange[]::new);
         Meta meta = this.meta.convert();
-        return new Attack(this.name, this.power, damageClass, this.type.convert(), this.accurancy, changes, meta);
+        return new Attack(this.name, this.power, damageClass, this.type.convert(), this.accurancy, changes, meta,
+                this.enemyIsTarget());
+    }
+
+    private boolean enemyIsTarget() {
+        switch (this.target.name) {
+            case "users-field":
+                return false;
+            case "all-other-pokemon":
+                return true;
+            case "random-opponent":
+                return true;
+            case "user":
+                return false;
+            case "opponents-field":
+                return true;
+            case "selected-pokemon":
+                return true;
+            case "all-opponents":
+                return true;
+            case "specific-move":
+                return true;
+
+            default:
+                try {
+                    throw new Exception("InvalidTargetKey");
+                } catch (Exception e) {
+                    System.out.println("___TARGET KEY OF " + this.name + "CAN NOT BE HANDLED___");
+                }
+                return true;
+        }
     }
 }
