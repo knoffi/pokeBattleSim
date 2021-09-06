@@ -5,6 +5,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 const { EnvironmentPlugin, ProgressPlugin } = require("webpack");
 const pathToPhaser = path.join(__dirname, "/node_modules/phaser/");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 
 const git = (command) =>
     child_process.execSync(`git ${command}`, { encoding: "utf8" }).trim();
@@ -34,6 +35,15 @@ module.exports = {
         alias: {
             phaser,
         },
+    },
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    output: null,
+                },
+            }),
+        ],
     },
     plugins: [
         new ProgressPlugin(),
