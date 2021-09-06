@@ -69,19 +69,52 @@
             "blueCombatant": "ekans",
             "battleLog": [
                 {
-                    "type": "textonly",
-                    "text": "I choose you, meowth!"
+                    "type": "summon",
+                    "blueActs": false,
+                    "message": "Go! MEOWTH!"
+                },
+                {
+                    "type": "summon",
+                    "blueActs": true,
+                    "message": "Blue sent out EKANS!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "EKANS is quicker!"
                 },
                 {
                     "type": "attack",
-                    "isBlue": true,
-                    "attackName": "struggle",
-                    "damage": 821,
-                    "superEffective": true
+                    "blueActs": true,
+                    "attackType": "statusChange",
+                    "message": "EKANS used LEET!"
                 },
                 {
-                    "type": "win",
-                    "isBlue": true
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "MEOWTH's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": false,
+                    "message": "MEOWTH used SCRATCH!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "EKANS used BITE!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "It's very effective!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": false,
+                    "message": "MEOWTH was defeated!"
                 }
             ],
             "blueWon": true
@@ -89,36 +122,346 @@
         {
             "redCombatant": "marowak",
             "blueCombatant": "ekans",
+            "battleLog": [
+                {
+                    "type": "summon",
+                    "blueActs": false,
+                    "message": "Go! MAROWAK!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "EKANS is quicker!"
+                },
+                {
+                    "type": "attack",
+                    "blueActs": true,
+                    "attackType": "statusChange",
+                    "message": "EKANS used LEET!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "MAROWAK's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": false,
+                    "message": "MAROWAK used BONEMERANG!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "It's very effective!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "EKANS used BITE!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": false,
+                    "message": "MAROWAK was defeated!"
+                }
+            ],
             "blueWon": true
         },
         {
             "redCombatant": "dewgong",
             "blueCombatant": "ekans",
+            "battleLog": [
+                {
+                    "type": "summon",
+                    "blueActs": false,
+                    "message": "Go! DEWGONG!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "EKANS is quicker!"
+                },
+                {
+                    "type": "attack",
+                    "blueActs": true,
+                    "attackType": "statusChange",
+                    "message": "EKANS used LEET!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "DEWGONG's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": false,
+                    "message": "DEWGONG used TACKLE!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "EKANS used BITE!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "It's very effective!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": false,
+                    "message": "DEWGONG's was defeated!"
+                }
+            ],
             "blueWon": true
         },
         {
             "redCombatant": "dewgong",
             "blueCombatant": "ekans",
+            "battleLog": [
+                {
+                    "type": "summon",
+                    "blueActs": false,
+                    "message": "Go! DEWGONG!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "EKANS is quicker!"
+                },
+                {
+                    "type": "attack",
+                    "blueActs": true,
+                    "attackType": "statusChange",
+                    "message": "EKANS used LEET!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "DEWGONG's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": false,
+                    "message": "DEWGONG used TACKLE!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": true,
+                    "message": "EKANS's was defeated!"
+                }
+            ],
             "blueWon": false
         },
         {
             "redCombatant": "dewgong",
             "blueCombatant": "clefable",
+            "battleLog": [
+                {
+                    "type": "summon",
+                    "blueActs": true,
+                    "message": "Blue sent out CLEFABLE!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "DEWGONG is quicker!"
+                },
+                {
+                    "type": "attack",
+                    "blueActs": false,
+                    "attackType": "statusChange",
+                    "message": "DEWGONG used LEET!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "CLEFABLE's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "ice",
+                    "blueActs": false,
+                    "message": "DEWGONG used ICE BEAM!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "It's very effective!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "CLEFABLE used POUND!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": false,
+                    "message": "DEWGONG used TAKE DOWN!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "CLEFABLE used POUND!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "ice",
+                    "blueActs": false,
+                    "message": "DEWGONG used ICE BEAM!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": true,
+                    "message": "CLEFABLE's was defeated!"
+                }
+            ],
             "blueWon": false
         },
         {
             "redCombatant": "dewgong",
             "blueCombatant": "beedrill",
+            "battleLog": [
+                {
+                    "type": "summon",
+                    "blueActs": true,
+                    "message": "Blue sent out BEEDRILL!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "BEEDRILL is quicker!"
+                },
+                {
+                    "type": "attack",
+                    "blueActs": true,
+                    "attackType": "statusChange",
+                    "message": "BEEDRILL used LEET!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "DEWGONG's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "BEEDRILL used DRILL!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "It's very effective!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": false,
+                    "message": "DEWGONG was defeated!"
+                }
+            ],
             "blueWon": true
         },
         {
             "redCombatant": "caterpie",
             "blueCombatant": "beedrill",
+            "battleLog": [
+                {
+                    "type": "summon",
+                    "blueActs": false,
+                    "message": "Go! CATERPIE!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "BEEDRILL is quicker!"
+                },
+                {
+                    "type": "attack",
+                    "blueActs": true,
+                    "attackType": "statusChange",
+                    "message": "BEEDRILL used LEET!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "CATERPIE's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "bug",
+                    "blueActs": false,
+                    "message": "CATERPIE used BUG BITE!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "BEEDRILL used DRILL!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "It's very effective!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": false,
+                    "message": "CATERPIE was defeated!"
+                }
+            ],
             "blueWon": true
         },
         {
             "redCombatant": "magnemite",
             "blueCombatant": "beedrill",
+            "battleLog": [
+                {
+                    "type": "summon",
+                    "blueActs": false,
+                    "message": "Go! MAGNEMITE!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "BEEDRILL is quicker!"
+                },
+                {
+                    "type": "attack",
+                    "blueActs": true,
+                    "attackType": "statusChange",
+                    "message": "BEEDRILL used LEET!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "MAGNEMITE's defense fell!"
+                },
+                {
+                    "type": "attack",
+                    "attackType": "normal",
+                    "blueActs": true,
+                    "message": "BEEDRILL used DRILL!"
+                },
+                {
+                    "type": "text",
+                    "blueActs": true,
+                    "message": "It's very effective!"
+                },
+                {
+                    "type": "faint",
+                    "blueActs": false,
+                    "message": "MAGNEMITE was defeated!"
+                }
+            ],
             "blueWon": true
         }
     ],
