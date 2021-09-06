@@ -30,7 +30,7 @@ public class Combat {
 
     private void pushPokemonSummons() {
         SummonLog blueSummon = new SummonLog(true, this.blue.getName());
-        SummonLog redSummon = new SummonLog(true, this.blue.getName());
+        SummonLog redSummon = new SummonLog(false, this.red.getName());
         this.combatSummary.add(blueSummon);
         this.combatSummary.add(redSummon);
     }
@@ -38,9 +38,8 @@ public class Combat {
     public LogRound getResult() {
         final CombatResult combatResult = new BattleCalculation(this.blue, this.red, language).getResult();
         final boolean blueWins = combatResult.blueWin;
-        final Pokemon winner = blueWins ? this.blue : this.red;
+
         CombatLog[] combatLogs = this.combatSummary.toArray(CombatLog[]::new);
-        winner.addExhaustion();
         return new LogRound(this.red.getName(), this.blue.getName(), combatLogs, blueWins);
     }
 
