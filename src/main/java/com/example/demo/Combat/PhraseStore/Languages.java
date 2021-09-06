@@ -8,4 +8,9 @@ public enum Languages {
     Languages(String key) {
         this.key = key;
     }
+
+    public boolean isEuropean() {
+        return this.key.equals(DE.key) || this.key.equals(ES.key) || this.key.equals(EN.key) || this.key.equals(FR.key)
+                || this.key.equals(IT.key);
+    }
 }

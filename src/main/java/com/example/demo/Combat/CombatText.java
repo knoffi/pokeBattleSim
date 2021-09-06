@@ -19,22 +19,39 @@ public class CombatText {
             Effectiveness redEffect, Languages language, boolean blueWon) {
         this.language = language;
         this.blue = Translater.getTranslatedName(blue, language);
-        this.red = Translater.getTranslatedName(red, language);
+        this.red = Translater.getTranslatedName(red, language).toUpperCase();
         this.blueAttack = Translater.getTranslatedAttack(blueAttack, language);
-        this.redAttack = Translater.getTranslatedAttack(redAttack, language);
+        this.redAttack = Translater.getTranslatedAttack(redAttack, language).toUpperCase();
         this.blueWon = blueWon;
         this.blueEffect = blueEffect;
         this.redEffect = redEffect;
+
+        this.adjustNames();
+    }
+
+    private void adjustNames() {
+        boolean isEuropeanLanguage = this.language.isEuropean();
+        if (isEuropeanLanguage) {
+            this.red = this.red.toUpperCase();
+            this.redAttack = this.redAttack.toUpperCase();
+            this.blue = this.blue.toUpperCase();
+            this.blueAttack = this.blueAttack.toUpperCase();
+        }
     }
 
     public String getAttackText(boolean blueAttacks) {
-        Effectiveness effect = blueAttacks ? this.blueEffect : this.redEffect;
         String attacker = blueAttacks ? this.blue : this.red;
         String move = blueAttacks ? this.blueAttack : this.redAttack;
-        String effectString = PhraseStore.getEffectPhrase(effect, language);
         String attackString = PhraseStore.getAttackPhrase(language).replace("XXX", attacker).replace("YYY", move);
 
-        return attackString + " " + effectString;
+        return attackString;
+    }
+
+    public String getEffectivenessText(boolean blueAttacks) {
+        Effectiveness effect = blueAttacks ? this.blueEffect : this.redEffect;
+        String effectString = PhraseStore.getEffectPhrase(effect, language);
+
+        return effectString;
     }
 
     public String getResultText() {
