@@ -16,41 +16,11 @@ import com.example.demo.TypeEffects.Effectiveness;
 import com.example.demo.TypeEffects.TypeStore;
 
 public class Combat {
-    private Pokemon red;
-    private Pokemon blue;
-    private Stack<CombatLog> combatSummary;
-    private Languages language;
+    public static LogRound getResult(Pokemon red, Pokemon blue, Languages language, VeteranMode veteran) {
+        final CombatResult result = new BattleCalculation(blue, red, language, veteran).getResult();
 
-    public Combat(Pokemon pokemonRed, Pokemon pokemonBlue, Languages language) {
-        this.red = pokemonRed;
-        this.blue = pokemonBlue;
-        this.language = language;
-        this.combatSummary = new Stack<CombatLog>();
-
-        this.pushPokemonSummons();
-    }
-
-    private void pushPokemonSummons() {
-        SummonLog blueSummon = new SummonLog(true, this.blue.getName());
-        SummonLog redSummon = new SummonLog(false, this.red.getName());
-        this.combatSummary.add(blueSummon);
-        this.combatSummary.add(redSummon);
-    }
-
-    private void pushFightResult(boolean blueWins) {
-        String loserName = blueWins ? this.red.getName() : this.blue.getName();
-        ResultLog fightResult = new ResultLog(blueWins, loserName);
-        this.combatSummary.push(fightResult);
-    }
-
-    public LogRound getResult() {
-        final CombatResult combatResult = new BattleCalculation(this.blue, this.red, language).getResult();
-        final boolean blueWins = combatResult.blueWin;
-
-        this.pushFightResult(blueWins);
-
-        CombatLog[] combatLogs = this.combatSummary.toArray(CombatLog[]::new);
-        return new LogRound(this.red.getName(), this.blue.getName(), combatLogs, blueWins);
+        CombatLog[] combatLogs = result.texts.toArray(CombatLog[]::new);
+        return new LogRound(red.getName(), blue.getName(), combatLogs, result.blueWin);
     }
 
 }
@@ -66,8 +36,10 @@ class BattleCalculation {
     private Effectiveness redEffect;
     private Languages language;
     private Stack<CombatLog> combatSummary;
+    private VeteranMode veteran;
 
-    public BattleCalculation(Pokemon blue, Pokemon red, Languages language) {
+    public BattleCalculation(Pokemon blue, Pokemon red, Languages language, VeteranMode veteran) {
+        this.combatSummary = new Stack<CombatLog>();
         this.blue = blue;
         this.red = red;
         this.blueAttack = this.getBestAttack(this.blue.getFinishingBlows(), true);
@@ -75,12 +47,39 @@ class BattleCalculation {
         this.blueEffect = this.getEffectiveness(this.blueAttack.getType(), red.getPokeTypes());
         this.redEffect = this.getEffectiveness(this.redAttack.getType(), blue.getPokeTypes());
         this.language = language;
+        this.veteran = veteran;
     }
 
     public CombatResult getResult() {
         boolean blueWins = this.blueWonSimulation();
+        this.pushPokemonSummons();
+        this.pushPreCombatEvents();
         this.pushCombatTexts(blueWins);
+        this.pushFightResult(blueWins);
         return new CombatResult(blueWins, this.combatSummary);
+    }
+
+    private void pushPokemonSummons() {
+        if (this.veteran != VeteranMode.BLUE) {
+            SummonLog blueSummon = new SummonLog(true, this.blue.getName());
+            this.combatSummary.add(blueSummon);
+        }
+        if (this.veteran != VeteranMode.RED) {
+            SummonLog redSummon = new SummonLog(false, this.red.getName());
+            this.combatSummary.add(redSummon);
+        }
+    }
+
+    private void pushPreCombatEvents() {
+        PreCombat preCombat = new PreCombat(this.blue, this.red, this.language);
+        Stack<CombatLog> events = preCombat.getPreCombatResult();
+        this.combatSummary.addAll(events);
+    }
+
+    private void pushFightResult(boolean blueWins) {
+        String loserName = blueWins ? this.red.getName() : this.blue.getName();
+        ResultLog fightResult = new ResultLog(!blueWins, loserName);
+        this.combatSummary.push(fightResult);
     }
 
     private boolean blueWonSimulation() {
@@ -181,27 +180,29 @@ class BattleCalculation {
         }
     }
 
+    private void pushAttackTexts(boolean blueAttacks) {
+        Attack attack = blueAttacks ? this.blueAttack : this.redAttack;
+        String attacker = blueAttacks ? this.blue.getName() : this.red.getName();
+        Optional<String> type = Optional.of(attack.getType().name);
+        CombatLog attackLog = new AttackLog(blueAttacks, attacker, attack.getName(), this.language, type);
+        this.combatSummary.push(attackLog);
+
+        boolean effectTextIsEmpty = blueAttacks ? this.blueEffect == Effectiveness.NORMAL
+                : this.redEffect == Effectiveness.NORMAL;
+        if (effectTextIsEmpty) {
+            return;
+        } else {
+            Effectiveness effect = blueAttacks ? this.blueEffect : this.redEffect;
+            CombatLog effectLog = new EffectivenessLog(blueAttacks, effect, this.language);
+            this.combatSummary.push(effectLog);
+        }
+    }
+
     private void pushCombatTexts(boolean blueWon) {
-        CombatText text = new CombatText(this.blue.getName(), this.blueAttack.getName(), blueEffect, red.getName(),
-                redAttack.getName(), redEffect, this.language, blueWon);
-
-        String blueAttackText = text.getAttackText(true);
-        Optional<String> blueAttackType = Optional.of(this.blueAttack.getType().name);
-        CombatLog blueAttackLog = new AttackLog(true, blueAttackText, blueAttackType);
-        this.combatSummary.push(blueAttackLog);
-
-        String blueEffectText = text.getEffectivenessText(true);
-        CombatLog blueEffectLog = new TextLog(true, blueEffectText);
-        this.combatSummary.push(blueEffectLog);
-
-        String redAttackText = text.getAttackText(false);
-        Optional<String> redAttackType = Optional.of(this.redAttack.getType().name);
-        CombatLog redAttackLog = new AttackLog(false, redAttackText, redAttackType);
-        this.combatSummary.push(redAttackLog);
-
-        String redEffectText = text.getEffectivenessText(false);
-        CombatLog redEffectLog = new TextLog(false, redEffectText);
-        this.combatSummary.push(redEffectLog);
+        // for blue
+        this.pushAttackTexts(true);
+        // for red
+        this.pushAttackTexts(false);
     }
 
     private double getAttackValue(Attack attack, boolean blueAttacks) {
@@ -265,7 +266,6 @@ class BattleCalculation {
     }
 
     private Effectiveness getEffectiveness(Type attackType, Type[] defenderTypes) {
-        // TODO: use OPTIONAL instead
         Type firstType, secondType;
         double effectivenessValue;
         firstType = defenderTypes[0];

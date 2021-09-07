@@ -12,17 +12,15 @@ public class CombatText {
     private String redAttack;
     private Effectiveness blueEffect;
     private Effectiveness redEffect;
-    private boolean blueWon;
     private Languages language;
 
     public CombatText(String blue, String blueAttack, Effectiveness blueEffect, String red, String redAttack,
-            Effectiveness redEffect, Languages language, boolean blueWon) {
+            Effectiveness redEffect, Languages language) {
         this.language = language;
         this.blue = Translater.getTranslatedName(blue, language);
         this.red = Translater.getTranslatedName(red, language).toUpperCase();
         this.blueAttack = Translater.getTranslatedAttack(blueAttack, language);
         this.redAttack = Translater.getTranslatedAttack(redAttack, language).toUpperCase();
-        this.blueWon = blueWon;
         this.blueEffect = blueEffect;
         this.redEffect = redEffect;
 
@@ -54,8 +52,8 @@ public class CombatText {
         return effectString;
     }
 
-    public String getResultText() {
-        String loser = this.blueWon ? this.red : this.blue;
+    public String getResultText(boolean blueWon) {
+        String loser = blueWon ? this.red : this.blue;
         String resultString = PhraseStore.getResultPhrase(language).replace("XXX", loser);
 
         return resultString;

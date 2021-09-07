@@ -6,4 +6,5 @@ public abstract class CombatLog {
     public String type;
     public String message;
     public String attackPokeType;
+
 }

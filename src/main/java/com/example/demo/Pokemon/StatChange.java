@@ -8,4 +8,12 @@ public class StatChange {
         this.value = value;
         this.stat = stat;
     }
+
+    public boolean isRisingStat() {
+        return this.value > 0;
+    }
+
+    public String getName() {
+        return this.stat;
+    }
 }

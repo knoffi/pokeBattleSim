@@ -3,6 +3,7 @@ package com.example.demo.TrainerDuell;
 import java.util.Stack;
 
 import com.example.demo.Combat.Combat;
+import com.example.demo.Combat.VeteranMode;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Pokemon;
@@ -27,15 +28,21 @@ public class TrainerDuell {
     public LogRound[] letThemFight(Languages language) {
         boolean blueCanFight = !this.blueTeam.empty();
         boolean redCanFight = !this.redTeam.empty();
+        VeteranMode veteran = VeteranMode.NONE;
         while (blueCanFight && redCanFight) {
+
             Pokemon blueFighter = this.blueTeam.pop();
             Pokemon redFighter = this.redTeam.pop();
-            LogRound roundSummary = new Combat(redFighter, blueFighter, language).getResult();
+
+            LogRound roundSummary = Combat.getResult(redFighter, blueFighter, language, veteran);
             this.duellSummary.push(roundSummary);
+
             if (roundSummary.blueWon) {
+                veteran = VeteranMode.BLUE;
                 this.blueTeam.push(blueFighter);
                 redCanFight = !this.redTeam.empty();
             } else {
+                veteran = VeteranMode.RED;
                 this.redTeam.push(redFighter);
                 blueCanFight = !this.blueTeam.empty();
             }
