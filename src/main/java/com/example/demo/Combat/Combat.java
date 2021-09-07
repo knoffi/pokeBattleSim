@@ -46,7 +46,6 @@ public class Combat {
     public LogRound getResult() {
         final CombatResult combatResult = new BattleCalculation(this.blue, this.red, language).getResult();
         final boolean blueWins = combatResult.blueWin;
-
         this.pushFightResult(blueWins);
 
         CombatLog[] combatLogs = this.combatSummary.toArray(CombatLog[]::new);
@@ -68,6 +67,7 @@ class BattleCalculation {
     private Stack<CombatLog> combatSummary;
 
     public BattleCalculation(Pokemon blue, Pokemon red, Languages language) {
+        this.combatSummary = new Stack<CombatLog>();
         this.blue = blue;
         this.red = red;
         this.blueAttack = this.getBestAttack(this.blue.getFinishingBlows(), true);
@@ -265,7 +265,6 @@ class BattleCalculation {
     }
 
     private Effectiveness getEffectiveness(Type attackType, Type[] defenderTypes) {
-        // TODO: use OPTIONAL instead
         Type firstType, secondType;
         double effectivenessValue;
         firstType = defenderTypes[0];
