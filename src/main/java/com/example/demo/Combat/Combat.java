@@ -46,7 +46,6 @@ class BattleCalculation {
     private Effectiveness redEffect;
     private Languages language;
     private Stack<CombatLog> combatSummary;
-    private CombatText textWriter;
 
     public BattleCalculation(Pokemon blue, Pokemon red, Languages language) {
         this.combatSummary = new Stack<CombatLog>();
@@ -57,8 +56,6 @@ class BattleCalculation {
         this.blueEffect = this.getEffectiveness(this.blueAttack.getType(), red.getPokeTypes());
         this.redEffect = this.getEffectiveness(this.redAttack.getType(), blue.getPokeTypes());
         this.language = language;
-        this.textWriter = new CombatText(blue.getName(), blueAttack.getName(), this.blueEffect, red.getName(),
-                redAttack.getName(), this.redEffect, language);
     }
 
     public CombatResult getResult() {
@@ -182,9 +179,9 @@ class BattleCalculation {
 
     private void pushAttackTexts(boolean blueAttacks) {
         Attack attack = blueAttacks ? this.blueAttack : this.redAttack;
-        String attackMessage = this.textWriter.getAttackText(blueAttacks);
+        String attacker = blueAttacks ? this.blue.getName() : this.red.getName();
         Optional<String> type = Optional.of(attack.getType().name);
-        CombatLog attackLog = new AttackLog(blueAttacks, attackMessage, type);
+        CombatLog attackLog = new AttackLog(blueAttacks, attacker, attack.getName(), this.language, type);
         this.combatSummary.push(attackLog);
 
         boolean effectTextIsEmpty = blueAttacks ? this.blueEffect == Effectiveness.NORMAL
@@ -192,8 +189,8 @@ class BattleCalculation {
         if (effectTextIsEmpty) {
             return;
         } else {
-            String effectMessage = this.textWriter.getEffectivenessText(blueAttacks);
-            CombatLog effectLog = new TextLog(blueAttacks, effectMessage);
+            Effectiveness effect = blueAttacks ? this.blueEffect : this.redEffect;
+            CombatLog effectLog = new EffectivenessLog(blueAttacks, effect, this.language);
             this.combatSummary.push(effectLog);
         }
     }
