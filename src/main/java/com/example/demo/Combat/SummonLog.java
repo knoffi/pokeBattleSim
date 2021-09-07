@@ -9,6 +9,6 @@ class SummonLog extends CombatLog {
 
     private String createMessage(String pokemonName) {
         String actor = this.blueActs ? "BLUE" : "RED";
-        return actor + " send out " + pokemonName + "!";
+        return actor + " sent out " + pokemonName + "!";
     }
 }
