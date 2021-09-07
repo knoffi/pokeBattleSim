@@ -61,6 +61,7 @@ class BattleCalculation {
     public CombatResult getResult() {
         boolean blueWins = this.blueWonSimulation();
         this.pushPokemonSummons();
+        this.pushPreCombatEvents();
         this.pushCombatTexts(blueWins);
         this.pushFightResult(blueWins);
         return new CombatResult(blueWins, this.combatSummary);
@@ -71,6 +72,12 @@ class BattleCalculation {
         SummonLog redSummon = new SummonLog(false, this.red.getName());
         this.combatSummary.add(blueSummon);
         this.combatSummary.add(redSummon);
+    }
+
+    private void pushPreCombatEvents() {
+        PreCombat preCombat = new PreCombat(this.blue, this.red, this.language);
+        Stack<CombatLog> events = preCombat.getPreCombatResult();
+        this.combatSummary.addAll(events);
     }
 
     private void pushFightResult(boolean blueWins) {
