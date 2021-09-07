@@ -16,21 +16,11 @@ import com.example.demo.TypeEffects.Effectiveness;
 import com.example.demo.TypeEffects.TypeStore;
 
 public class Combat {
-    private Pokemon red;
-    private Pokemon blue;
-    private Languages language;
-
-    public Combat(Pokemon pokemonRed, Pokemon pokemonBlue, Languages language) {
-        this.red = pokemonRed;
-        this.blue = pokemonBlue;
-        this.language = language;
-    }
-
-    public LogRound getResult() {
-        final CombatResult result = new BattleCalculation(this.blue, this.red, language).getResult();
+    public static LogRound getResult(Pokemon red, Pokemon blue, Languages language, VeteranMode veteran) {
+        final CombatResult result = new BattleCalculation(blue, red, language, veteran).getResult();
 
         CombatLog[] combatLogs = result.texts.toArray(CombatLog[]::new);
-        return new LogRound(this.red.getName(), this.blue.getName(), combatLogs, result.blueWin);
+        return new LogRound(red.getName(), blue.getName(), combatLogs, result.blueWin);
     }
 
 }
@@ -46,8 +36,9 @@ class BattleCalculation {
     private Effectiveness redEffect;
     private Languages language;
     private Stack<CombatLog> combatSummary;
+    private VeteranMode veteran;
 
-    public BattleCalculation(Pokemon blue, Pokemon red, Languages language) {
+    public BattleCalculation(Pokemon blue, Pokemon red, Languages language, VeteranMode veteran) {
         this.combatSummary = new Stack<CombatLog>();
         this.blue = blue;
         this.red = red;
@@ -56,6 +47,7 @@ class BattleCalculation {
         this.blueEffect = this.getEffectiveness(this.blueAttack.getType(), red.getPokeTypes());
         this.redEffect = this.getEffectiveness(this.redAttack.getType(), blue.getPokeTypes());
         this.language = language;
+        this.veteran = veteran;
     }
 
     public CombatResult getResult() {
@@ -68,10 +60,14 @@ class BattleCalculation {
     }
 
     private void pushPokemonSummons() {
-        SummonLog blueSummon = new SummonLog(true, this.blue.getName());
-        SummonLog redSummon = new SummonLog(false, this.red.getName());
-        this.combatSummary.add(blueSummon);
-        this.combatSummary.add(redSummon);
+        if (this.veteran != VeteranMode.BLUE) {
+            SummonLog blueSummon = new SummonLog(true, this.blue.getName());
+            this.combatSummary.add(blueSummon);
+        }
+        if (this.veteran != VeteranMode.RED) {
+            SummonLog redSummon = new SummonLog(false, this.red.getName());
+            this.combatSummary.add(redSummon);
+        }
     }
 
     private void pushPreCombatEvents() {
