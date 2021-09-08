@@ -78,7 +78,7 @@ class BattleCalculation {
 
     private void pushFightResult(boolean blueWins) {
         String loserName = blueWins ? this.red.getName() : this.blue.getName();
-        ResultLog fightResult = new ResultLog(!blueWins, loserName);
+        ResultLog fightResult = new ResultLog(!blueWins, loserName, this.language);
         this.combatSummary.push(fightResult);
     }
 
