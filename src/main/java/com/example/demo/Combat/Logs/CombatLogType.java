@@ -1,4 +1,4 @@
-package com.example.demo.Combat;
+package com.example.demo.Combat.Logs;
 
 public enum CombatLogType {
     ATTACK("attack"), TEXT("text"), FAINT("faint"), SUMMON("summon");

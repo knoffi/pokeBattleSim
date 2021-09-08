@@ -5,6 +5,11 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
+import com.example.demo.Combat.Logs.AttackLog;
+import com.example.demo.Combat.Logs.CombatLog;
+import com.example.demo.Combat.Logs.EffectivenessLog;
+import com.example.demo.Combat.Logs.ResultLog;
+import com.example.demo.Combat.Logs.SummonLog;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Combat.PreCombat.PreCombat;
 import com.example.demo.Controller.LogRound;

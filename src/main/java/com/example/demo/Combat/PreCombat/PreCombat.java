@@ -5,10 +5,10 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
-import com.example.demo.Combat.AttackLog;
-import com.example.demo.Combat.CombatLog;
-import com.example.demo.Combat.SpeedContestLog;
-import com.example.demo.Combat.StatChangeLog;
+import com.example.demo.Combat.Logs.AttackLog;
+import com.example.demo.Combat.Logs.CombatLog;
+import com.example.demo.Combat.Logs.SpeedContestLog;
+import com.example.demo.Combat.Logs.StatChangeLog;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.Pokemon;

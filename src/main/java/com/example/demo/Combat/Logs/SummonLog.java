@@ -1,6 +1,6 @@
-package com.example.demo.Combat;
+package com.example.demo.Combat.Logs;
 
-class SummonLog extends CombatLog {
+public class SummonLog extends CombatLog {
     public SummonLog(boolean blueActs, String pokemonName) {
         this.blueActs = blueActs;
         this.type = CombatLogType.SUMMON.type;

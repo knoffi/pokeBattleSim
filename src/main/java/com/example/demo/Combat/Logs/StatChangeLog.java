@@ -1,4 +1,4 @@
-package com.example.demo.Combat;
+package com.example.demo.Combat.Logs;
 
 public class StatChangeLog extends CombatLog {
     public StatChangeLog(boolean blueActs, String target, String stat, boolean isRising) {

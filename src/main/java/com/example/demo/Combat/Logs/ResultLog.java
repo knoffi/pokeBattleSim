@@ -1,9 +1,9 @@
-package com.example.demo.Combat;
+package com.example.demo.Combat.Logs;
 
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Combat.PhraseStore.PhraseStore;
 
-class ResultLog extends CombatLog {
+public class ResultLog extends CombatLog {
     public ResultLog(boolean blueWins, String name, Languages language) {
         // front end needs this field
         this.blueActs = blueWins;

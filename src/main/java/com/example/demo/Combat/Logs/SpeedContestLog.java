@@ -1,4 +1,4 @@
-package com.example.demo.Combat;
+package com.example.demo.Combat.Logs;
 
 public class SpeedContestLog extends CombatLog {
     public SpeedContestLog(boolean blueActs, String winner, int stepsAhead) {

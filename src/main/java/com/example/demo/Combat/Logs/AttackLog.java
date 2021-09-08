@@ -1,4 +1,4 @@
-package com.example.demo.Combat;
+package com.example.demo.Combat.Logs;
 
 import java.util.Optional;
 
