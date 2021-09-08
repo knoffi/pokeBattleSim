@@ -1,7 +1,7 @@
 package com.example.demo.Combat;
 
 class SummonLog extends CombatLog {
-    SummonLog(boolean blueActs, String pokemonName) {
+    public SummonLog(boolean blueActs, String pokemonName) {
         this.blueActs = blueActs;
         this.type = CombatLogType.SUMMON.type;
         this.message = this.createMessage(pokemonName);

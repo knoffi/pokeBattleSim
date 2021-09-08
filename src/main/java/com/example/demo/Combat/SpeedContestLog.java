@@ -1,7 +1,7 @@
 package com.example.demo.Combat;
 
 public class SpeedContestLog extends CombatLog {
-    SpeedContestLog(boolean blueActs, String winner, int stepsAhead) {
+    public SpeedContestLog(boolean blueActs, String winner, int stepsAhead) {
         // front end needs this field
         this.blueActs = blueActs;
         this.type = CombatLogType.TEXT.type;

@@ -5,9 +5,9 @@ import java.util.Optional;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Combat.PhraseStore.PhraseStore;
 
-class AttackLog extends CombatLog {
+public class AttackLog extends CombatLog {
 
-    AttackLog(boolean blueActs, String attacker, String move, Languages language, Optional<String> type) {
+    public AttackLog(boolean blueActs, String attacker, String move, Languages language, Optional<String> type) {
         this.blueActs = blueActs;
         this.attackPokeType = type.isPresent() ? type.get() : "statusChange";
         this.message = this.createMessage(attacker, move, language);

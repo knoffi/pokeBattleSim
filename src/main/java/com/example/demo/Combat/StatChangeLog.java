@@ -1,7 +1,7 @@
 package com.example.demo.Combat;
 
 public class StatChangeLog extends CombatLog {
-    StatChangeLog(boolean blueActs, String target, String stat, boolean isRising) {
+    public StatChangeLog(boolean blueActs, String target, String stat, boolean isRising) {
         // front end needs this field
         this.blueActs = blueActs;
         this.type = CombatLogType.TEXT.type;

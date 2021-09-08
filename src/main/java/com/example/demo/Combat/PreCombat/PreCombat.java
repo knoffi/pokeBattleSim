@@ -1,16 +1,21 @@
-package com.example.demo.Combat;
+package com.example.demo.Combat.PreCombat;
 
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
+import com.example.demo.Combat.AttackLog;
+import com.example.demo.Combat.CombatLog;
+import com.example.demo.Combat.SpeedContestLog;
+import com.example.demo.Combat.StatChangeLog;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.Pokemon;
 import com.example.demo.Pokemon.StatKeys;
 
-class PreCombat {
+public class PreCombat {
+
     private final static int SPEED_STEP = 40;
     private Pokemon fastPokemon;
     private Pokemon slowPokemon;
@@ -19,7 +24,7 @@ class PreCombat {
     private Stack<CombatLog> summary;
     private Languages language;
 
-    PreCombat(Pokemon blue, Pokemon red, Languages language) {
+    public PreCombat(Pokemon blue, Pokemon red, Languages language) {
         int blueSpeedAdvantage = blue.getStatValue(StatKeys.SPEED) - red.getStatValue(StatKeys.SPEED);
         this.blueIsFaster = blueSpeedAdvantage > 0;
         this.roundsAhead = Math.abs(blueSpeedAdvantage / SPEED_STEP);
