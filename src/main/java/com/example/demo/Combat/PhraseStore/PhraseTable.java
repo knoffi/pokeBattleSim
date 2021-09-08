@@ -25,7 +25,7 @@ class PhraseTable {
             return attackText.get();
         } else {
             this.throwRowNotFound();
-            return PhraseRow.defaultAttackText;
+            return Phrases.attack.text;
         }
     }
 
@@ -37,7 +37,7 @@ class PhraseTable {
             return resultText.get();
         } else {
             this.throwRowNotFound();
-            return PhraseRow.defaultResultText;
+            return Phrases.result.text;
         }
     }
 
@@ -49,7 +49,7 @@ class PhraseTable {
             return effectText.get();
         } else {
             this.throwRowNotFound();
-            return PhraseRow.defaultEffectText;
+            return Phrases.normalEffect.text;
         }
     }
 

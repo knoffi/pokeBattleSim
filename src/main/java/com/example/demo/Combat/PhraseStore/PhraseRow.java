@@ -4,10 +4,6 @@ import com.example.demo.Translater.Translater;
 import com.example.demo.TypeEffects.Effectiveness;
 
 class PhraseRow {
-    final static public String defaultAttackText = "XXX uses YYY.";
-    final static public String defaultResultText = "XXX was defeated!";
-    final static public String defaultEffectText = "";
-
     private String languageKey;
     private String veryEffective;
     private String superEffective;
@@ -20,14 +16,14 @@ class PhraseRow {
 
     public PhraseRow(Languages language) {
         this.languageKey = language.key;
-        this.veryEffective = Translater.getTranslatedText("It is very effective!", language.key);
-        this.superEffective = Translater.getTranslatedText("It is super effective!", language.key);
-        this.notVeryEffective = Translater.getTranslatedText("It is not very effective!", language.key);
-        this.normalEffective = defaultEffectText;
-        this.barelyEffective = Translater.getTranslatedText("It is nearly ineffective!", language.key);
-        this.immunEffective = Translater.getTranslatedText("Nothing happens!", language.key);
-        this.attackText = Translater.getTranslatedText(defaultAttackText, language.key);
-        this.resultText = Translater.getTranslatedText(defaultResultText, language.key);
+        this.veryEffective = Translater.getTranslatedText(Phrases.veryEffect.text, language.key);
+        this.superEffective = Translater.getTranslatedText(Phrases.superEffect.text, language.key);
+        this.notVeryEffective = Translater.getTranslatedText(Phrases.notVeryEffect.text, language.key);
+        this.normalEffective = Phrases.normalEffect.text;
+        this.barelyEffective = Translater.getTranslatedText(Phrases.veryBadEffect.text, language.key);
+        this.immunEffective = Translater.getTranslatedText(Phrases.immunEffect.text, language.key);
+        this.attackText = Translater.getTranslatedText(Phrases.attack.text, language.key);
+        this.resultText = Translater.getTranslatedText(Phrases.result.text, language.key);
     }
 
     PhraseRow() {
