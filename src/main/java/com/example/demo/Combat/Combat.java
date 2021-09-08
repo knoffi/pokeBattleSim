@@ -5,7 +5,13 @@ import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.IntStream;
 
+import com.example.demo.Combat.Logs.AttackLog;
+import com.example.demo.Combat.Logs.CombatLog;
+import com.example.demo.Combat.Logs.EffectivenessLog;
+import com.example.demo.Combat.Logs.ResultLog;
+import com.example.demo.Combat.Logs.SummonLog;
 import com.example.demo.Combat.PhraseStore.Languages;
+import com.example.demo.Combat.PreCombat.PreCombat;
 import com.example.demo.Controller.LogRound;
 import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.DamageClass;
@@ -61,11 +67,11 @@ class BattleCalculation {
 
     private void pushPokemonSummons() {
         if (this.veteran != VeteranMode.BLUE) {
-            SummonLog blueSummon = new SummonLog(true, this.blue.getName());
+            SummonLog blueSummon = new SummonLog(true, this.blue.getName(), this.language);
             this.combatSummary.add(blueSummon);
         }
         if (this.veteran != VeteranMode.RED) {
-            SummonLog redSummon = new SummonLog(false, this.red.getName());
+            SummonLog redSummon = new SummonLog(false, this.red.getName(), this.language);
             this.combatSummary.add(redSummon);
         }
     }
@@ -78,7 +84,7 @@ class BattleCalculation {
 
     private void pushFightResult(boolean blueWins) {
         String loserName = blueWins ? this.red.getName() : this.blue.getName();
-        ResultLog fightResult = new ResultLog(!blueWins, loserName);
+        ResultLog fightResult = new ResultLog(!blueWins, loserName, this.language);
         this.combatSummary.push(fightResult);
     }
 

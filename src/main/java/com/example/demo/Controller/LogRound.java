@@ -1,6 +1,6 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Combat.CombatLog;
+import com.example.demo.Combat.Logs.CombatLog;
 
 public class LogRound {
     public String redCombatant;
