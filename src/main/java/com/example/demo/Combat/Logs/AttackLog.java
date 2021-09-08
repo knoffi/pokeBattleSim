@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Combat.PhraseStore.PhraseStore;
+import com.example.demo.Translater.Translater;
 
 public class AttackLog extends CombatLog {
 
@@ -15,7 +16,15 @@ public class AttackLog extends CombatLog {
     }
 
     private String createMessage(String attacker, String move, Languages language) {
-        String message = PhraseStore.getAttackPhrase(language).replace("XXX", attacker).replace("YYY", move);
+        // TODO: get translated name from Pokemon (myPokemon.nameMap.get(language))
+        String translatedAttacker = Translater.getTranslatedName(attacker, language);
+        String attackerForPhrase = this.isEuropean(language) ? translatedAttacker.toUpperCase() : translatedAttacker;
+        // TODO: get translated name from Move (myMove.nameMap.get(language))
+        String translatedMove = Translater.getTranslatedAttack(move, language);
+        String moveForPhrase = this.isEuropean(language) ? translatedMove.toUpperCase() : translatedMove;
+
+        String message = PhraseStore.getAttackPhrase(language).replace("XXX", attackerForPhrase).replace("YYY",
+                moveForPhrase);
 
         return message;
     }

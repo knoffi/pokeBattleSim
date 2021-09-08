@@ -67,11 +67,11 @@ class BattleCalculation {
 
     private void pushPokemonSummons() {
         if (this.veteran != VeteranMode.BLUE) {
-            SummonLog blueSummon = new SummonLog(true, this.blue.getName());
+            SummonLog blueSummon = new SummonLog(true, this.blue.getName(), this.language);
             this.combatSummary.add(blueSummon);
         }
         if (this.veteran != VeteranMode.RED) {
-            SummonLog redSummon = new SummonLog(false, this.red.getName());
+            SummonLog redSummon = new SummonLog(false, this.red.getName(), this.language);
             this.combatSummary.add(redSummon);
         }
     }
