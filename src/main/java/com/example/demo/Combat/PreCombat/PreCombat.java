@@ -36,7 +36,8 @@ public class PreCombat {
     }
 
     private void pushSpeedWinner() {
-        CombatLog winnerAnnouncement = new SpeedContestLog(this.blueIsFaster, fastPokemon.getName(), this.roundsAhead);
+        CombatLog winnerAnnouncement = new SpeedContestLog(this.blueIsFaster, fastPokemon.getName(), this.roundsAhead,
+                this.language);
         this.summary.push(winnerAnnouncement);
 
     }
@@ -50,7 +51,7 @@ public class PreCombat {
     }
 
     private void pushStatEffect(String target, String stat, boolean isRising) {
-        CombatLog statEffect = new StatChangeLog(this.blueIsFaster, target, stat, isRising);
+        CombatLog statEffect = new StatChangeLog(this.blueIsFaster, target, stat, isRising, this.language);
         this.summary.push(statEffect);
 
     }

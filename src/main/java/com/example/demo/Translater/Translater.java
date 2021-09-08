@@ -18,6 +18,7 @@ public class Translater {
     private static final String GOOGLE_TRANSLATION_MODE = "base";
     private static final String SOURCE_LANGUAGE = "en";
     private final static String POKE_MOVE_PATH = "api/v2/move/";
+    private final static String POKE_STAT_PATH = "api/v2/stat/";
     private final static String POKEMON_SPECIES_PATH = "api/v2/pokemon-species/";
 
     // TODO: make this into a bean (add constructor which maps officialLanguageKey
@@ -55,6 +56,23 @@ public class Translater {
             System.out.println("___FAIL ON TRANSLATED ATTACK NAME___" + e.getClass());
         }
         return englishAttack;
+    }
+
+    public static String getTranslatedStat(String englishStat, Languages language) {
+        try {
+            String specificPath = POKE_STAT_PATH + englishStat;
+            TranslationHolder translations = Pokedex.getPokeData(specificPath, TranslationHolder.class,
+                    RequestMode.JAVA_11);
+            String languageKey = TranslationKeyMapper.getKey(language.key);
+            Optional<Name> translation = Arrays.stream(translations.names)
+                    .filter(name -> name.language.name.equals(languageKey)).findFirst();
+            if (translation.isPresent()) {
+                return translation.get().name;
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("___FAIL ON TRANSLATED ATTACK NAME___" + e.getClass());
+        }
+        return englishStat;
     }
 
     public static String getTranslatedText(String englishText, String languageParam) {
