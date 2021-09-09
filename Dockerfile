@@ -24,7 +24,7 @@ FROM adoptopenjdk/openjdk11:alpine
 WORKDIR /usr/src/app
 COPY --from=packager /usr/src/app/target .
 
-# dont env var change name. will be used by google-cloud-translate library
+# don't change the name of the env var. Only under the current name it will automatically be used by google-cloud-translate library
 ENV GOOGLE_APPLICATION_CREDENTIALS=/usr/src/app/mnt/secrets/google-translate-api-key.json
 
 EXPOSE 8080
