@@ -5,10 +5,10 @@ import java.util.Optional;
 
 import com.example.demo.TypeEffects.Effectiveness;
 
-class PhraseTable {
+public class PhraseTable {
     private PhraseRow[] rows;
 
-    PhraseTable() {
+    public PhraseTable() {
 
     }
 
@@ -50,6 +50,55 @@ class PhraseTable {
         } else {
             this.throwRowNotFound();
             return Phrases.normalEffect.text;
+        }
+    }
+
+    public String getSummonPhrase(Languages language, boolean isForBlue) {
+        Optional<String> effectText = Arrays.stream(this.rows).filter(row -> row.belongsToLanguage(language))
+                .map(row -> row.getSummonText(isForBlue)).findAny();
+
+        if (effectText.isPresent()) {
+            return effectText.get();
+        } else {
+            this.throwRowNotFound();
+            return Phrases.normalEffect.text;
+        }
+    }
+
+    public String getSpeedDiffPhrase(Languages language, int speedDiff) {
+        Optional<String> effectText = Arrays.stream(this.rows).filter(row -> row.belongsToLanguage(language))
+                .map(row -> row.getSpeedDiffText(speedDiff)).findAny();
+
+        if (effectText.isPresent()) {
+            return effectText.get();
+        } else {
+            this.throwRowNotFound();
+            switch (speedDiff) {
+                case 0:
+                    return Phrases.speedDiff0.text;
+                case 1:
+                    return Phrases.speedDiff1.text;
+                case 2:
+                    return Phrases.speedDiff2.text;
+                case 3:
+                    return Phrases.speedDiff3.text;
+
+                default:
+                    return Phrases.speedDiff4.text;
+            }
+
+        }
+    }
+
+    public String getStatPhrase(Languages language, boolean isRising) {
+        Optional<String> effectText = Arrays.stream(this.rows).filter(row -> row.belongsToLanguage(language))
+                .map(row -> row.getStatText(isRising)).findAny();
+
+        if (effectText.isPresent()) {
+            return effectText.get();
+        } else {
+            this.throwRowNotFound();
+            return isRising ? Phrases.statRise.text : Phrases.statFall.text;
         }
     }
 
