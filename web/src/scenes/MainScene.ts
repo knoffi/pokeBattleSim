@@ -44,6 +44,8 @@ export class MainScene extends Scene {
                 "assets/particles/shapes.png",
                 "assets/particles/shapes.json"
             )
+            .audio("startMusic", "assets/sounds/PKMN-Battle-Start-1.1.mp3")
+            .audio("battleMusic", "assets/sounds/PKMN-Battle-Main-1.1.mp3")
             .plugin(
                 "rexinversepipelineplugin",
                 "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinversepipelineplugin.min.js",
@@ -61,6 +63,20 @@ export class MainScene extends Scene {
         // enforce renders
         this.events.on("next round", () => this.nextRound());
         this.events.emit("next round");
+
+        this.addMusic();
+    }
+
+    private addMusic() {
+        const startBgm = this.sound.add("startMusic", { volume: 0.1 });
+        startBgm.play();
+        startBgm.on("complete", () => {
+            const battleBgm = this.sound.add("battleMusic", {
+                volume: 0.1,
+                loop: true,
+            });
+            battleBgm.play();
+        });
     }
 
     private addTextboxWithMask() {
