@@ -210,9 +210,8 @@ public class Pokemon {
     }
 
     private Attack createAttack(String URL) {
-        String attackPath = Pokedex.getPathFromURL(URL);
         try {
-            MoveSearch move = Pokedex.getPokeData(attackPath, MoveSearch.class, RequestMode.JAVA_11);
+            MoveSearch move = Pokedex.getPokeDataByURL(URL, MoveSearch.class, RequestMode.JAVA_11);
             Attack attack = move.convert();
             return attack;
         } catch (IOException | InterruptedException e) {

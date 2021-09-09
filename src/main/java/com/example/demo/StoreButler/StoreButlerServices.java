@@ -1,7 +1,7 @@
 package com.example.demo.StoreButler;
 
 public enum StoreButlerServices {
-    ATTACKS("attacks"), TYPES("typeTable"), PHRASES("phraseTable");
+    ATTACKS("attacks"), TYPES("types"), PHRASES("phrases");
 
     public final String key;
 

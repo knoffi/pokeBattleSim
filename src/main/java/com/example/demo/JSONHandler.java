@@ -16,4 +16,12 @@ public class JSONHandler {
         T result = mapper.readValue(response, type);
         return result;
     }
+
+    public static <T> String getNiceString(T data) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+        String dataJSON = mapper.writeValueAsString(data);
+        return dataJSON;
+    }
 }

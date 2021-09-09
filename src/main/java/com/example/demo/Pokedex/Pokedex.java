@@ -22,11 +22,11 @@ public class Pokedex {
     public static final String API_PATH = "api/v2/";
     public static final String POKEMON_PATH = "pokemon/";
     public static final String CLASSICAL_POKEMON_QUERY = "?limit=" + CLASSICAL_POKEMON_RANGE + "/";
+    public static final String RELEVANT_ATTACKS = "move/?offset=0&limit=200";// actually, it suffices to get 0-165
+    public static final String TYPE_PATH = "type/";
     public static final String CLASSICAL_VERSION_PATH = "version-group/1/";
     public static final String GENERATION_I_PATH = "generation/1/";
     public static final String CLASSICAL_TYPES_PATH = "type?limit=16";
-
-    
 
     public static String getClassicalVersionKey() {
         String key = "red-blue";
@@ -74,7 +74,6 @@ public class Pokedex {
         return data;
     }
 
-
     public static String getStringPokeData(int index) throws IOException, InterruptedException {
         var url = URI.create(HOST + POKEMON_PATH + index);
         var client = HttpClient.newHttpClient();
@@ -115,8 +114,10 @@ public class Pokedex {
         return index;
     }
 
-    public static String getPathFromURL(String url) {
-        return url.substring(HOST.length());
+    public static <T> T getPokeDataByURL(String url, Class<T> type, RequestMode mode)
+            throws IOException, InterruptedException {
+        String pathFromURL = url.substring(HOST.length());
+        return getPokeData(pathFromURL, type, mode);
     }
 
     public static String CLASSICAL_VERSION_KEY = getClassicalVersionKey();

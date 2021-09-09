@@ -17,6 +17,7 @@ public class MoveSearch {
     public StatChangeBySearch[] stat_changes;
     public MetaBySearch meta;
     public NameHolder target;
+    public NameHolder generation;
 
     public Attack convert() {
         DamageClass damageClass = this.damage_class.name.equals("special") ? DamageClass.SPECIAL
