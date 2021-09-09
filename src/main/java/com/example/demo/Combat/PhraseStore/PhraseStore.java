@@ -36,4 +36,16 @@ public class PhraseStore {
         return PHRASES.getResultPhrase(language);
     }
 
+    public static String getSummonPhrase(Languages language, boolean blueSummons) {
+        return PHRASES.getSummonPhrase(language, blueSummons);
+    }
+
+    public static String getStatPhrase(Languages language, boolean isRising) {
+        return PHRASES.getStatPhrase(language, isRising);
+    }
+
+    public static String getSpeedDiffPhrase(Languages language, int speedDiff) {
+        return PHRASES.getSpeedDiffPhrase(language, speedDiff);
+    }
+
 }

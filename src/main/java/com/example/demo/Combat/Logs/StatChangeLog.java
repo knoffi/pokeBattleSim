@@ -1,7 +1,7 @@
 package com.example.demo.Combat.Logs;
 
 import com.example.demo.Combat.PhraseStore.Languages;
-import com.example.demo.Combat.PhraseStore.Phrases;
+import com.example.demo.Combat.PhraseStore.PhraseStore;
 import com.example.demo.Translater.Translater;
 
 public class StatChangeLog extends CombatLog {
@@ -21,12 +21,8 @@ public class StatChangeLog extends CombatLog {
         String translatedTarget = Translater.getTranslatedName(target, language);
         String targetForPhrase = this.isEuropean(language) ? translatedTarget.toUpperCase() : translatedTarget;
 
-        String phrase = isRising ? Phrases.statRise.text : Phrases.statFall.text;
-        String translatedPhrase = Translater.getTranslatedText(phrase, language.key);
-        // TODO: use PhraseStore to avoid overkill of Google API calls and
-        // for better German translation ("Die INITIATIVE von Aerodactyl is gestiegen"
-        // <-> "Aerodactyls INITIATIVE ist gestiegen!")
-        String message = translatedPhrase.replaceAll("XXX", targetForPhrase).replaceAll("YYY", statForPhrase);
+        String phrase = PhraseStore.getStatPhrase(language, isRising);
+        String message = phrase.replaceAll("XXX", targetForPhrase).replaceAll("YYY", statForPhrase);
 
         return Translater.getTranslatedText(message, language.key);
     }

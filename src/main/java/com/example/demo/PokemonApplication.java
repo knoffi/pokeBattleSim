@@ -19,7 +19,6 @@ public class PokemonApplication {
 			System.exit(-1);
 
 		}
-
 		SpringApplication.run(PokemonApplication.class, args);
 	}
 

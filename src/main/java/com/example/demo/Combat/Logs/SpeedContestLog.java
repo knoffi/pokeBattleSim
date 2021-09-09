@@ -1,7 +1,7 @@
 package com.example.demo.Combat.Logs;
 
 import com.example.demo.Combat.PhraseStore.Languages;
-import com.example.demo.Combat.PhraseStore.Phrases;
+import com.example.demo.Combat.PhraseStore.PhraseStore;
 import com.example.demo.Translater.Translater;
 
 public class SpeedContestLog extends CombatLog {
@@ -14,32 +14,13 @@ public class SpeedContestLog extends CombatLog {
 
     private String createMessage(String winner, int stepsAhead, Languages language) {
 
-        String phrase;
-
-        switch (stepsAhead) {
-            case 0:
-                return Translater.getTranslatedText(Phrases.speedDiff0.text, language.key);
-            case 1:
-                phrase = Phrases.speedDiff1.text;
-                break;
-            case 2:
-                phrase = Phrases.speedDiff2.text;
-                break;
-            case 3:
-                phrase = Phrases.speedDiff3.text;
-                break;
-            default:
-                phrase = Phrases.speedDiff4.text;
-                break;
-        }
-
-        String translatedPhrase = Translater.getTranslatedText(phrase, language.key);
+        String phrase = PhraseStore.getSpeedDiffPhrase(language, stepsAhead);
 
         // TODO: get translated name from Pokemon (myPokemon.nameMap.get(language))
         String translatedWinner = Translater.getTranslatedName(winner, language);
         String winnerForPhrase = this.isEuropean(language) ? translatedWinner.toUpperCase() : translatedWinner;
 
-        String message = translatedPhrase.replaceAll("XXX", winnerForPhrase);
+        String message = phrase.replaceAll("XXX", winnerForPhrase);
         return message;
     }
 }
