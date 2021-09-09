@@ -23,6 +23,7 @@ public class Pokedex {
     public static final String POKEMON_PATH = "pokemon/";
     public static final String CLASSICAL_POKEMON_QUERY = "?limit=" + CLASSICAL_POKEMON_RANGE + "/";
     public static final String RELEVANT_ATTACKS = "move/?offset=0&limit=200";// actually, it suffices to get 0-165
+    public static final String TYPE_PATH = "type/";
     public static final String CLASSICAL_VERSION_PATH = "version-group/1/";
     public static final String GENERATION_I_PATH = "generation/1/";
     public static final String CLASSICAL_TYPES_PATH = "type?limit=16";

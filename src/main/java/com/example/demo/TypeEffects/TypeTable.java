@@ -3,18 +3,18 @@ package com.example.demo.TypeEffects;
 import java.util.Arrays;
 import java.util.Optional;
 
-class TypeTable {
-    private TypeData[] types;
+public class TypeTable {
+    private TypeRow[] types;
 
     TypeTable() {
     }
 
-    TypeTable(TypeData[] types) {
+    TypeTable(TypeRow[] types) {
         this.types = types;
     }
 
-    public Effectiveness getEffectiveness(String pokemonType, String attackType) {
-        Optional<TypeData> typeRow = Arrays.stream(types).filter(type -> type.equals(attackType)).findAny();
+    Effectiveness getEffectiveness(String pokemonType, String attackType) {
+        Optional<TypeRow> typeRow = Arrays.stream(types).filter(type -> type.equals(attackType)).findAny();
         if (typeRow.isEmpty()) {
             try {
                 throw new Exception("MissingPokeTypeRow");
@@ -23,8 +23,8 @@ class TypeTable {
                 return Effectiveness.NORMAL;
             }
         } else {
-            TypeData attackData = typeRow.get();
-            return attackData.getEffectivenessAgainstPokemon(pokemonType);
+            TypeRow attackData = typeRow.get();
+            return attackData.getEffectivenessAgainst(pokemonType);
 
         }
     }

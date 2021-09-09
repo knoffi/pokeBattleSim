@@ -31,9 +31,9 @@ public class AttackStore {
 
     public static String[] getUpdatedAttackNames() {
         try {
-            MovesSearch relevantMoves = Pokedex.getPokeData(Pokedex.API_PATH + Pokedex.RELEVANT_ATTACKS,
-                    MovesSearch.class, RequestMode.JAVA_11);
-            String[] attacks = Arrays.stream(relevantMoves.results).map(move -> getMoveFromURL(move.url))
+            MovesSearch moves = Pokedex.getPokeData(Pokedex.API_PATH + Pokedex.RELEVANT_ATTACKS, MovesSearch.class,
+                    RequestMode.JAVA_11);
+            String[] attacks = Arrays.stream(moves.results).map(move -> getMoveFromURL(move.url))
                     .filter(move -> GenerationFilter.check(move.generation.name))
                     .filter(move -> CategoryFilter.check(move.meta.category.name)).map(moveSearch -> moveSearch.name)
                     .toArray(String[]::new);

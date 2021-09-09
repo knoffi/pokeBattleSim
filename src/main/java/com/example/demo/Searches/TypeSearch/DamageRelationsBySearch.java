@@ -1,4 +1,4 @@
-package com.example.demo.TypeEffects;
+package com.example.demo.Searches.TypeSearch;
 
 import java.util.Arrays;
 
