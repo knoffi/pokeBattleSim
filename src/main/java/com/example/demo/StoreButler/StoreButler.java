@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 
 import com.example.demo.JSONHandler;
@@ -55,7 +58,30 @@ public class StoreButler {
 
     }
 
-    public static ButlerNotes getUpdatedNotes() {
+    public static void sendUpdatesToCloud() {
+
+        var url = URI.create("https://api.jsonbin.io/b/61265c142aa80036126f7f7b/");
+        var client = HttpClient.newHttpClient();
+        try {
+
+            BodyPublisher body = BodyPublishers.ofString(JSONHandler.getNiceString(getUpdatedNotes()));
+            Builder request = HttpRequest.newBuilder(url).PUT(body);
+
+            request.header("Content-Type", "application/json");
+            request.header("secret-key", JSON_BIN_API_KEY);
+            request.header("versioning", "false");
+
+            try {
+                client.send(request.build(), HttpResponse.BodyHandlers.ofString());
+            } catch (InterruptedException | IOException e) {
+                System.out.print("___FAIL AT SENDING UPDATES TO CLOUD___" + e.getClass());
+            }
+        } catch (JsonProcessingException e) {
+            System.out.println("___FAIL AT GETTING STRING FROM NOTES___");
+        }
+    }
+
+    private static ButlerNotes getUpdatedNotes() {
         String[] attacks = AttackStore.getUpdatedNames();
         TypeTable types = TypeStore.getUpdatedTable();
         PhraseTable phrases = PhraseStore.getUpdatedTable();
