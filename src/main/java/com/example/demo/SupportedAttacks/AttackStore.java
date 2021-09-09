@@ -29,7 +29,7 @@ public class AttackStore {
         return Arrays.stream(SUPPORTED_ATTACKS_BY_NAME).anyMatch(attackName -> attackName.equals(name));
     }
 
-    public static String[] getUpdatedAttackNames() {
+    public static String[] getUpdatedNames() {
         try {
             MovesSearch moves = Pokedex.getPokeData(Pokedex.API_PATH + Pokedex.RELEVANT_ATTACKS, MovesSearch.class,
                     RequestMode.JAVA_11);

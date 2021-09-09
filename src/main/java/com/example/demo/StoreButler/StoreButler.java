@@ -7,6 +7,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import com.example.demo.JSONHandler;
+import com.example.demo.Combat.PhraseStore.PhraseStore;
+import com.example.demo.Combat.PhraseStore.PhraseTable;
+import com.example.demo.SupportedAttacks.AttackStore;
+import com.example.demo.TypeEffects.TypeStore;
+import com.example.demo.TypeEffects.TypeTable;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +52,16 @@ public class StoreButler {
         JsonNode typeObject = responseObject.get(WRAPPER_FIELD).get(service.key);
         T object = JSONHandler.convertJSON(typeObject.toString(), type);
         return object;
+
+    }
+
+    public static ButlerNotes getUpdatedNotes() {
+        String[] attacks = AttackStore.getUpdatedNames();
+        TypeTable types = TypeStore.getUpdatedTable();
+        PhraseTable phrases = PhraseStore.getUpdatedTable();
+
+        ButlerNotes updatedNotes = new ButlerNotes(attacks, types, phrases);
+        return updatedNotes;
 
     }
 }

@@ -31,7 +31,7 @@ public class TypeStore {
         return typeTable.getEffectiveness(pokemonType, attackType);
     }
 
-    public static TypeTable getUpdatedTypeTable() {
+    public static TypeTable getUpdatedTable() {
         try {
             TypesSearch types = Pokedex.getPokeData(Pokedex.API_PATH + Pokedex.TYPE_PATH, TypesSearch.class,
                     RequestMode.JAVA_11);
