@@ -76,6 +76,9 @@ public class Translater {
     }
 
     public static String getTranslatedText(String englishText, String languageParam) {
+        if (languageParam == "en") {
+            return englishText;
+        }
         Translate translate = TranslateOptions.getDefaultInstance().getService();
 
         Translation translation = translate.translate(englishText,
