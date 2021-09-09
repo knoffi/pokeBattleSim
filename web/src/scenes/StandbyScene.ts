@@ -47,7 +47,7 @@ function assertApiRes(x: undefined | Partial<ApiRes>): asserts x is ApiRes {
 }
 
 const devUrl = "./db.json";
-const url = "/getTrainerDuell?lng=es";
+const url = "/getTrainerDuell?lng=de";
 
 export class StandbyScene extends Scene {
     private gameboyLogo?: GameObjects.Image;
