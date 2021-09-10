@@ -18,7 +18,10 @@ public class AttackLog extends CombatLog {
     private String createMessage(String attacker, String move, Languages language) {
 
         String attackerForPhrase = this.isEuropean(language) ? attacker.toUpperCase() : attacker;
-        // TODO: get translated name from Move (myMove.nameMap.get(language))
+        // TODO: get move translation from jsonbin by store butler (translating every
+        // move at instantiation is not effectiv since half of the created moves are not
+        // used. And translating every move just for the log is slightly better, because
+        // the same move does only appear twice in text (in average).)
         String translatedMove = Translater.getTranslatedAttack(move, language);
         String moveForPhrase = this.isEuropean(language) ? translatedMove.toUpperCase() : translatedMove;
 
