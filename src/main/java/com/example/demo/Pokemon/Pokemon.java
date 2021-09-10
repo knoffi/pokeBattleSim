@@ -33,8 +33,8 @@ public class Pokemon {
     private int level = MAXIMAL_LEVEL;
     private int HP;
 
-    public Pokemon(PokemonSearch data) {
-        this.name = data.name;
+    public Pokemon(PokemonSearch data, Languages language) {
+        this.name = Translater.getTranslatedName(data.name, language);
         this.stats = Arrays.stream(data.stats).map(StatBySearch::convert).toArray(Stat[]::new);
         this.types = Arrays.stream(data.types).map(TypeHolder::convert).toArray(Type[]::new);
         this.attacks = creatAttacks(data.moves);

@@ -1,5 +1,6 @@
 package com.example.demo.Searches.PokemonSearch;
 
+import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Pokemon.Pokemon;
 
 public class PokemonSearch {
@@ -9,7 +10,7 @@ public class PokemonSearch {
     public MoveBySearch[] moves;
     public SpritesBySearch sprites;
 
-    public Pokemon convert() {
-        return new Pokemon(this);
+    public Pokemon convert(Languages language) {
+        return new Pokemon(this, language);
     }
 }
