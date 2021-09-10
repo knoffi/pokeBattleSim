@@ -1,5 +1,6 @@
 import { Types } from "phaser";
 import { Plugin as NineSlicePlugin } from "phaser3-nineslice";
+import InversePipelinePlugin from "phaser3-rex-plugins/plugins/inversepipeline-plugin.js";
 import { DEV } from "./dev-config";
 import { StandbyScene } from "./scenes/StandbyScene";
 
@@ -30,7 +31,15 @@ export const gameConfig: Types.Core.GameConfig = {
         height: 198, // gba screen height
     },
     plugins: {
-        global: [NineSlicePlugin.DefaultCfg, ...DebugPlugins],
+        global: [
+            NineSlicePlugin.DefaultCfg,
+            {
+                key: "rexInversePipeline",
+                plugin: InversePipelinePlugin,
+                start: true,
+            },
+            ...DebugPlugins,
+        ],
     },
     callbacks: {
         postBoot: (game) => {
