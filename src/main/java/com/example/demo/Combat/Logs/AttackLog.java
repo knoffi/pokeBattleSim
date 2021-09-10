@@ -16,9 +16,8 @@ public class AttackLog extends CombatLog {
     }
 
     private String createMessage(String attacker, String move, Languages language) {
-        // TODO: get translated name from Pokemon (myPokemon.nameMap.get(language))
-        String translatedAttacker = Translater.getTranslatedName(attacker, language);
-        String attackerForPhrase = this.isEuropean(language) ? translatedAttacker.toUpperCase() : translatedAttacker;
+
+        String attackerForPhrase = this.isEuropean(language) ? attacker.toUpperCase() : attacker;
         // TODO: get translated name from Move (myMove.nameMap.get(language))
         String translatedMove = Translater.getTranslatedAttack(move, language);
         String moveForPhrase = this.isEuropean(language) ? translatedMove.toUpperCase() : translatedMove;
