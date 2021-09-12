@@ -291,13 +291,11 @@ export class MainScene extends Scene {
             onStart: () => {
                 this.plugins
                     .get("rexInversePipeline")
-                    // @ts-ignore
                     .add(this.cameras.main, {});
             },
             onComplete: () => {
                 this.plugins
                     .get("rexInversePipeline")
-                    // @ts-ignore
                     .remove(this.cameras.main);
             },
         };
