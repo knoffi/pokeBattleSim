@@ -30,7 +30,6 @@ public class Pokemon {
     private Attack[] attacks;
     private String frontSpriteUrl;
     private String backSpriteUrl;
-    private int exhaustionPoint;
     private int level = MAXIMAL_LEVEL;
     private int HP;
 
@@ -41,20 +40,11 @@ public class Pokemon {
         this.attacks = createAttacks(data.moves);
         this.backSpriteUrl = data.sprites.back_default;
         this.frontSpriteUrl = data.sprites.front_default;
-        this.exhaustionPoint = 0;
         this.HP = this.getStatValue(StatKeys.HP);
     }
 
     public void translateName(Languages language) {
         this.name = Translater.getTranslatedName(this.name, language);
-    }
-
-    public int getExhaustion() {
-        return this.exhaustionPoint;
-    }
-
-    public void addExhaustion() {
-        this.exhaustionPoint++;
     }
 
     public int getLevel() {
