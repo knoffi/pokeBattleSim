@@ -18,6 +18,11 @@ public class Stat {
     }
 
     public int getValue(int pokemonLevel) {
+        boolean isBattleStat = this.name == StatKeys.ACC.name || this.name == StatKeys.EVA.name;
+
+        if (isBattleStat) {
+            return this.modifier;
+        }
         int trainedValue = this.calculateValueFromLevel(pokemonLevel);
         int productWithoutBoundCheck = (int) (trainedValue * this.getModifierFactor());
         return adjustToBounds(productWithoutBoundCheck, false);
@@ -100,4 +105,5 @@ public class Stat {
                 return 1;
         }
     }
+
 }

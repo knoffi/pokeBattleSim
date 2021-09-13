@@ -81,6 +81,8 @@ public class Pokemon {
     private static HashMap<String, Stat> createStatMap(StatBySearch[] preStats) {
         HashMap<String, Stat> newMap = new HashMap<String, Stat>();
         Arrays.stream(preStats).map(StatBySearch::convert).forEach(stat -> newMap.put(stat.name, stat));
+        newMap.put(StatKeys.EVA.name, new Stat(StatKeys.EVA.name, 100));
+        newMap.put(StatKeys.ACC.name, new Stat(StatKeys.ACC.name, 100));
         return newMap;
 
     }
