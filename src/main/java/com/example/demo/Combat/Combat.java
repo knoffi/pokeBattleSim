@@ -211,6 +211,7 @@ class BattleCalculation {
         this.pushAttackTexts(false);
     }
 
+    // TODO: get this into attack or pokemon and encapsulate
     private double getAttackValue(Attack attack, boolean blueAttacks) {
         // TODO: test each step of factor calculation with easy examples
         Pokemon attacker = blueAttacks ? this.blue : this.red;

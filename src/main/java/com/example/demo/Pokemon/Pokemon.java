@@ -2,6 +2,7 @@ package com.example.demo.Pokemon;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 
 import com.example.demo.RequestMode;
@@ -24,7 +25,7 @@ public class Pokemon {
     private static final int MAXIMAL_LEVEL = 100;
 
     private String name;
-    private Stat[] stats;
+    private HashMap<String, Stat> stats;
     private Type[] types;
     private Attack[] attacks;
     private String frontSpriteUrl;
@@ -35,9 +36,9 @@ public class Pokemon {
 
     public Pokemon(PokemonSearch data) {
         this.name = data.name;
-        this.stats = Arrays.stream(data.stats).map(StatBySearch::convert).toArray(Stat[]::new);
+        this.stats = createStatMap(data.stats);
         this.types = Arrays.stream(data.types).map(TypeHolder::convert).toArray(Type[]::new);
-        this.attacks = creatAttacks(data.moves);
+        this.attacks = createAttacks(data.moves);
         this.backSpriteUrl = data.sprites.back_default;
         this.frontSpriteUrl = data.sprites.front_default;
         this.exhaustionPoint = 0;
@@ -87,6 +88,13 @@ public class Pokemon {
         }
     }
 
+    private static HashMap<String, Stat> createStatMap(StatBySearch[] preStats) {
+        HashMap<String, Stat> newMap = new HashMap<String, Stat>();
+        Arrays.stream(preStats).map(StatBySearch::convert).forEach(stat -> newMap.put(stat.name, stat));
+        return newMap;
+
+    }
+
     private void changeStat(StatChange change) {
         try {
             Optional<StatKeys> key = Arrays.stream(StatKeys.values())
@@ -123,12 +131,12 @@ public class Pokemon {
     }
 
     private Stat getStatFromKey(StatKeys key) throws Exception {
-        Optional<Stat> desiredStat = Arrays.stream(this.stats).filter(stat -> stat.name.equals(key.name)).findAny();
+        Stat desiredStat = this.stats.get(key.name);
 
-        if (desiredStat.isEmpty()) {
+        if (desiredStat == null) {
             throw new Exception(key + "NotFound");
         } else {
-            return desiredStat.get();
+            return desiredStat;
         }
     }
 
@@ -187,7 +195,7 @@ public class Pokemon {
         return Arrays.stream(indices).limit(trimIndex).anyMatch(index -> index == newIndex);
     }
 
-    private Attack[] creatAttacks(MoveBySearch[] moves) {
+    private Attack[] createAttacks(MoveBySearch[] moves) {
         String[] filteredURLs = Arrays.stream(moves).filter(MoveBySearch::isSupported).map(move -> move.move.url)
                 .toArray(String[]::new);
         int moveAmount = filteredURLs.length;
