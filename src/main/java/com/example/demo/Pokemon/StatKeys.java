@@ -2,7 +2,7 @@ package com.example.demo.Pokemon;
 
 public enum StatKeys {
     ATT("attack"), SPEC_ATT("special-attack"), DEF("defense"), SPEC_DEF("special-defense"), HP("hp"), SPEED("speed"),
-    ACC("accurancy"), EVA("evasion");
+    ACC("accuracy"), EVA("evasion");
 
     public final String name;
 

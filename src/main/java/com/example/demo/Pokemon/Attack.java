@@ -49,7 +49,7 @@ public class Attack {
                 System.out.println("___EVASION MODIFIER OUT OF BOUNDARY___");
             }
         } catch (Exception e1) {
-            System.out.println("___ACCURANCY MODIFIER OUT OF BOUNDARY___");
+            System.out.println("___ACCURACY MODIFIER OUT OF BOUNDARY___");
         }
         return 1.0;
 
