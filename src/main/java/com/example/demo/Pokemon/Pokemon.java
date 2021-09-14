@@ -43,10 +43,6 @@ public class Pokemon {
         this.HP = this.getStatValue(StatKeys.HP);
     }
 
-    public void translateName(Languages language) {
-        this.name = Translater.getTranslatedName(this.name, language);
-    }
-
     public int getLevel() {
         return this.level;
     }

@@ -1,8 +1,5 @@
 package com.example.demo.Pokemon;
 
-import com.example.demo.Combat.PhraseStore.Languages;
-import com.example.demo.Translater.Translater;
-
 public class Attack {
     private final static Type POKE_TYPE_NORMAL = new Type("normal", "https://pokeapi.co/api/v2/type/1/");
     private String name;
@@ -100,10 +97,6 @@ public class Attack {
         this.statChanges = statChanges;
         this.meta = meta;
         this.enemyIsTarget = enemyIsTarget;
-    }
-
-    public void translateName(Languages language) {
-        this.name = Translater.getTranslatedAttack(this.name, language);
     }
 
     public Type getType() {
