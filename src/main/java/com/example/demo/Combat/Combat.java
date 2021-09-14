@@ -211,7 +211,6 @@ class BattleCalculation {
         this.pushAttackTexts(false);
     }
 
-    // TODO: get this into attack and encapsulate
     private double getAttackValue(Attack attack, boolean blueAttacks) {
         // TODO: test each step of factor calculation with easy examples
         Pokemon attacker = blueAttacks ? this.blue : this.red;
@@ -235,7 +234,7 @@ class BattleCalculation {
         double randomFactor = (217 + Math.random() * 38) / 255;
         double effectFactor = effect.value;
         double sameTypeFactor = this.getSameTypeFactor(attack.getType(), attacker);
-        // -> getBestAttackEffect
+
         return (levelFactor * statFactor * powerFactor + 2) * randomFactor * effectFactor * sameTypeFactor
                 * hitChangeFactor;
     }
