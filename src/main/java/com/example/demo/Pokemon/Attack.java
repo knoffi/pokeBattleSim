@@ -9,7 +9,6 @@ public class Attack {
     private int power;
     private DamageClass damageClass;
     private Type type;
-    private int accuracy;
     private StatChange[] statChanges;
     private Meta meta;
     private boolean enemyIsTarget;
@@ -19,7 +18,6 @@ public class Attack {
         this.power = 50;
         this.type = POKE_TYPE_NORMAL;
         this.damageClass = DamageClass.PHYSICAL;
-        this.accuracy = 100;
         this.statChanges = new StatChange[0];
         this.meta = new Meta();
         this.enemyIsTarget = true;
@@ -46,7 +44,7 @@ public class Attack {
             double accuracyFactor = getHitFactor(attackerAccuracy);
             try {
                 double evasionFactor = 1.0 / getHitFactor(defenderEvasion);
-                return this.accuracy / 100.0 * accuracyFactor * evasionFactor;
+                return accuracyFactor * evasionFactor;
             } catch (Exception e2) {
                 System.out.println("___EVASION MODIFIER OUT OF BOUNDARY___");
             }
@@ -92,14 +90,13 @@ public class Attack {
         }
     }
 
-    public Attack(String name, int power, DamageClass damageClass, Type type, int accuracy, StatChange[] statChanges,
-            Meta meta, boolean enemyIsTarget) {
+    public Attack(String name, int power, DamageClass damageClass, Type type, StatChange[] statChanges, Meta meta,
+            boolean enemyIsTarget) {
         Type classicalType = type.name.toUpperCase().equals("DARK") ? POKE_TYPE_NORMAL : type;
         this.name = name;
         this.power = power;
         this.damageClass = damageClass;
         this.type = classicalType;
-        this.accuracy = accuracy;
         this.statChanges = statChanges;
         this.meta = meta;
         this.enemyIsTarget = enemyIsTarget;
