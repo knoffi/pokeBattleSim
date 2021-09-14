@@ -46,7 +46,7 @@ public class Attack {
             double accuracyFactor = getHitFactor(attackerAccuracy);
             try {
                 double evasionFactor = 1.0 / getHitFactor(defenderEvasion);
-                return this.accuracy / 100 * accuracyFactor * evasionFactor;
+                return this.accuracy / 100.0 * accuracyFactor * evasionFactor;
             } catch (Exception e2) {
                 System.out.println("___EVASION MODIFIER OUT OF BOUNDARY___");
             }

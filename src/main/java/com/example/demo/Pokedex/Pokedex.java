@@ -103,6 +103,7 @@ public class Pokedex {
             throws RuntimeException, IOException, InterruptedException {
         PokemonSearch[] pokemonTeam = new PokemonSearch[6];
         for (int i = 0; i < 6; i++) {
+
             pokemonTeam[i] = getPokemon(getRandomPokeIndex(), mode);
         }
 
