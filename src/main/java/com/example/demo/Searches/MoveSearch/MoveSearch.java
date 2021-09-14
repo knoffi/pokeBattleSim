@@ -13,7 +13,7 @@ public class MoveSearch {
     public int power;
     public NameHolder damage_class;
     public NameHolder type;
-    public int accurancy;
+    public int accuracy;
     public StatChangeBySearch[] stat_changes;
     public MetaBySearch meta;
     public NameHolder target;
@@ -25,8 +25,19 @@ public class MoveSearch {
         StatChange[] changes = Arrays.stream(this.stat_changes).map(change -> change.convert())
                 .toArray(StatChange[]::new);
         Meta meta = this.meta.convert();
-        return new Attack(this.name, this.power, damageClass, this.type.convert(), this.accurancy, changes, meta,
+
+        this.adjustAccuracy();
+
+        return new Attack(this.name, this.power, damageClass, this.type.convert(), this.accuracy, changes, meta,
                 this.enemyIsTarget());
+    }
+
+    private void adjustAccuracy() {
+        // Due to some errors in the pokemon api, this step is necessary. F.e., "swift"
+        // (="Sternenschauer") has accuracy null
+        if (this.accuracy <= 0 || this.accuracy > 100) {
+            this.accuracy = 100;
+        }
     }
 
     private boolean enemyIsTarget() {
