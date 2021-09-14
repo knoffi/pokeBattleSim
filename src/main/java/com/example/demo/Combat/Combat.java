@@ -222,17 +222,21 @@ class BattleCalculation {
         StatKeys defenseKey = isPhysicalAttack ? StatKeys.DEF : StatKeys.SPEC_DEF;
 
         int attackStat = attacker.getStatValue(attackKey);
+        int accuracyStat = attacker.getStatValue(StatKeys.ACC);
         int defenseStat = defender.getStatValue(defenseKey);
+        int evasionStat = defender.getStatValue(StatKeys.EVA);
         int attackerLevel = attacker.getLevel();
 
         double levelFactor = 2 * attackerLevel / 5.0 + 2;
         double statFactor = attackStat * 1.0 / defenseStat;
         double powerFactor = attack.getPower() / 50.0;
+        double hitChangeFactor = attack.getAccuracy(accuracyStat, evasionStat);
         double randomFactor = (217 + Math.random() * 38) / 255;
         double effectFactor = effect.value;
         double sameTypeFactor = this.getSameTypeFactor(attack.getType(), attacker);
-        // -> getBestAttackEffect
-        return (levelFactor * statFactor * powerFactor + 2) * randomFactor * effectFactor * sameTypeFactor;
+
+        return (levelFactor * statFactor * powerFactor + 2) * randomFactor * effectFactor * sameTypeFactor
+                * hitChangeFactor;
     }
 
     private double getSameTypeFactor(Type type, Pokemon attacker) {

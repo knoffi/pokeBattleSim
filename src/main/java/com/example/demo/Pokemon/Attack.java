@@ -9,7 +9,6 @@ public class Attack {
     private int power;
     private DamageClass damageClass;
     private Type type;
-    private int accurancy;
     private StatChange[] statChanges;
     private Meta meta;
     private boolean enemyIsTarget;
@@ -19,7 +18,6 @@ public class Attack {
         this.power = 50;
         this.type = POKE_TYPE_NORMAL;
         this.damageClass = DamageClass.PHYSICAL;
-        this.accurancy = 100;
         this.statChanges = new StatChange[0];
         this.meta = new Meta();
         this.enemyIsTarget = true;
@@ -41,14 +39,64 @@ public class Attack {
         return this.enemyIsTarget;
     }
 
-    public Attack(String name, int power, DamageClass damageClass, Type type, int accurancy, StatChange[] statChanges,
-            Meta meta, boolean enemyIsTarget) {
+    public double getAccuracy(int attackerAccuracy, int defenderEvasion) {
+        try {
+            double accuracyFactor = getHitFactor(attackerAccuracy);
+            try {
+                double evasionFactor = 1.0 / getHitFactor(defenderEvasion);
+                return accuracyFactor * evasionFactor;
+            } catch (Exception e2) {
+                System.out.println("___EVASION MODIFIER OUT OF BOUNDARY___");
+            }
+        } catch (Exception e1) {
+            System.out.println("___ACCURACY MODIFIER OUT OF BOUNDARY___");
+        }
+        return 1.0;
+
+    }
+
+    private static double getHitFactor(int value) throws Exception {
+        switch (value) {
+            case -6:
+                return 0.25;
+            case -5:
+                return 0.28;
+            case -4:
+                return 0.33;
+            case -3:
+                return 0.4;
+            case -2:
+                return 0.5;
+            case -1:
+                return 0.66;
+            case 0:
+                return 1.0;
+            case 1:
+                return 1.5;
+            case 2:
+                return 2.0;
+            case 3:
+                return 2.5;
+            case 4:
+                return 3.0;
+            case 5:
+                return 3.5;
+            case 6:
+                return 4.0;
+
+            default:
+                throw new Exception("HitValueOutOfBounce");
+
+        }
+    }
+
+    public Attack(String name, int power, DamageClass damageClass, Type type, StatChange[] statChanges, Meta meta,
+            boolean enemyIsTarget) {
         Type classicalType = type.name.toUpperCase().equals("DARK") ? POKE_TYPE_NORMAL : type;
         this.name = name;
         this.power = power;
         this.damageClass = damageClass;
         this.type = classicalType;
-        this.accurancy = accurancy;
         this.statChanges = statChanges;
         this.meta = meta;
         this.enemyIsTarget = enemyIsTarget;

@@ -13,7 +13,6 @@ public class MoveSearch {
     public int power;
     public NameHolder damage_class;
     public NameHolder type;
-    public int accurancy;
     public StatChangeBySearch[] stat_changes;
     public MetaBySearch meta;
     public NameHolder target;
@@ -25,8 +24,8 @@ public class MoveSearch {
         StatChange[] changes = Arrays.stream(this.stat_changes).map(change -> change.convert())
                 .toArray(StatChange[]::new);
         Meta meta = this.meta.convert();
-        return new Attack(this.name, this.power, damageClass, this.type.convert(), this.accurancy, changes, meta,
-                this.enemyIsTarget());
+
+        return new Attack(this.name, this.power, damageClass, this.type.convert(), changes, meta, this.enemyIsTarget());
     }
 
     private boolean enemyIsTarget() {
