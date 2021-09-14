@@ -22,8 +22,8 @@ public class DuellController {
     public @ResponseBody DuellLog index(@RequestParam(defaultValue = "en") String lng) {
         Languages language = this.getLanguageFromQuery(lng);
         try {
-            Pokemon[] blue = this.getRandomPokemonTeam();
-            Pokemon[] red = this.getRandomPokemonTeam();
+            Pokemon[] blue = this.getRandomPokemonTeam(language);
+            Pokemon[] red = this.getRandomPokemonTeam(language);
             LogPokemon[] blueLogPokemon = Arrays.stream(blue).map(pokemon -> pokemon.getLogData())
                     .toArray(LogPokemon[]::new);
             LogPokemon[] redLogPokemon = Arrays.stream(red).map(pokemon -> pokemon.getLogData())
@@ -54,9 +54,10 @@ public class DuellController {
 
     }
 
-    private Pokemon[] getRandomPokemonTeam() throws IOException, InterruptedException {
+    private Pokemon[] getRandomPokemonTeam(Languages language) throws IOException, InterruptedException {
         PokemonSearch[] pokemonSearches = Pokedex.getRandomTeam(RequestMode.JAVA_11);
-        Pokemon[] randomTeam = Arrays.stream(pokemonSearches).map(search -> search.convert()).toArray(Pokemon[]::new);
+        Pokemon[] randomTeam = Arrays.stream(pokemonSearches).map(search -> search.convert(language))
+                .toArray(Pokemon[]::new);
         return randomTeam;
 
     }

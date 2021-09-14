@@ -33,8 +33,8 @@ public class Pokemon {
     private int level = MAXIMAL_LEVEL;
     private int HP;
 
-    public Pokemon(PokemonSearch data) {
-        this.name = data.name;
+    public Pokemon(PokemonSearch data, Languages language) {
+        this.name = Translater.getTranslatedName(data.name, language);
         this.stats = createStatMap(data.stats);
         this.types = Arrays.stream(data.types).map(TypeHolder::convert).toArray(Type[]::new);
         this.attacks = createAttacks(data.moves);
@@ -192,7 +192,6 @@ public class Pokemon {
                 .toArray(String[]::new);
         int moveAmount = filteredURLs.length;
         int[] selectedIndices = getMoveSelection(moveAmount - 1);
-        // TODO: throw exception and use "Verzweifler" if selectionSize is less than 1
         int selectionSize = Math.min(MAXIMAL_ATTACK_AMOUNT, moveAmount);
         Attack[] selectedAttacks = new Attack[selectionSize];
         try {

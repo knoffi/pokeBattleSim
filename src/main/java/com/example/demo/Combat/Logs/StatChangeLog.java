@@ -17,9 +17,7 @@ public class StatChangeLog extends CombatLog {
         String translatedStat = Translater.getTranslatedStat(stat, language);
         String statForPhrase = this.isEuropean(language) ? translatedStat.toUpperCase() : translatedStat;
 
-        // TODO: get translated name from Pokemon (myPokemon.nameMap.get(language))
-        String translatedTarget = Translater.getTranslatedName(target, language);
-        String targetForPhrase = this.isEuropean(language) ? translatedTarget.toUpperCase() : translatedTarget;
+        String targetForPhrase = this.isEuropean(language) ? target.toUpperCase() : target;
 
         String phrase = PhraseStore.getStatPhrase(language, isRising);
         String message = phrase.replaceAll("XXX", targetForPhrase).replaceAll("YYY", statForPhrase);
