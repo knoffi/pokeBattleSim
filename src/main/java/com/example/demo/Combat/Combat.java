@@ -91,14 +91,14 @@ class BattleCalculation {
 
         boolean blueStarted = blueSpeedAdvantage >= 0;
 
-        double blueDMG = this.getAttackValue(this.blueAttack, true);
-        double redDMG = this.getAttackValue(this.redAttack, false);
-
         boolean blueAttacksNext = blueStarted;
         while (!this.blue.isKO() && !this.red.isKO()) {
-            double dmg = blueAttacksNext ? blueDMG : redDMG;
+            Pokemon attacker = blueAttacksNext ? this.blue : this.red;
             Pokemon defender = blueAttacksNext ? this.red : this.blue;
-            defender.takesDamage((int) dmg);
+            Attack attack = blueAttacksNext ? this.blueAttack : this.redAttack;
+            double dmg = attacker.dealsDamage(this.getAttackValue(attack, blueAttacksNext));
+            Effectiveness effect = blueAttacksNext ? this.blueEffect : this.redEffect;
+            defender.takesDamage((int) dmg, effect);
             blueAttacksNext = !blueAttacksNext;
         }
 
