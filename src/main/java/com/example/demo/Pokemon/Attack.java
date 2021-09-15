@@ -24,12 +24,24 @@ public class Attack {
         return this.power > 0 || this.meta.category.substring(0, 3).equals("dam");
     }
 
+    public boolean isPureChanger() {
+        return this.isPureStatChanger() || isPureStatusChanger();
+    }
+
     public boolean isPureStatChanger() {
         return this.meta.category.substring(0, 3).equals("net");
     }
 
+    public boolean isPureStatusChanger() {
+        return this.meta.category.substring(0, 3).equals("ail");
+    }
+
     public StatChange[] getStatChanges() {
         return this.statChanges;
+    }
+
+    public String getAilment() {
+        return this.meta.ailment;
     }
 
     public boolean enemyIsTarget() {
