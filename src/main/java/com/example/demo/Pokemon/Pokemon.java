@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Stack;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Combat.PhraseStore.Languages;
@@ -160,7 +161,7 @@ public class Pokemon {
 
     public double dealsDamage(double damage) {
         this.HP -= this.status.selfHarm * damage;
-        return this.status.damageReduce * damage;
+        return (1 - this.status.damageReduce) * damage;
     }
 
     private void shortenStatusDuration(Effectiveness damage) {
@@ -209,10 +210,14 @@ public class Pokemon {
         return finishingAttacks;
     }
 
-    public Attack[] getPureStatChangers() {
-        Attack[] pureStatChangers = Arrays.stream(this.attacks).filter(Attack::isPureStatChanger)
-                .toArray(Attack[]::new);
-        return pureStatChangers;
+    public Stack<Attack> getStatOrStatusChangers() {
+        Stack<Attack> pureChangers = new Stack<Attack>();
+        Arrays.stream(this.attacks).filter(Attack::isPureChanger).forEach(changer -> pureChangers.push(changer));
+        return pureChangers;
+    }
+
+    public void setStatus(String status) {
+        this.status = new Status(status);
     }
 
     private static int[] getMoveSelection(int maxIndex) {
