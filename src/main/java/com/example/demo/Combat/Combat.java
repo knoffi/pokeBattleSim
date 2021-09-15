@@ -3,7 +3,6 @@ package com.example.demo.Combat;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Stack;
-import java.util.stream.IntStream;
 
 import com.example.demo.Combat.Logs.AttackLog;
 import com.example.demo.Combat.Logs.CombatLog;
@@ -32,7 +31,6 @@ public class Combat {
 }
 
 class BattleCalculation {
-    private final static int SPEED_STEP = 40;
 
     private Pokemon blue;
     private Pokemon red;
@@ -57,9 +55,9 @@ class BattleCalculation {
     }
 
     public CombatResult getResult() {
-        boolean blueWins = this.blueWonSimulation();
         this.pushPokemonSummons();
-        this.pushPreCombatEvents();
+        this.resolvePreCombat();
+        boolean blueWins = this.blueWonSimulation();
         this.pushCombatTexts(blueWins);
         this.pushFightResult(blueWins);
         return new CombatResult(blueWins, this.combatSummary);
@@ -76,7 +74,7 @@ class BattleCalculation {
         }
     }
 
-    private void pushPreCombatEvents() {
+    private void resolvePreCombat() {
         PreCombat preCombat = new PreCombat(this.blue, this.red, this.language);
         Stack<CombatLog> events = preCombat.getPreCombatResult();
         this.combatSummary.addAll(events);
@@ -91,7 +89,6 @@ class BattleCalculation {
     private boolean blueWonSimulation() {
         int blueSpeedAdvantage = this.blue.getStatValue(StatKeys.SPEED) - this.red.getStatValue(StatKeys.SPEED);
 
-        this.resolveSpeedAdvantage(blueSpeedAdvantage);
         boolean blueStarted = blueSpeedAdvantage >= 0;
 
         double blueDMG = this.getAttackValue(this.blueAttack, true);
@@ -108,46 +105,6 @@ class BattleCalculation {
         boolean blueWon = this.red.isKO();
 
         return blueWon;
-    }
-
-    private void resolveSpeedAdvantage(int blueSpeedAdvantage) {
-        int speedDiff = Math.abs(blueSpeedAdvantage);
-
-        if (speedDiff < 1 * SPEED_STEP) {
-            return;
-        }
-
-        boolean blueIsFaster = blueSpeedAdvantage > 0;
-        Pokemon fastPokemon = blueIsFaster ? this.blue : this.red;
-        Pokemon slowPokemon = blueIsFaster ? this.red : this.blue;
-
-        int roundsAhead = speedDiff / SPEED_STEP;
-
-        Attack[] statChangers = fastPokemon.getPureStatChangers();
-
-        if (statChangers.length == 0) {
-            return;
-        } else {
-            // repeat this process as often as roundsAhead
-            IntStream.rangeClosed(1, roundsAhead)
-                    .forEach(step -> this.applyStatChangers(fastPokemon, slowPokemon, statChangers));
-        }
-    }
-
-    private void applyStatChangers(Pokemon user, Pokemon enemy, Attack[] statChangers) {
-        Optional<Attack> randomMove = Arrays.stream(statChangers).findAny();
-
-        if (randomMove.isEmpty()) {
-            try {
-                throw new Exception("EmptyStatChangers");
-            } catch (Exception e) {
-                System.out.print("___THERE ARE NO STAT CHANGERS TO USE___");
-            }
-        } else {
-            Attack move = randomMove.get();
-            Pokemon target = move.enemyIsTarget() ? enemy : user;
-            target.applyStatChanger(move);
-        }
     }
 
     private void pushAttackTexts(boolean blueAttacks) {
