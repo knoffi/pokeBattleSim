@@ -94,30 +94,22 @@ class BattleCalculation {
         this.resolveSpeedAdvantage(blueSpeedAdvantage);
         boolean blueStarted = blueSpeedAdvantage >= 0;
 
-        double blueAttackValue = this.getAttackValue(this.blueAttack, true);
-        double redAttackValue = this.getAttackValue(this.redAttack, false);
+        double blueDMG = this.getAttackValue(this.blueAttack, true);
+        double redDMG = this.getAttackValue(this.redAttack, false);
 
-        int roundsBlueCanSurvive = this.getSurvivableRounds(this.blue.getHP(), redAttackValue);
-        int roundsRedCanSurvive = this.getSurvivableRounds(this.red.getHP(), blueAttackValue);
+        boolean blueAttacksNext = blueStarted;
+        while (!this.blue.isKO() && !this.red.isKO()) {
+            double dmg = blueAttacksNext ? blueDMG : redDMG;
+            Pokemon defender = blueAttacksNext ? this.red : this.blue;
+            defender.takesDamage((int) dmg);
+            blueAttacksNext = !blueAttacksNext;
+        }
 
-        boolean blueWonClearly = roundsBlueCanSurvive > roundsRedCanSurvive;
-        boolean blueWonBarely = roundsBlueCanSurvive == roundsRedCanSurvive && blueStarted;
-        boolean blueWon = blueWonBarely || blueWonClearly;
-
-        Pokemon winner = blueWon ? this.blue : this.red;
-        Pokemon loser = blueWon ? this.red : this.blue;
-        int loserSurvivedRounds = blueWon ? roundsRedCanSurvive : roundsBlueCanSurvive;
-        double loserAttackValue = blueWon ? redAttackValue : blueAttackValue;
-        boolean winnerHadFirstStrike = blueWon ? blueStarted : !blueStarted;
-
-        this.dealDamage(winner, loser, loserSurvivedRounds, loserAttackValue, winnerHadFirstStrike);
+        boolean blueWon = this.red.isKO();
 
         return blueWon;
     }
 
-    // TODO: make this into a "preBattle" and store results for text display and
-    // further
-    // combat
     private void resolveSpeedAdvantage(int blueSpeedAdvantage) {
         int speedDiff = Math.abs(blueSpeedAdvantage);
 
@@ -155,34 +147,6 @@ class BattleCalculation {
             Attack move = randomMove.get();
             Pokemon target = move.enemyIsTarget() ? enemy : user;
             target.applyStatChanger(move);
-        }
-    }
-
-    private int getSurvivableRounds(int defenderHP, double attackerDamage) {
-        int rounds = (int) (defenderHP / attackerDamage);
-        int remainingHP = (int) (defenderHP - rounds * attackerDamage);
-        if (remainingHP == 0) {
-            System.out.println("Edge case can really happen!");
-            return rounds - 1;
-        } else {
-            return rounds;
-        }
-
-    }
-
-    private void dealDamage(Pokemon winner, Pokemon loser, int loserSurvivedRounds, double loserAttack,
-            boolean winnerHadFirstStrike) {
-        loser.setKO();
-        int loserLandedHits = loserSurvivedRounds + (winnerHadFirstStrike ? 0 : 1);
-        int sufferedDamage = loserLandedHits * (int) loserAttack;
-        winner.takesDamage(sufferedDamage);
-        if (winner.isKO()) {
-            try {
-                throw new Exception("DeadWinnerGoesToNextRound");
-            } catch (Exception e) {
-                winner.revive();
-                System.out.print("___WINNER GOES WITH 0 HP TO NEXT TO NEXT ROUND___");
-            }
         }
     }
 
