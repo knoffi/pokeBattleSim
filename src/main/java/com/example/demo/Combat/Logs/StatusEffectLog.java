@@ -4,8 +4,8 @@ import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Combat.PhraseStore.Phrases;
 import com.example.demo.Pokemon.Status.StatusKeys;
 
-public class StatusLog extends CombatLog {
-    public StatusLog(boolean blueActs, String target, StatusKeys status, Languages language) {
+public class StatusEffectLog extends CombatLog {
+    public StatusEffectLog(boolean blueActs, String target, StatusKeys status, Languages language) {
         // front end needs this field
         this.blueActs = blueActs;
         this.type = CombatLogType.TEXT.type;
@@ -13,26 +13,25 @@ public class StatusLog extends CombatLog {
     }
 
     private String createMessage(String target, StatusKeys status, Languages language) {
-
         switch (status) {
             case FREEZE:
 
-                return Phrases.frozen.text.replaceAll("XXX", target);
+                return Phrases.frozenResult.text;
             case BURN:
 
-                return Phrases.burn.text.replaceAll("XXX", target);
+                return Phrases.burnResult.text;
             case SLEEP:
 
-                return Phrases.sleep.text.replaceAll("XXX", target);
+                return Phrases.sleepResult.text;
             case POISON:
 
-                return Phrases.poison.text.replaceAll("XXX", target);
+                return Phrases.poisonResult.text;
             case CONFUS:
 
-                return Phrases.confusion.text.replaceAll("XXX", target);
+                return Phrases.confusionResult.text;
             case PARA:
 
-                return Phrases.paralyzed.text.replaceAll("XXX", target);
+                return Phrases.paralyzedResult.text;
 
             default:
                 try {
@@ -40,7 +39,7 @@ public class StatusLog extends CombatLog {
                 } catch (Exception e) {
                     System.out.println("___STATUS KEY NOT FOUND FOR STATUS RESULT!___");
                 }
-                return Phrases.frozen.text.replaceAll("XXX", target);
+                return Phrases.frozenResult.text;
         }
     }
 }

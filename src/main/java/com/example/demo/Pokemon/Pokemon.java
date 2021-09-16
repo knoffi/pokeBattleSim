@@ -11,6 +11,7 @@ import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Controller.LogPokemon;
 import com.example.demo.Pokedex.Pokedex;
 import com.example.demo.Pokemon.Status.Status;
+import com.example.demo.Pokemon.Status.StatusKeys;
 import com.example.demo.Searches.MoveSearch.MoveSearch;
 import com.example.demo.Searches.PokemonSearch.MoveBySearch;
 import com.example.demo.Searches.PokemonSearch.PokemonSearch;
@@ -147,10 +148,11 @@ public class Pokemon {
         }
     }
 
-    public int takesDamage(int damage, Effectiveness effect) {
-        this.shortenStatusDuration(effect);
+    public Optional<StatusKeys> takesDamage(int damage, Effectiveness effect) {
         this.inflictDamageByStatus();
-        return this.HP -= damage;
+        this.HP -= damage;
+        return this.handleStatusDuration(effect);
+
     }
 
     private void inflictDamageByStatus() {
@@ -164,37 +166,32 @@ public class Pokemon {
         return (1 - this.status.damageReduce) * damage;
     }
 
-    private void shortenStatusDuration(Effectiveness damage) {
+    private Optional<StatusKeys> handleStatusDuration(Effectiveness damage) {
         switch (damage) {
             case IMMUN:
-                this.removeStatCounter(Status.SLEEP_ROUNDS / 1);
-                break;
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 1);
             case SUPER_BAD:
-                this.removeStatCounter(Status.SLEEP_ROUNDS / 1);
-                break;
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 1);
             case RESISTANT:
-                this.removeStatCounter(Status.SLEEP_ROUNDS / 1);
-                break;
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 1);
             case NORMAL:
-                this.removeStatCounter(Status.SLEEP_ROUNDS / 2);
-                break;
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 2);
             case VERY:
-                this.removeStatCounter(Status.SLEEP_ROUNDS / 3);
-                break;
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 3);
             case SUPER:
-                this.removeStatCounter(Status.SLEEP_ROUNDS / 3);
-                break;
-
-            default:
-                break;
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 3);
         }
+        return Optional.empty();
     }
 
-    private void removeStatCounter(int counters) {
+    private Optional<StatusKeys> resolveStatusCounter(int counters) {
         this.status.roundsLeft -= counters;
         if (this.status.roundsLeft <= 0) {
+            Optional<StatusKeys> endedStatus = Optional.of(this.status.key);
             this.status = new Status();
+            return endedStatus;
         }
+        return Optional.empty();
     }
 
     public boolean isKO() {

@@ -8,11 +8,13 @@ import com.example.demo.Combat.Logs.AttackLog;
 import com.example.demo.Combat.Logs.CombatLog;
 import com.example.demo.Combat.Logs.SpeedContestLog;
 import com.example.demo.Combat.Logs.StatChangeLog;
+import com.example.demo.Combat.Logs.StatusEffectLog;
 import com.example.demo.Combat.Logs.StatusLog;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.Pokemon;
 import com.example.demo.Pokemon.StatKeys;
+import com.example.demo.Pokemon.Status.StatusKeys;
 
 public class PreCombat {
 
@@ -57,8 +59,13 @@ public class PreCombat {
     }
 
     private void pushStatusChange(String status) {
-        CombatLog statusChange = new StatusLog(!this.blueIsFaster, this.slowPokemon.getName(), status, language);
+        StatusKeys statusKey = StatusKeys.getKeyFromName(status);
+
+        CombatLog statusChange = new StatusLog(!this.blueIsFaster, this.slowPokemon.getName(), statusKey, language);
+        CombatLog statusEffect = new StatusEffectLog(!this.blueIsFaster, this.slowPokemon.getName(), statusKey,
+                language);
         this.summary.push(statusChange);
+        this.summary.push(statusEffect);
 
     }
 
