@@ -35,8 +35,8 @@ public class AttackStore {
                     RequestMode.JAVA_11);
             String[] attacks = Arrays.stream(moves.results).map(move -> getMoveFromURL(move.url))
                     .filter(move -> GenerationFilter.check(move.generation.name))
-                    .filter(move -> CategoryFilter.check(move.meta.category.name)).map(moveSearch -> moveSearch.name)
-                    .toArray(String[]::new);
+                    .filter(move -> CategoryFilter.check(move.meta.category.name, move.name))
+                    .map(moveSearch -> moveSearch.name).toArray(String[]::new);
             return attacks;
 
         } catch (IOException | InterruptedException e) {
@@ -59,11 +59,12 @@ public class AttackStore {
 }
 
 class CategoryFilter {
-    private static String[] categories = { "damage", "damage+ailment", "damage+lower", "damage+raise",
-            "net-good-stats" };
+    private static String[] categories = { "damage", "damage+ailment", "damage+lower", "damage+raise", "net-good-stats",
+            "ailment" };
 
-    public static boolean check(String testCategory) {
-        return Arrays.stream(categories).anyMatch(category -> category.equals(testCategory));
+    public static boolean check(String testCategory, String name) {
+        return !name.equals("leech-seed")
+                && Arrays.stream(categories).anyMatch(category -> category.equals(testCategory));
     };
 }
 

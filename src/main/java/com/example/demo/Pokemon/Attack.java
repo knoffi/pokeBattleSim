@@ -1,8 +1,5 @@
 package com.example.demo.Pokemon;
 
-import com.example.demo.Combat.PhraseStore.Languages;
-import com.example.demo.Translater.Translater;
-
 public class Attack {
     private final static Type POKE_TYPE_NORMAL = new Type("normal", "https://pokeapi.co/api/v2/type/1/");
     private String name;
@@ -27,12 +24,24 @@ public class Attack {
         return this.power > 0 || this.meta.category.substring(0, 3).equals("dam");
     }
 
+    public boolean isPureChanger() {
+        return this.isPureStatChanger() || isPureStatusChanger();
+    }
+
     public boolean isPureStatChanger() {
         return this.meta.category.substring(0, 3).equals("net");
     }
 
+    public boolean isPureStatusChanger() {
+        return this.meta.category.substring(0, 3).equals("ail");
+    }
+
     public StatChange[] getStatChanges() {
         return this.statChanges;
+    }
+
+    public String getAilment() {
+        return this.meta.ailment;
     }
 
     public boolean enemyIsTarget() {
@@ -100,10 +109,6 @@ public class Attack {
         this.statChanges = statChanges;
         this.meta = meta;
         this.enemyIsTarget = enemyIsTarget;
-    }
-
-    public void translateName(Languages language) {
-        this.name = Translater.getTranslatedAttack(this.name, language);
     }
 
     public Type getType() {

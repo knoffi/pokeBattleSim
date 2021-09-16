@@ -4,17 +4,21 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Stack;
 
 import com.example.demo.RequestMode;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Controller.LogPokemon;
 import com.example.demo.Pokedex.Pokedex;
+import com.example.demo.Pokemon.Status.Status;
+import com.example.demo.Pokemon.Status.StatusKeys;
 import com.example.demo.Searches.MoveSearch.MoveSearch;
 import com.example.demo.Searches.PokemonSearch.MoveBySearch;
 import com.example.demo.Searches.PokemonSearch.PokemonSearch;
 import com.example.demo.Searches.PokemonSearch.StatBySearch;
 import com.example.demo.Searches.PokemonSearch.TypeHolder;
 import com.example.demo.Translater.Translater;
+import com.example.demo.TypeEffects.Effectiveness;
 
 public class Pokemon {
 
@@ -32,6 +36,7 @@ public class Pokemon {
     private String backSpriteUrl;
     private int level = MAXIMAL_LEVEL;
     private int HP;
+    private Status status;
 
     public Pokemon(PokemonSearch data, Languages language) {
         this.name = Translater.getTranslatedName(data.name, language);
@@ -41,10 +46,7 @@ public class Pokemon {
         this.backSpriteUrl = data.sprites.back_default;
         this.frontSpriteUrl = data.sprites.front_default;
         this.HP = this.getStatValue(StatKeys.HP);
-    }
-
-    public void translateName(Languages language) {
-        this.name = Translater.getTranslatedName(this.name, language);
+        this.status = new Status();
     }
 
     public int getLevel() {
@@ -146,8 +148,50 @@ public class Pokemon {
         }
     }
 
-    public int takesDamage(int damage) {
-        return this.HP -= damage;
+    public Optional<StatusKeys> takesDamage(int damage, Effectiveness effect) {
+        this.inflictDamageByStatus();
+        this.HP -= damage;
+        return this.handleStatusDuration(effect);
+
+    }
+
+    private void inflictDamageByStatus() {
+        if (this.status.dotDamage > 0) {
+            this.HP -= (int) (this.status.dotDamage * this.HP);
+        }
+    }
+
+    public double dealsDamage(double damage) {
+        this.HP -= this.status.selfHarm * damage;
+        return (1 - this.status.damageReduce) * damage;
+    }
+
+    private Optional<StatusKeys> handleStatusDuration(Effectiveness damage) {
+        switch (damage) {
+            case IMMUN:
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 1);
+            case SUPER_BAD:
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 1);
+            case RESISTANT:
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 1);
+            case NORMAL:
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 2);
+            case VERY:
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 3);
+            case SUPER:
+                return this.resolveStatusCounter(Status.SLEEP_ROUNDS / 3);
+        }
+        return Optional.empty();
+    }
+
+    private Optional<StatusKeys> resolveStatusCounter(int counters) {
+        this.status.roundsLeft -= counters;
+        if (this.status.roundsLeft <= 0) {
+            Optional<StatusKeys> endedStatus = Optional.of(this.status.key);
+            this.status = new Status();
+            return endedStatus;
+        }
+        return Optional.empty();
     }
 
     public boolean isKO() {
@@ -163,10 +207,14 @@ public class Pokemon {
         return finishingAttacks;
     }
 
-    public Attack[] getPureStatChangers() {
-        Attack[] pureStatChangers = Arrays.stream(this.attacks).filter(Attack::isPureStatChanger)
-                .toArray(Attack[]::new);
-        return pureStatChangers;
+    public Stack<Attack> getStatOrStatusChangers() {
+        Stack<Attack> pureChangers = new Stack<Attack>();
+        Arrays.stream(this.attacks).filter(Attack::isPureChanger).forEach(changer -> pureChangers.push(changer));
+        return pureChangers;
+    }
+
+    public void setStatus(String status) {
+        this.status = new Status(status);
     }
 
     private static int[] getMoveSelection(int maxIndex) {

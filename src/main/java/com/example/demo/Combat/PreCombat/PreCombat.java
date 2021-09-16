@@ -1,6 +1,5 @@
 package com.example.demo.Combat.PreCombat;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.IntStream;
@@ -9,10 +8,13 @@ import com.example.demo.Combat.Logs.AttackLog;
 import com.example.demo.Combat.Logs.CombatLog;
 import com.example.demo.Combat.Logs.SpeedContestLog;
 import com.example.demo.Combat.Logs.StatChangeLog;
+import com.example.demo.Combat.Logs.StatusEffectLog;
+import com.example.demo.Combat.Logs.StatusLog;
 import com.example.demo.Combat.PhraseStore.Languages;
 import com.example.demo.Pokemon.Attack;
 import com.example.demo.Pokemon.Pokemon;
 import com.example.demo.Pokemon.StatKeys;
+import com.example.demo.Pokemon.Status.StatusKeys;
 
 public class PreCombat {
 
@@ -56,6 +58,17 @@ public class PreCombat {
 
     }
 
+    private void pushStatusChange(String status) {
+        StatusKeys statusKey = StatusKeys.getKeyFromName(status);
+
+        CombatLog statusChange = new StatusLog(!this.blueIsFaster, this.slowPokemon.getName(), statusKey, language);
+        CombatLog statusEffect = new StatusEffectLog(!this.blueIsFaster, this.slowPokemon.getName(), statusKey,
+                language);
+        this.summary.push(statusChange);
+        this.summary.push(statusEffect);
+
+    }
+
     public Stack<CombatLog> getPreCombatResult() {
         this.pushSpeedWinner();
         this.resolveSpeedAdvantage();
@@ -67,19 +80,30 @@ public class PreCombat {
         if (this.roundsAhead < 1) {
             return;
         }
+        Optional<Attack> changer = fastPokemon.getStatOrStatusChangers().stream().findAny();
 
-        Optional<Attack> statChanger = Arrays.stream(fastPokemon.getPureStatChangers()).findAny();
-
-        if (statChanger.isEmpty()) {
+        if (changer.isEmpty()) {
             return;
         } else {
-            // repeat this process as often as roundsAhead
-            this.applyStatChanger(this.fastPokemon, this.slowPokemon, statChanger.get(), roundsAhead);
+            Attack move = changer.get();
+            if (move.isPureStatusChanger()) {
+                this.applyStatusChanger(move);
+                ;
+            } else {
+                // repeats this process as often as roundsAhead
+                this.applyStatChanger(move, roundsAhead);
+            }
         }
     }
 
-    private void applyStatChanger(Pokemon user, Pokemon enemy, Attack move, int roundsAhead) {
-        Pokemon target = move.enemyIsTarget() ? enemy : user;
+    private void applyStatusChanger(Attack move) {
+        this.slowPokemon.setStatus(move.getAilment());
+        this.pushStatAttack(move.getName());
+        this.pushStatusChange(move.getAilment());
+    }
+
+    private void applyStatChanger(Attack move, int roundsAhead) {
+        Pokemon target = move.enemyIsTarget() ? this.slowPokemon : this.fastPokemon;
         String changedStat = move.getStatChanges()[0].getName();
         boolean statIsRising = move.getStatChanges()[0].isRisingStat();
         this.pushStatAttack(move.getName());
