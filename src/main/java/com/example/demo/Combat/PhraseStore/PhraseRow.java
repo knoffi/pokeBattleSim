@@ -1,5 +1,6 @@
 package com.example.demo.Combat.PhraseStore;
 
+import com.example.demo.Pokemon.Status.StatusKeys;
 import com.example.demo.Translater.Translater;
 import com.example.demo.TypeEffects.Effectiveness;
 
@@ -22,6 +23,18 @@ class PhraseRow {
     private String speedDiff2Text;
     private String speedDiff3Text;
     private String speedDiff4Text;
+    private String freeze;
+    private String freezeResult;
+    private String sleep;
+    private String sleepResult;
+    private String paralyze;
+    private String paralyzeResult;
+    private String poison;
+    private String poisonResult;
+    private String burn;
+    private String burnResult;
+    private String confusion;
+    private String confusionResult;
 
     public PhraseRow(Languages language) {
         this.languageKey = language.key;
@@ -42,6 +55,18 @@ class PhraseRow {
         this.speedDiff2Text = Translater.getTranslatedText(Phrases.speedDiff2.text, language.key);
         this.speedDiff3Text = Translater.getTranslatedText(Phrases.speedDiff3.text, language.key);
         this.speedDiff4Text = Translater.getTranslatedText(Phrases.speedDiff4.text, language.key);
+        this.freeze = Translater.getTranslatedText(Phrases.frozen.text, language.key);
+        this.freezeResult = Translater.getTranslatedText(Phrases.frozenResult.text, language.key);
+        this.sleep = Translater.getTranslatedText(Phrases.sleep.text, language.key);
+        this.sleepResult = Translater.getTranslatedText(Phrases.sleepResult.text, language.key);
+        this.burn = Translater.getTranslatedText(Phrases.burn.text, language.key);
+        this.burnResult = Translater.getTranslatedText(Phrases.burnResult.text, language.key);
+        this.paralyze = Translater.getTranslatedText(Phrases.paralyzed.text, language.key);
+        this.paralyzeResult = Translater.getTranslatedText(Phrases.paralyzedResult.text, language.key);
+        this.poison = Translater.getTranslatedText(Phrases.poison.text, language.key);
+        this.poisonResult = Translater.getTranslatedText(Phrases.poisonResult.text, language.key);
+        this.confusion = Translater.getTranslatedText(Phrases.confusion.text, language.key);
+        this.confusionResult = Translater.getTranslatedText(Phrases.confusionResult.text, language.key);
     }
 
     PhraseRow() {
@@ -58,6 +83,46 @@ class PhraseRow {
 
     public String getResultText() {
         return this.resultText;
+    }
+
+    public String getStatusText(StatusKeys status) {
+        switch (status) {
+            case FREEZE:
+                return this.freeze;
+            case BURN:
+                return this.burn;
+            case POISON:
+                return this.poison;
+            case SLEEP:
+                return this.sleep;
+            case CONFUS:
+                return this.confusion;
+            case PARA:
+                return this.paralyze;
+
+            default:
+                return "";
+        }
+    }
+
+    public String getStatusEffectText(StatusKeys status) {
+        switch (status) {
+            case FREEZE:
+                return this.freezeResult;
+            case BURN:
+                return this.burnResult;
+            case POISON:
+                return this.poisonResult;
+            case SLEEP:
+                return this.sleepResult;
+            case CONFUS:
+                return this.confusionResult;
+            case PARA:
+                return this.paralyzeResult;
+
+            default:
+                return "";
+        }
     }
 
     public String getEffectText(Effectiveness effect) {

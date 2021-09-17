@@ -1,5 +1,6 @@
 package com.example.demo.Combat.PhraseStore;
 
+import com.example.demo.Pokemon.Status.StatusKeys;
 import com.example.demo.StoreButler.StoreButler;
 import com.example.demo.StoreButler.StoreButlerServices;
 import com.example.demo.TypeEffects.Effectiveness;
@@ -46,6 +47,14 @@ public class PhraseStore {
 
     public static String getSpeedDiffPhrase(Languages language, int speedDiff) {
         return PHRASES.getSpeedDiffPhrase(language, speedDiff);
+    }
+
+    public static String getStatusPhrase(Languages language, StatusKeys status) {
+        return PHRASES.getStatusPhrase(language, status);
+    }
+
+    public static String getStatusEffectDiffPhrase(Languages language, StatusKeys status) {
+        return PHRASES.getStatusEffectPhrase(language, status);
     }
 
 }
