@@ -3,6 +3,7 @@ package com.example.demo.Combat.PhraseStore;
 import java.util.Arrays;
 import java.util.Optional;
 
+import com.example.demo.Pokemon.Status.StatusKeys;
 import com.example.demo.TypeEffects.Effectiveness;
 
 public class PhraseTable {
@@ -35,6 +36,30 @@ public class PhraseTable {
 
         if (resultText.isPresent()) {
             return resultText.get();
+        } else {
+            this.throwRowNotFound();
+            return Phrases.result.text;
+        }
+    }
+
+    public String getStatusPhrase(Languages language, StatusKeys status) {
+        Optional<String> statusText = Arrays.stream(this.rows).filter(row -> row.belongsToLanguage(language))
+                .map(row -> row.getStatusText(status)).findAny();
+
+        if (statusText.isPresent()) {
+            return statusText.get();
+        } else {
+            this.throwRowNotFound();
+            return Phrases.result.text;
+        }
+    }
+
+    public String getStatusEffectPhrase(Languages language, StatusKeys status) {
+        Optional<String> statusEffectText = Arrays.stream(this.rows).filter(row -> row.belongsToLanguage(language))
+                .map(row -> row.getStatusEffectText(status)).findAny();
+
+        if (statusEffectText.isPresent()) {
+            return statusEffectText.get();
         } else {
             this.throwRowNotFound();
             return Phrases.result.text;
