@@ -23,14 +23,3 @@ public class PokemonApplication {
 	}
 
 }
-
-class Tester {
-	public String name;
-
-	Tester() {
-	}
-
-	Tester(String name) {
-		this.name = name;
-	}
-}
