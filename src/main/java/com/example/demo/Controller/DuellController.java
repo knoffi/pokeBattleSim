@@ -1,6 +1,5 @@
 package com.example.demo.Controller;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import com.example.demo.Combat.PhraseStore.Languages;
@@ -23,8 +22,7 @@ public class DuellController {
     }
 
     private Languages getLanguageFromQuery(String lng) {
-        Optional<Languages> queryLanguage = Arrays.stream(Languages.values())
-                .filter(language -> language.key.equals(lng)).findAny();
+        Optional<Languages> queryLanguage = Languages.getLanguageByKey(lng);
         if (queryLanguage.isPresent()) {
             return queryLanguage.get();
         } else {
